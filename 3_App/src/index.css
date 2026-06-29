@@ -1,0 +1,112 @@
+/*
+  Tailwind v4 + counterfoil-starter-kit setup
+  ------------------------------------------
+  We use Option A: semanticTokens + CounterfoilComponents (pre-built).
+  Tailwind utilities from @tailwind are processed but content scanning
+  may not include all project files. Custom component classes below
+  use design tokens directly for viewer components.
+*/
+@import 'counterfoil-starter-kit/styles/semanticTokens.css';
+@import 'counterfoil-starter-kit/styles/CounterfoilComponents.css';
+
+@config "../tailwind.config.ts";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: var(--bg-primary);
+  }
+}
+
+@layer utilities {
+  .font-uiTypeface {
+    font-family: sans-serif;
+  }
+
+  .font-contentTypeface {
+    font-family: serif;
+  }
+}
+
+@layer components {
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 1.5rem;
+  }
+
+  .modal-card {
+    width: 100%;
+    max-width: 28rem;
+    border: 1px solid var(--border-tertiary);
+    background-color: var(--bg-primary);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+  }
+
+  /* Viewer section: uses tokens directly (Tailwind bg-* not reliably generated) */
+  .viewer-section {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-tertiary);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  /* TextBlock: default and hover backgrounds */
+  .textblock-bg {
+    background-color: var(--bg-primary);
+  }
+
+  .textblock-bg-hover {
+    background-color: var(--bg-primary-hover);
+  }
+
+  .textblock-focused {
+    border-color: var(--fg-primary);
+  }
+
+  .easypub-hyphenate {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  /* TextBlock edit textarea: match unselected block styling, no internal scroll */
+  .textblock-edit-textarea {
+    box-sizing: border-box;
+  }
+
+  /* TipTap rich editor: remove default paragraph margins inside contenteditable */
+  .tiptap p {
+    margin: 0;
+  }
+  .tiptap:focus {
+    outline: none;
+  }
+
+  .spell-unknown {
+    text-decoration: underline wavy;
+    text-decoration-color: #ef4444;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+
+  .spell-dictionary {
+    background-color: color-mix(in srgb, #22c55e 15%, transparent);
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  .spell-selected {
+    outline: 2px solid #3b82f6;
+    outline-offset: 1px;
+    border-radius: 2px;
+  }
+}
