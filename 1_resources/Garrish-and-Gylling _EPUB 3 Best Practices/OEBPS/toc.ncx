@@ -1,0 +1,1473 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <head>
+    <meta name="cover" content="cover"/>
+    <meta name="dtb:uid" content="isbn:9781449329143"/>
+    <meta name="dtb:depth" content="-1"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>EPUB 3 Best Practices</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="id510435" playOrder="1">
+      <navLabel>
+        <text>EPUB 3 Best Practices</text>
+      </navLabel>
+      <content src="index.html"/>
+    </navPoint>
+    <navPoint id="id541245" playOrder="2">
+      <navLabel>
+        <text>Preface</text>
+      </navLabel>
+      <content src="pr01.html"/>
+      <navPoint id="id522160" playOrder="3">
+        <navLabel>
+          <text>The Future</text>
+        </navLabel>
+        <content src="pr01.html#_preface_future_"/>
+      </navPoint>
+      <navPoint id="id557551" playOrder="4">
+        <navLabel>
+          <text>How to Use This Book</text>
+        </navLabel>
+        <content src="pr01.html#_how_to_use_this_book"/>
+      </navPoint>
+      <navPoint id="id528199" playOrder="5">
+        <navLabel>
+          <text>Conventions Used in This Book</text>
+        </navLabel>
+        <content src="pr01.html#I_sect1_d1e137"/>
+      </navPoint>
+      <navPoint id="id538105" playOrder="6">
+        <navLabel>
+          <text>Using Code Examples</text>
+        </navLabel>
+        <content src="pr01.html#I_sect1_d1e176"/>
+      </navPoint>
+      <navPoint id="id552455" playOrder="7">
+        <navLabel>
+          <text>Credits</text>
+        </navLabel>
+        <content src="pr01.html#_credits"/>
+      </navPoint>
+      <navPoint id="id532411" playOrder="8">
+        <navLabel>
+          <text>Acknowledgments</text>
+        </navLabel>
+        <content src="pr01.html#_acknowledgments"/>
+      </navPoint>
+      <navPoint id="id459720" playOrder="9">
+        <navLabel>
+          <text>Safari® Books Online</text>
+        </navLabel>
+        <content src="pr01.html#I_sect1_d1e191"/>
+      </navPoint>
+      <navPoint id="id510447" playOrder="10">
+        <navLabel>
+          <text>How to Contact Us</text>
+        </navLabel>
+        <content src="pr01.html#I_sect1_d1e204"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id496318" playOrder="11">
+      <navLabel>
+        <text>Introduction</text>
+      </navLabel>
+      <content src="pr02.html"/>
+    </navPoint>
+    <navPoint id="id550338" playOrder="12">
+      <navLabel>
+        <text>1. Package Document and Metadata</text>
+      </navLabel>
+      <content src="ch01.html"/>
+      <navPoint id="id475637" playOrder="13">
+        <navLabel>
+          <text>Vocabularies</text>
+        </navLabel>
+        <content src="ch01.html#_meta_vocab"/>
+        <navPoint id="id557646" playOrder="14">
+          <navLabel>
+            <text>The Default Vocabulary</text>
+          </navLabel>
+          <content src="ch01.html#_meta_vocab_default"/>
+        </navPoint>
+        <navPoint id="id522442" playOrder="15">
+          <navLabel>
+            <text>The Reserved Vocabularies</text>
+          </navLabel>
+          <content src="ch01.html#_meta_vocab_reserved"/>
+        </navPoint>
+        <navPoint id="id522445" playOrder="16">
+          <navLabel>
+            <text>Using Other Vocabularies</text>
+          </navLabel>
+          <content src="ch01.html#_meta_vocab_other"/>
+        </navPoint>
+        <navPoint id="id553603" playOrder="17">
+          <navLabel>
+            <text>The All-Powerful meta Element</text>
+          </navLabel>
+          <content src="ch01.html#_meta_meta_element"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id475642" playOrder="18">
+        <navLabel>
+          <text>Publication Metadata</text>
+        </navLabel>
+        <content src="ch01.html#_meta_publication_metadata"/>
+        <navPoint id="id482337" playOrder="19">
+          <navLabel>
+            <text>The Package Document Structure</text>
+          </navLabel>
+          <content src="ch01.html#_meta_package_doc"/>
+        </navPoint>
+        <navPoint id="id502789" playOrder="20">
+          <navLabel>
+            <text>The metadata Element</text>
+          </navLabel>
+          <content src="ch01.html#_meta_metadata_element"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id535835" playOrder="21">
+        <navLabel>
+          <text>Identifiers</text>
+        </navLabel>
+        <content src="ch01.html#_meta_identifiers"/>
+      </navPoint>
+      <navPoint id="id503147" playOrder="22">
+        <navLabel>
+          <text>Types of Titles</text>
+        </navLabel>
+        <content src="ch01.html#_meta_titles"/>
+      </navPoint>
+      <navPoint id="id538230" playOrder="23">
+        <navLabel>
+          <text>The Manifest and Spine</text>
+        </navLabel>
+        <content src="ch01.html#_meta_structure"/>
+        <navPoint id="id493430" playOrder="24">
+          <navLabel>
+            <text>The manifest and Fallbacks</text>
+          </navLabel>
+          <content src="ch01.html#_meta_manifest"/>
+        </navPoint>
+        <navPoint id="id493434" playOrder="25">
+          <navLabel>
+            <text>The spine</text>
+          </navLabel>
+          <content src="ch01.html#_meta_spine"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id463600" playOrder="26">
+        <navLabel>
+          <text>Document Metadata</text>
+        </navLabel>
+        <content src="ch01.html#_meta_document_metadata"/>
+      </navPoint>
+      <navPoint id="id513615" playOrder="27">
+        <navLabel>
+          <text>Links and Bindings</text>
+        </navLabel>
+        <content src="ch01.html#_meta_links_bindings"/>
+      </navPoint>
+      <navPoint id="id510782" playOrder="28">
+        <navLabel>
+          <text>Metadata for Fixed Layout Publications</text>
+        </navLabel>
+        <content src="ch01.html#_meta_fxl"/>
+      </navPoint>
+      <navPoint id="id538313" playOrder="29">
+        <navLabel>
+          <text>The Container</text>
+        </navLabel>
+        <content src="ch01.html#_meta_containers"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id550488" playOrder="30">
+      <navLabel>
+        <text>2. Navigation</text>
+      </navLabel>
+      <content src="ch02.html"/>
+      <navPoint id="id489145" playOrder="31">
+        <navLabel>
+          <text>The EPUB Navigation Document</text>
+        </navLabel>
+        <content src="ch02.html#_the_epub_navigation_document"/>
+      </navPoint>
+      <navPoint id="id546726" playOrder="32">
+        <navLabel>
+          <text>Building a Navigation Document</text>
+        </navLabel>
+        <content src="ch02.html#_building_a_navigation_document"/>
+        <navPoint id="id456371" playOrder="33">
+          <navLabel>
+            <text>Repeated Patterns</text>
+          </navLabel>
+          <content src="ch02.html#_repeated_patterns"/>
+          <navPoint id="id553543" playOrder="34">
+            <navLabel>
+              <text>Navigation Labels</text>
+            </navLabel>
+            <content src="ch02.html#_navigation_labels"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id456380" playOrder="35">
+          <navLabel>
+            <text>Table of Contents</text>
+          </navLabel>
+          <content src="ch02.html#_table_of_contents"/>
+          <navPoint id="id496898" playOrder="36">
+            <navLabel>
+              <text>Hiding Content</text>
+            </navLabel>
+            <content src="ch02.html#_hiding_content"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id479748" playOrder="37">
+          <navLabel>
+            <text>Landmarks</text>
+          </navLabel>
+          <content src="ch02.html#_landmarks"/>
+        </navPoint>
+        <navPoint id="id535053" playOrder="38">
+          <navLabel>
+            <text>Page List</text>
+          </navLabel>
+          <content src="ch02.html#_page_list"/>
+        </navPoint>
+        <navPoint id="id529894" playOrder="39">
+          <navLabel>
+            <text>Extensibility</text>
+          </navLabel>
+          <content src="ch02.html#_extensibility"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id473451" playOrder="40">
+        <navLabel>
+          <text>Adding the Navigation Document</text>
+        </navLabel>
+        <content src="ch02.html#_adding_the_navigation_document"/>
+        <navPoint id="id549155" playOrder="41">
+          <navLabel>
+            <text>Embedding as Content</text>
+          </navLabel>
+          <content src="ch02.html#_embedding_as_content"/>
+        </navPoint>
+        <navPoint id="id535479" playOrder="42">
+          <navLabel>
+            <text>Hiding Lists</text>
+          </navLabel>
+          <content src="ch02.html#_hiding_lists"/>
+        </navPoint>
+        <navPoint id="id535482" playOrder="43">
+          <navLabel>
+            <text>Styling Lists</text>
+          </navLabel>
+          <content src="ch02.html#_styling_lists"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id523243" playOrder="44">
+        <navLabel>
+          <text>The NCX</text>
+        </navLabel>
+        <content src="ch02.html#_the_ncx"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id546066" playOrder="45">
+      <navLabel>
+        <text>3. Content Documents</text>
+      </navLabel>
+      <content src="ch03.html"/>
+      <navPoint id="id551033" playOrder="46">
+        <navLabel>
+          <text>Terminology Refresher</text>
+        </navLabel>
+        <content src="ch03.html#_cd_terminology"/>
+      </navPoint>
+      <navPoint id="id534610" playOrder="47">
+        <navLabel>
+          <text>XHTML</text>
+        </navLabel>
+        <content src="ch03.html#_cd_xhtml"/>
+        <navPoint id="id516340" playOrder="48">
+          <navLabel>
+            <text>New in HTML5</text>
+          </navLabel>
+          <content src="ch03.html#_cd_new_html5"/>
+        </navPoint>
+        <navPoint id="id516763" playOrder="49">
+          <navLabel>
+            <text>EPUB Support Gotchas</text>
+          </navLabel>
+          <content src="ch03.html#_cd_gotchas"/>
+        </navPoint>
+        <navPoint id="id473181" playOrder="50">
+          <navLabel>
+            <text>DTDs Are Dead</text>
+          </navLabel>
+          <content src="ch03.html#_cd_dtds"/>
+        </navPoint>
+        <navPoint id="id516509" playOrder="51">
+          <navLabel>
+            <text>Linking and Referencing</text>
+          </navLabel>
+          <content src="ch03.html#_cd_linking"/>
+          <navPoint id="id494935" playOrder="52">
+            <navLabel>
+              <text>EPUB Canonical Fragment Identifiers</text>
+            </navLabel>
+            <content src="ch03.html#_cd_epubcfis"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id496028" playOrder="53">
+          <navLabel>
+            <text>Content Chunking</text>
+          </navLabel>
+          <content src="ch03.html#_content_chunking"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id534613" playOrder="54">
+        <navLabel>
+          <text>epub:type and Structural Semantics</text>
+        </navLabel>
+        <content src="ch03.html#_cd_epub_type"/>
+        <navPoint id="id493549" playOrder="55">
+          <navLabel>
+            <text>Adding Semantics</text>
+          </navLabel>
+          <content src="ch03.html#_cd_semantics"/>
+        </navPoint>
+        <navPoint id="id493553" playOrder="56">
+          <navLabel>
+            <text>Multiple Semantics</text>
+          </navLabel>
+          <content src="ch03.html#_cd_semantics_multiple"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id530747" playOrder="57">
+        <navLabel>
+          <text>MathML</text>
+        </navLabel>
+        <content src="ch03.html#_cd_mathml"/>
+      </navPoint>
+      <navPoint id="id533823" playOrder="58">
+        <navLabel>
+          <text>SVG</text>
+        </navLabel>
+        <content src="ch03.html#_cd_svg"/>
+      </navPoint>
+      <navPoint id="id542384" playOrder="59">
+        <navLabel>
+          <text>Fixed Layouts</text>
+        </navLabel>
+        <content src="ch03.html#_cd_fixed_layouts"/>
+      </navPoint>
+      <navPoint id="id531362" playOrder="60">
+        <navLabel>
+          <text>Covers</text>
+        </navLabel>
+        <content src="ch03.html#_cd_covers"/>
+      </navPoint>
+      <navPoint id="id492545" playOrder="61">
+        <navLabel>
+          <text>Styling</text>
+        </navLabel>
+        <content src="ch03.html#_cd_style"/>
+        <navPoint id="id480902" playOrder="62">
+          <navLabel>
+            <text>EPUB CSS Profile</text>
+          </navLabel>
+          <content src="ch03.html#_cd_style_css"/>
+        </navPoint>
+        <navPoint id="id480938" playOrder="63">
+          <navLabel>
+            <text>CSS 2.1</text>
+          </navLabel>
+          <content src="ch03.html#_cd_style_css21"/>
+        </navPoint>
+        <navPoint id="id458753" playOrder="64">
+          <navLabel>
+            <text>CSS3</text>
+          </navLabel>
+          <content src="ch03.html#_cd_style_css3"/>
+          <navPoint id="id519292" playOrder="65">
+            <navLabel>
+              <text>Media Queries</text>
+            </navLabel>
+            <content src="ch03.html#_cd_style_media_queries"/>
+          </navPoint>
+          <navPoint id="id519308" playOrder="66">
+            <navLabel>
+              <text>Namespaces</text>
+            </navLabel>
+            <content src="ch03.html#_cd_style_namespaces"/>
+          </navPoint>
+          <navPoint id="id466213" playOrder="67">
+            <navLabel>
+              <text>Fonts</text>
+            </navLabel>
+            <content src="ch03.html#_cd_style_fonts"/>
+          </navPoint>
+          <navPoint id="id462981" playOrder="68">
+            <navLabel>
+              <text>Multicolumn Layout</text>
+            </navLabel>
+            <content src="ch03.html#_cd_style_multi_column"/>
+          </navPoint>
+          <navPoint id="id523438" playOrder="69">
+            <navLabel>
+              <text>Writing Modes, Text, and Speech</text>
+            </navLabel>
+            <content src="ch03.html#_cd_style_prefixed"/>
+          </navPoint>
+          <navPoint id="id462989" playOrder="70">
+            <navLabel>
+              <text>Additional Support</text>
+            </navLabel>
+            <content src="ch03.html#_cd_style_additional"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id515556" playOrder="71">
+          <navLabel>
+            <text>Ruby</text>
+          </navLabel>
+          <content src="ch03.html#_cd_style_ruby"/>
+        </navPoint>
+        <navPoint id="id497342" playOrder="72">
+          <navLabel>
+            <text>Headers and Footers</text>
+          </navLabel>
+          <content src="ch03.html#_cd_style_oeb_page"/>
+        </navPoint>
+        <navPoint id="id497354" playOrder="73">
+          <navLabel>
+            <text>Alt Style Tags</text>
+          </navLabel>
+          <content src="ch03.html#_cd_style_alt_tags"/>
+        </navPoint>
+        <navPoint id="id532787" playOrder="74">
+          <navLabel>
+            <text>CSS Resets</text>
+          </navLabel>
+          <content src="ch03.html#_cd_style_resets"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id527272" playOrder="75">
+        <navLabel>
+          <text>Fallback Content</text>
+        </navLabel>
+        <content src="ch03.html#_cd_fallbacks"/>
+        <navPoint id="id467745" playOrder="76">
+          <navLabel>
+            <text>Manifest Fallbacks</text>
+          </navLabel>
+          <content src="ch03.html#_cd_fallbacks_cs"/>
+        </navPoint>
+        <navPoint id="id562856" playOrder="77">
+          <navLabel>
+            <text>Content Fallbacks</text>
+          </navLabel>
+          <content src="ch03.html#_cd_content_fallbacks"/>
+        </navPoint>
+        <navPoint id="id467817" playOrder="78">
+          <navLabel>
+            <text>The epub:switch element</text>
+          </navLabel>
+          <content src="ch03.html#_cd_epub_switch"/>
+        </navPoint>
+        <navPoint id="id563433" playOrder="79">
+          <navLabel>
+            <text>Bindings</text>
+          </navLabel>
+          <content src="ch03.html#_cd_bindings"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id491624" playOrder="80">
+      <navLabel>
+        <text>4. Font Embedding and Licensing</text>
+      </navLabel>
+      <content src="ch04.html"/>
+      <navPoint id="id565857" playOrder="81">
+        <navLabel>
+          <text>Why Embed Fonts?</text>
+        </navLabel>
+        <content src="ch04.html#_why_embed_fonts"/>
+        <navPoint id="id565914" playOrder="82">
+          <navLabel>
+            <text>Maybe You Shouldn’t</text>
+          </navLabel>
+          <content src="ch04.html#_maybe_you_shouldn_8217_t"/>
+          <navPoint id="id566053" playOrder="83">
+            <navLabel>
+              <text>Historically, reading system support for font embedding has been poor and inconsistent</text>
+            </navLabel>
+            <content src="ch04.html#reader_support"/>
+          </navPoint>
+          <navPoint id="id565951" playOrder="84">
+            <navLabel>
+              <text>Embedding adds complexity</text>
+            </navLabel>
+            <content src="ch04.html#_embedding_adds_complexity"/>
+          </navPoint>
+          <navPoint id="id566244" playOrder="85">
+            <navLabel>
+              <text>Device makers have already done the work for you</text>
+            </navLabel>
+            <content src="ch04.html#device_makers"/>
+          </navPoint>
+          <navPoint id="id566356" playOrder="86">
+            <navLabel>
+              <text>Embedding inflates file size</text>
+            </navLabel>
+            <content src="ch04.html#_embedding_inflates_file_size"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id566392" playOrder="87">
+          <navLabel>
+            <text>Maybe You Should</text>
+          </navLabel>
+          <content src="ch04.html#maybe_you_should"/>
+          <navPoint id="id566468" playOrder="88">
+            <navLabel>
+              <text>Embedding to be forward-thinking</text>
+            </navLabel>
+            <content src="ch04.html#forward-thinking"/>
+          </navPoint>
+          <navPoint id="id566533" playOrder="89">
+            <navLabel>
+              <text>Embedding to create a consistent look and feel across “platforms”</text>
+            </navLabel>
+            <content src="ch04.html#embedding_platforms"/>
+          </navPoint>
+          <navPoint id="id566767" playOrder="90">
+            <navLabel>
+              <text>Embedding for improved glyph coverage</text>
+            </navLabel>
+            <content src="ch04.html#glyph_coverage"/>
+          </navPoint>
+          <navPoint id="id567248" playOrder="91">
+            <navLabel>
+              <text>Embedding for specialized or technical reasons</text>
+            </navLabel>
+            <content src="ch04.html#embedding_specialized"/>
+          </navPoint>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id567429" playOrder="92">
+        <navLabel>
+          <text>Font Embedding in EPUB 3</text>
+        </navLabel>
+        <content src="ch04.html#font_embedding_epub3"/>
+      </navPoint>
+      <navPoint id="id567858" playOrder="93">
+        <navLabel>
+          <text>How to Embed Fonts</text>
+        </navLabel>
+        <content src="ch04.html#how_to_embed"/>
+        <navPoint id="id567946" playOrder="94">
+          <navLabel>
+            <text>Add the Font to Your EPUB Package</text>
+          </navLabel>
+          <content src="ch04.html#_add_the_font_to_your_epub_package"/>
+        </navPoint>
+        <navPoint id="id568051" playOrder="95">
+          <navLabel>
+            <text>Include the File in the EPUB Manifest</text>
+          </navLabel>
+          <content src="ch04.html#_include_the_file_in_the_epub_manifest"/>
+        </navPoint>
+        <navPoint id="id568367" playOrder="96">
+          <navLabel>
+            <text>Reference the Font in the EPUB CSS</text>
+          </navLabel>
+          <content src="ch04.html#reference_the_font"/>
+        </navPoint>
+        <navPoint id="id569070" playOrder="97">
+          <navLabel>
+            <text>Obfuscating Fonts</text>
+          </navLabel>
+          <content src="ch04.html#font_obfuscation"/>
+        </navPoint>
+        <navPoint id="id569082" playOrder="98">
+          <navLabel>
+            <text>Subsetting a Font</text>
+          </navLabel>
+          <content src="ch04.html#font_subsetting"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id569513" playOrder="99">
+        <navLabel>
+          <text>Licensing Fonts for Embedding in EPUB</text>
+        </navLabel>
+        <content src="ch04.html#font_licensing"/>
+        <navPoint id="id569632" playOrder="100">
+          <navLabel>
+            <text>Use an Open Font</text>
+          </navLabel>
+          <content src="ch04.html#_use_an_open_font"/>
+        </navPoint>
+        <navPoint id="id569824" playOrder="101">
+          <navLabel>
+            <text>Contact the Foundry Directly</text>
+          </navLabel>
+          <content src="ch04.html#_contact_the_foundry_directly"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id565790" playOrder="102">
+      <navLabel>
+        <text>5. Multimedia</text>
+      </navLabel>
+      <content src="ch05.html"/>
+      <navPoint id="id570086" playOrder="103">
+        <navLabel>
+          <text>The Codec Issue</text>
+        </navLabel>
+        <content src="ch05.html#_media_codecs"/>
+      </navPoint>
+      <navPoint id="id570120" playOrder="104">
+        <navLabel>
+          <text>The Media Elements</text>
+        </navLabel>
+        <content src="ch05.html#_media_elements"/>
+        <navPoint id="id570451" playOrder="105">
+          <navLabel>
+            <text>Sources</text>
+          </navLabel>
+          <content src="ch05.html#_media_source"/>
+          <navPoint id="id571221" playOrder="106">
+            <navLabel>
+              <text>Size matters</text>
+            </navLabel>
+            <content src="ch05.html#_media_size"/>
+          </navPoint>
+          <navPoint id="id571454" playOrder="107">
+            <navLabel>
+              <text>Optimizing Playback</text>
+            </navLabel>
+            <content src="ch05.html#_media_optimize"/>
+          </navPoint>
+          <navPoint id="id572406" playOrder="108">
+            <navLabel>
+              <text>Preloading</text>
+            </navLabel>
+            <content src="ch05.html#_media_preload"/>
+          </navPoint>
+          <navPoint id="id572586" playOrder="109">
+            <navLabel>
+              <text>Another Option</text>
+            </navLabel>
+            <content src="ch05.html#_media_options"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id570464" playOrder="110">
+          <navLabel>
+            <text>Control</text>
+          </navLabel>
+          <content src="ch05.html#_media_control"/>
+        </navPoint>
+        <navPoint id="id570469" playOrder="111">
+          <navLabel>
+            <text>Posters</text>
+          </navLabel>
+          <content src="ch05.html#_media_poster"/>
+        </navPoint>
+        <navPoint id="id573350" playOrder="112">
+          <navLabel>
+            <text>Dimensions</text>
+          </navLabel>
+          <content src="ch05.html#_media_dimensions"/>
+        </navPoint>
+        <navPoint id="id573613" playOrder="113">
+          <navLabel>
+            <text>The Rest</text>
+          </navLabel>
+          <content src="ch05.html#_media_other_attr"/>
+        </navPoint>
+        <navPoint id="id573818" playOrder="114">
+          <navLabel>
+            <text>Timed Tracks</text>
+          </navLabel>
+          <content src="ch05.html#_media_timed_tracks"/>
+        </navPoint>
+        <navPoint id="id575042" playOrder="115">
+          <navLabel>
+            <text>Fallbacks</text>
+          </navLabel>
+          <content src="ch05.html#_media_fallbacks"/>
+        </navPoint>
+        <navPoint id="id575057" playOrder="116">
+          <navLabel>
+            <text>Alternate Content</text>
+          </navLabel>
+          <content src="ch05.html#_media_fallbacks_alt_content"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id570163" playOrder="117">
+        <navLabel>
+          <text>Triggers</text>
+        </navLabel>
+        <content src="ch05.html#_media_triggers"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id578055" playOrder="118">
+      <navLabel>
+        <text>6. Media Overlays</text>
+      </navLabel>
+      <content src="ch06.html"/>
+      <navPoint id="id578169" playOrder="119">
+        <navLabel>
+          <text>The EPUB Spectrum</text>
+        </navLabel>
+        <content src="ch06.html#_the_epub_spectrum"/>
+      </navPoint>
+      <navPoint id="id578157" playOrder="120">
+        <navLabel>
+          <text>Overlays in a Nutshell</text>
+        </navLabel>
+        <content src="ch06.html#_mo_nutshell"/>
+      </navPoint>
+      <navPoint id="id578442" playOrder="121">
+        <navLabel>
+          <text>Synchronization Granularity</text>
+        </navLabel>
+        <content src="ch06.html#_mo_synch_level"/>
+      </navPoint>
+      <navPoint id="id578468" playOrder="122">
+        <navLabel>
+          <text>Constructing an Overlay</text>
+        </navLabel>
+        <content src="ch06.html#_mo_constructing"/>
+        <navPoint id="id578955" playOrder="123">
+          <navLabel>
+            <text>Sequences</text>
+          </navLabel>
+          <content src="ch06.html#_mo_seq"/>
+        </navPoint>
+        <navPoint id="id579139" playOrder="124">
+          <navLabel>
+            <text>Parallel Playback</text>
+          </navLabel>
+          <content src="ch06.html#_mo_par"/>
+        </navPoint>
+        <navPoint id="id579134" playOrder="125">
+          <navLabel>
+            <text>Adding to the Container</text>
+          </navLabel>
+          <content src="ch06.html#_mo_package_ref"/>
+        </navPoint>
+        <navPoint id="id579893" playOrder="126">
+          <navLabel>
+            <text>Styling the Active Element</text>
+          </navLabel>
+          <content src="ch06.html#_mo_styling"/>
+        </navPoint>
+        <navPoint id="id580155" playOrder="127">
+          <navLabel>
+            <text>Structural Considerations</text>
+          </navLabel>
+          <content src="ch06.html#_structural_considerations"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id578537" playOrder="128">
+        <navLabel>
+          <text>Advanced Synchronization</text>
+        </navLabel>
+        <content src="ch06.html#_mo_advanced_synch"/>
+      </navPoint>
+      <navPoint id="id581143" playOrder="129">
+        <navLabel>
+          <text>Audio Considerations</text>
+        </navLabel>
+        <content src="ch06.html#_mo_advanced_audio"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id575664" playOrder="130">
+      <navLabel>
+        <text>7. Interactivity</text>
+      </navLabel>
+      <content src="ch07.html"/>
+      <navPoint id="id581775" playOrder="131">
+        <navLabel>
+          <text>First Principles: Interaction Scope and Design</text>
+        </navLabel>
+        <content src="ch07.html#_first_principles_interaction_scope_and_design"/>
+        <navPoint id="id581891" playOrder="132">
+          <navLabel>
+            <text>Progressive Enhancement</text>
+          </navLabel>
+          <content src="ch07.html#_progressive_enhancement"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id581894" playOrder="133">
+        <navLabel>
+          <text>Procedural Interaction: JavaScript</text>
+        </navLabel>
+        <content src="ch07.html#_procedural_interaction_javascript"/>
+        <navPoint id="id581994" playOrder="134">
+          <navLabel>
+            <text>JavaScript in EPUB 2</text>
+          </navLabel>
+          <content src="ch07.html#_javascript_in_epub_2"/>
+        </navPoint>
+        <navPoint id="id582138" playOrder="135">
+          <navLabel>
+            <text>The EPUB 3 epubReadingSystem Object</text>
+          </navLabel>
+          <content src="ch07.html#_the_epub_3_epubreadingsystem_object"/>
+          <navPoint id="id582434" playOrder="136">
+            <navLabel>
+              <text>Detect features</text>
+            </navLabel>
+            <content src="ch07.html#_detect_features"/>
+          </navPoint>
+          <navPoint id="id582438" playOrder="137">
+            <navLabel>
+              <text>Use preventDefault to avoid reading system default behavior</text>
+            </navLabel>
+            <content src="ch07.html#_use_preventdefault_to_avoid_reading_system_default_behavior"/>
+          </navPoint>
+          <navPoint id="id582801" playOrder="138">
+            <navLabel>
+              <text>Always query epubReadingSystem!</text>
+            </navLabel>
+            <content src="ch07.html#_always_query_epubreadingsystem"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id582080" playOrder="139">
+          <navLabel>
+            <text>Inclusion Models</text>
+          </navLabel>
+          <content src="ch07.html#_inclusion_models"/>
+          <navPoint id="id583015" playOrder="140">
+            <navLabel>
+              <text>Container-constrained scripts</text>
+            </navLabel>
+            <content src="ch07.html#_container_constrained_scripts"/>
+          </navPoint>
+          <navPoint id="id583113" playOrder="141">
+            <navLabel>
+              <text>Spine-level scripting</text>
+            </navLabel>
+            <content src="ch07.html#_spine_level_scripting"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id583199" playOrder="142">
+          <navLabel>
+            <text>Ebook State and Storage</text>
+          </navLabel>
+          <content src="ch07.html#_ebook_state_and_storage"/>
+        </navPoint>
+        <navPoint id="id583372" playOrder="143">
+          <navLabel>
+            <text>Identifying Scripted Content Documents</text>
+          </navLabel>
+          <content src="ch07.html#_identifying_scripted_content_documents"/>
+          <navPoint id="id583252" playOrder="144">
+            <navLabel>
+              <text>Creating fallbacks</text>
+            </navLabel>
+            <content src="ch07.html#_creating_fallbacks"/>
+          </navPoint>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id583780" playOrder="145">
+        <navLabel>
+          <text>Animation and Graphics: Canvas</text>
+        </navLabel>
+        <content src="ch07.html#_animation_and_graphics_canvas"/>
+        <navPoint id="id583907" playOrder="146">
+          <navLabel>
+            <text>Best Practices in Canvas Usage</text>
+          </navLabel>
+          <content src="ch07.html#_best_practices_in_canvas_usage"/>
+        </navPoint>
+        <navPoint id="id583915" playOrder="147">
+          <navLabel>
+            <text>Canvas in a Nonscripted Reading System</text>
+          </navLabel>
+          <content src="ch07.html#_canvas_in_a_nonscripted_reading_system"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id584608" playOrder="148">
+        <navLabel>
+          <text>Object</text>
+        </navLabel>
+        <content src="ch07.html#_object"/>
+      </navPoint>
+      <navPoint id="id584719" playOrder="149">
+        <navLabel>
+          <text>Other Graphical Interaction Models</text>
+        </navLabel>
+        <content src="ch07.html#_other_graphical_interaction_models"/>
+      </navPoint>
+      <navPoint id="id584871" playOrder="150">
+        <navLabel>
+          <text>Accessibility and Scripting Summary</text>
+        </navLabel>
+        <content src="ch07.html#_accessibility_and_scripting_summary"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id584962" playOrder="151">
+      <navLabel>
+        <text>8. Global Language Support</text>
+      </navLabel>
+      <content src="ch08.html"/>
+      <navPoint id="id585021" playOrder="152">
+        <navLabel>
+          <text>Characters and Encodings</text>
+        </navLabel>
+        <content src="ch08.html#_gls_characters_encodings"/>
+        <navPoint id="id585049" playOrder="153">
+          <navLabel>
+            <text>Unicode</text>
+          </navLabel>
+          <content src="ch08.html#_unicode"/>
+        </navPoint>
+        <navPoint id="id585201" playOrder="154">
+          <navLabel>
+            <text>Declaring Encodings</text>
+          </navLabel>
+          <content src="ch08.html#_gls_declaring_encodings"/>
+        </navPoint>
+        <navPoint id="id585205" playOrder="155">
+          <navLabel>
+            <text>Private Characters</text>
+          </navLabel>
+          <content src="ch08.html#_gls_private_characters"/>
+        </navPoint>
+        <navPoint id="id585928" playOrder="156">
+          <navLabel>
+            <text>Names</text>
+          </navLabel>
+          <content src="ch08.html#_gls_names"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id586369" playOrder="157">
+        <navLabel>
+          <text>Specifying the Natural Language</text>
+        </navLabel>
+        <content src="ch08.html#_gls_natural_language"/>
+      </navPoint>
+      <navPoint id="id586372" playOrder="158">
+        <navLabel>
+          <text>Vertical Writing</text>
+        </navLabel>
+        <content src="ch08.html#_gls_vertical_writing"/>
+        <navPoint id="id586931" playOrder="159">
+          <navLabel>
+            <text>Writing Modes</text>
+          </navLabel>
+          <content src="ch08.html#_writing_modes"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id586713" playOrder="160">
+        <navLabel>
+          <text>Page Progression Direction</text>
+        </navLabel>
+        <content src="ch08.html#_gls_page_progression_direction"/>
+        <navPoint id="id587648" playOrder="161">
+          <navLabel>
+            <text>Global Direction</text>
+          </navLabel>
+          <content src="ch08.html#_global_direction"/>
+        </navPoint>
+        <navPoint id="id587843" playOrder="162">
+          <navLabel>
+            <text>Content Direction</text>
+          </navLabel>
+          <content src="ch08.html#_content_direction"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id588082" playOrder="163">
+        <navLabel>
+          <text>Ruby and Emphasis Dots</text>
+        </navLabel>
+        <content src="ch08.html#_gls_ruby_and_emphasis_dots"/>
+        <navPoint id="id588167" playOrder="164">
+          <navLabel>
+            <text>Ruby</text>
+          </navLabel>
+          <content src="ch08.html#_ruby"/>
+        </navPoint>
+        <navPoint id="id588173" playOrder="165">
+          <navLabel>
+            <text>Emphasis Dots</text>
+          </navLabel>
+          <content src="ch08.html#_emphasis_dots"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id588084" playOrder="166">
+        <navLabel>
+          <text>Line Breaks, Word Breaks, and Hyphenation</text>
+        </navLabel>
+        <content src="ch08.html#_line_breaks_word_breaks_and_hyphenation"/>
+      </navPoint>
+      <navPoint id="id589181" playOrder="167">
+        <navLabel>
+          <text>Itemized Lists</text>
+        </navLabel>
+        <content src="ch08.html#_itemized_lists"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id581743" playOrder="168">
+      <navLabel>
+        <text>9. Accessibility</text>
+      </navLabel>
+      <content src="ch09.html"/>
+      <navPoint id="id589321" playOrder="169">
+        <navLabel>
+          <text>Accessibility and Usability</text>
+        </navLabel>
+        <content src="ch09.html#_accessibility_and_usability"/>
+      </navPoint>
+      <navPoint id="id589428" playOrder="170">
+        <navLabel>
+          <text>Fundamentals of Accessibility</text>
+        </navLabel>
+        <content src="ch09.html#_building_a_better_epub"/>
+        <navPoint id="id589648" playOrder="171">
+          <navLabel>
+            <text>Structure and Semantics</text>
+          </navLabel>
+          <content src="ch09.html#_structure_and_semantics"/>
+        </navPoint>
+        <navPoint id="id589651" playOrder="172">
+          <navLabel>
+            <text>Data Integrity</text>
+          </navLabel>
+          <content src="ch09.html#_data_integrity"/>
+        </navPoint>
+        <navPoint id="id589816" playOrder="173">
+          <navLabel>
+            <text>Separation of Style</text>
+          </navLabel>
+          <content src="ch09.html#_separation_of_style"/>
+        </navPoint>
+        <navPoint id="id590634" playOrder="174">
+          <navLabel>
+            <text>Semantic Inflection</text>
+          </navLabel>
+          <content src="ch09.html#_semantic_inflection"/>
+        </navPoint>
+        <navPoint id="id590754" playOrder="175">
+          <navLabel>
+            <text>Language</text>
+          </navLabel>
+          <content src="ch09.html#_language"/>
+        </navPoint>
+        <navPoint id="id590842" playOrder="176">
+          <navLabel>
+            <text>Logical Reading Order</text>
+          </navLabel>
+          <content src="ch09.html#_logical_reading_order"/>
+        </navPoint>
+        <navPoint id="id590793" playOrder="177">
+          <navLabel>
+            <text>Sections and Headings</text>
+          </navLabel>
+          <content src="ch09.html#_sections_and_headings"/>
+        </navPoint>
+        <navPoint id="id592057" playOrder="178">
+          <navLabel>
+            <text>Context Changes</text>
+          </navLabel>
+          <content src="ch09.html#_context_changes"/>
+        </navPoint>
+        <navPoint id="id591296" playOrder="179">
+          <navLabel>
+            <text>Lists</text>
+          </navLabel>
+          <content src="ch09.html#_lists"/>
+        </navPoint>
+        <navPoint id="id592499" playOrder="180">
+          <navLabel>
+            <text>Tables</text>
+          </navLabel>
+          <content src="ch09.html#_tables"/>
+        </navPoint>
+        <navPoint id="id592932" playOrder="181">
+          <navLabel>
+            <text>Figures</text>
+          </navLabel>
+          <content src="ch09.html#_figures"/>
+        </navPoint>
+        <navPoint id="id594110" playOrder="182">
+          <navLabel>
+            <text>Images</text>
+          </navLabel>
+          <content src="ch09.html#_images"/>
+        </navPoint>
+        <navPoint id="id594690" playOrder="183">
+          <navLabel>
+            <text>SVG</text>
+          </navLabel>
+          <content src="ch09.html#_svg"/>
+        </navPoint>
+        <navPoint id="id594839" playOrder="184">
+          <navLabel>
+            <text>MathML</text>
+          </navLabel>
+          <content src="ch09.html#_mathml"/>
+        </navPoint>
+        <navPoint id="id594844" playOrder="185">
+          <navLabel>
+            <text>Footnotes</text>
+          </navLabel>
+          <content src="ch09.html#_footnotes"/>
+        </navPoint>
+        <navPoint id="id595222" playOrder="186">
+          <navLabel>
+            <text>Page Numbering</text>
+          </navLabel>
+          <content src="ch09.html#_page_numbering"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id595418" playOrder="187">
+        <navLabel>
+          <text>Styling</text>
+        </navLabel>
+        <content src="ch09.html#_access_css"/>
+        <navPoint id="id595829" playOrder="188">
+          <navLabel>
+            <text>Avoiding Conflicts</text>
+          </navLabel>
+          <content src="ch09.html#_avoiding_conflicts"/>
+        </navPoint>
+        <navPoint id="id595889" playOrder="189">
+          <navLabel>
+            <text>Color</text>
+          </navLabel>
+          <content src="ch09.html#_color"/>
+          <navPoint id="id595933" playOrder="190">
+            <navLabel>
+              <text>Deficiencies</text>
+            </navLabel>
+            <content src="ch09.html#_deficiencies"/>
+          </navPoint>
+          <navPoint id="id596034" playOrder="191">
+            <navLabel>
+              <text>Contrast</text>
+            </navLabel>
+            <content src="ch09.html#_contrast"/>
+          </navPoint>
+          <navPoint id="id596078" playOrder="192">
+            <navLabel>
+              <text>Luminosity</text>
+            </navLabel>
+            <content src="ch09.html#_luminosity"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id596065" playOrder="193">
+          <navLabel>
+            <text>Hiding Content</text>
+          </navLabel>
+          <content src="ch09.html#_hiding_content_2"/>
+        </navPoint>
+        <navPoint id="id596163" playOrder="194">
+          <navLabel>
+            <text>Emphasis</text>
+          </navLabel>
+          <content src="ch09.html#_emphasis"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id596302" playOrder="195">
+        <navLabel>
+          <text>Fixed Layouts</text>
+        </navLabel>
+        <content src="ch09.html#_fixed_layouts"/>
+        <navPoint id="id596383" playOrder="196">
+          <navLabel>
+            <text>Image Layouts</text>
+          </navLabel>
+          <content src="ch09.html#_fixed_layouts_image"/>
+        </navPoint>
+        <navPoint id="id596368" playOrder="197">
+          <navLabel>
+            <text>Mixed Layouts</text>
+          </navLabel>
+          <content src="ch09.html#_fixed_layouts_mixed"/>
+        </navPoint>
+        <navPoint id="id597172" playOrder="198">
+          <navLabel>
+            <text>Text Layouts</text>
+          </navLabel>
+          <content src="ch09.html#_fixed_layouts_text"/>
+        </navPoint>
+        <navPoint id="id597548" playOrder="199">
+          <navLabel>
+            <text>Interactive Layouts</text>
+          </navLabel>
+          <content src="ch09.html#_fixed_layouts_interactive"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id596306" playOrder="200">
+        <navLabel>
+          <text>Scripted Interactivity</text>
+        </navLabel>
+        <content src="ch09.html#_scripted_interactivity"/>
+        <navPoint id="id597644" playOrder="201">
+          <navLabel>
+            <text>Progressive Enhancement</text>
+          </navLabel>
+          <content src="ch09.html#_progressive_enhancement_section"/>
+        </navPoint>
+        <navPoint id="id597649" playOrder="202">
+          <navLabel>
+            <text>WAI-ARIA</text>
+          </navLabel>
+          <content src="ch09.html#_wai_aria"/>
+          <navPoint id="id597895" playOrder="203">
+            <navLabel>
+              <text>Custom controls</text>
+            </navLabel>
+            <content src="ch09.html#_custom_controls"/>
+          </navPoint>
+          <navPoint id="id599121" playOrder="204">
+            <navLabel>
+              <text>Forms</text>
+            </navLabel>
+            <content src="ch09.html#_forms"/>
+          </navPoint>
+          <navPoint id="id599937" playOrder="205">
+            <navLabel>
+              <text>Live regions</text>
+            </navLabel>
+            <content src="ch09.html#_live_regions"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id599970" playOrder="206">
+          <navLabel>
+            <text>Canvas</text>
+          </navLabel>
+          <content src="ch09.html#_canvas"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id600589" playOrder="207">
+        <navLabel>
+          <text>Metadata</text>
+        </navLabel>
+        <content src="ch09.html#_metadata"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id589249" playOrder="208">
+      <navLabel>
+        <text>10. Text-to-Speech (TTS)</text>
+      </navLabel>
+      <content src="ch10.html"/>
+      <navPoint id="id601313" playOrder="209">
+        <navLabel>
+          <text>PLS Lexicons</text>
+        </navLabel>
+        <content src="ch10.html#_pls_lexicons"/>
+      </navPoint>
+      <navPoint id="id602748" playOrder="210">
+        <navLabel>
+          <text>SSML</text>
+        </navLabel>
+        <content src="ch10.html#_ssml"/>
+      </navPoint>
+      <navPoint id="id601447" playOrder="211">
+        <navLabel>
+          <text>CSS3 Speech</text>
+        </navLabel>
+        <content src="ch10.html#_css3_speech"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id601207" playOrder="212">
+      <navLabel>
+        <text>11. Validation</text>
+      </navLabel>
+      <content src="ch11.html"/>
+      <navPoint id="id605114" playOrder="213">
+        <navLabel>
+          <text>epubcheck</text>
+        </navLabel>
+        <content src="ch11.html#_validation_epubcheck"/>
+        <navPoint id="id605231" playOrder="214">
+          <navLabel>
+            <text>Installing</text>
+          </navLabel>
+          <content src="ch11.html#_validation_installing"/>
+        </navPoint>
+        <navPoint id="id605320" playOrder="215">
+          <navLabel>
+            <text>Running</text>
+          </navLabel>
+          <content src="ch11.html#_validation_running"/>
+        </navPoint>
+        <navPoint id="id605328" playOrder="216">
+          <navLabel>
+            <text>Options</text>
+          </navLabel>
+          <content src="ch11.html#_validation_options"/>
+          <navPoint id="id605916" playOrder="217">
+            <navLabel>
+              <text>Validating EPUB archives</text>
+            </navLabel>
+            <content src="ch11.html#_validation_archives"/>
+          </navPoint>
+          <navPoint id="id605923" playOrder="218">
+            <navLabel>
+              <text>Validating unpacked EPUBs</text>
+            </navLabel>
+            <content src="ch11.html#_validation_unpacked"/>
+          </navPoint>
+          <navPoint id="id606032" playOrder="219">
+            <navLabel>
+              <text>Validating EPUB component files</text>
+            </navLabel>
+            <content src="ch11.html#_validation_components"/>
+          </navPoint>
+          <navPoint id="id606348" playOrder="220">
+            <navLabel>
+              <text>Assessment reports</text>
+            </navLabel>
+            <content src="ch11.html#_validation_reports"/>
+          </navPoint>
+          <navPoint id="id606888" playOrder="221">
+            <navLabel>
+              <text>Help</text>
+            </navLabel>
+            <content src="ch11.html#_validation_help"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id605330" playOrder="222">
+          <navLabel>
+            <text>Reading Errors</text>
+          </navLabel>
+          <content src="ch11.html#_validation_reading_errors"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id605171" playOrder="223">
+        <navLabel>
+          <text>Beyond the Command Line</text>
+        </navLabel>
+        <content src="ch11.html#_validation_beyond_cmd"/>
+        <navPoint id="id607187" playOrder="224">
+          <navLabel>
+            <text>Web Validation</text>
+          </navLabel>
+          <content src="ch11.html#_validation_web"/>
+        </navPoint>
+        <navPoint id="id607369" playOrder="225">
+          <navLabel>
+            <text>Graphical Interface</text>
+          </navLabel>
+          <content src="ch11.html#_validation_gui"/>
+        </navPoint>
+        <navPoint id="id607381" playOrder="226">
+          <navLabel>
+            <text>Commercial Options</text>
+          </navLabel>
+          <content src="ch11.html#_validation_commercial"/>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id607410" playOrder="227">
+        <navLabel>
+          <text>Understanding Errors</text>
+        </navLabel>
+        <content src="ch11.html#_validation_understanding"/>
+        <navPoint id="id607472" playOrder="228">
+          <navLabel>
+            <text>Common XML Errors</text>
+          </navLabel>
+          <content src="ch11.html#_validation_xml_errors"/>
+          <navPoint id="id607529" playOrder="229">
+            <navLabel>
+              <text>Document errors</text>
+            </navLabel>
+            <content src="ch11.html#_validation_doc_errors"/>
+          </navPoint>
+          <navPoint id="id607608" playOrder="230">
+            <navLabel>
+              <text>Element errors</text>
+            </navLabel>
+            <content src="ch11.html#_validation_element"/>
+          </navPoint>
+          <navPoint id="id607839" playOrder="231">
+            <navLabel>
+              <text>Attribute errors</text>
+            </navLabel>
+            <content src="ch11.html#_validation_attribute"/>
+          </navPoint>
+          <navPoint id="id608004" playOrder="232">
+            <navLabel>
+              <text>Character encoding</text>
+            </navLabel>
+            <content src="ch11.html#_validation_encoding"/>
+          </navPoint>
+          <navPoint id="id608069" playOrder="233">
+            <navLabel>
+              <text>Linking errors</text>
+            </navLabel>
+            <content src="ch11.html#_validation_linking"/>
+          </navPoint>
+        </navPoint>
+        <navPoint id="id608201" playOrder="234">
+          <navLabel>
+            <text>Container Errors</text>
+          </navLabel>
+          <content src="ch11.html#_validation_container"/>
+        </navPoint>
+        <navPoint id="id608584" playOrder="235">
+          <navLabel>
+            <text>Package Validation</text>
+          </navLabel>
+          <content src="ch11.html#_validation_package"/>
+        </navPoint>
+        <navPoint id="id608594" playOrder="236">
+          <navLabel>
+            <text>Content Validation</text>
+          </navLabel>
+          <content src="ch11.html#_validation_content"/>
+          <navPoint id="id610048" playOrder="237">
+            <navLabel>
+              <text>Entity errors</text>
+            </navLabel>
+            <content src="ch11.html#_validation_entity"/>
+          </navPoint>
+        </navPoint>
+      </navPoint>
+      <navPoint id="id607415" playOrder="238">
+        <navLabel>
+          <text>Style</text>
+        </navLabel>
+        <content src="ch11.html#_validation_style"/>
+      </navPoint>
+      <navPoint id="id610216" playOrder="239">
+        <navLabel>
+          <text>Scripting</text>
+        </navLabel>
+        <content src="ch11.html#_validation_scripting"/>
+      </navPoint>
+      <navPoint id="id610267" playOrder="240">
+        <navLabel>
+          <text>Accessibility</text>
+        </navLabel>
+        <content src="ch11.html#_validation_accessibility"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="id603715" playOrder="241">
+      <navLabel>
+        <text>Colophon</text>
+      </navLabel>
+      <content src="co01.html"/>
+    </navPoint>
+    <navPoint id="id610393" playOrder="242">
+      <navLabel>
+        <text>Index</text>
+      </navLabel>
+      <content src="ix01.html"/>
+    </navPoint>
+    <navPoint id="id610375" playOrder="243">
+      <navLabel>
+        <text>Copyright</text>
+      </navLabel>
+      <content src="copyright.html"/>
+    </navPoint>
+  </navMap>
+</ncx>

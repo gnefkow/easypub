@@ -1,0 +1,133 @@
+<?xml version="1.0"  encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="bookid">
+  <metadata>
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/">EPUB 3 Best Practices</dc:title>
+    <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns1="http://www.idpf.org/2007/opf" ns1:role="aut" ns1:file-as="Garrish, Matt and Gylling, Markus">Matt Garrish</dc:creator>
+    <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.idpf.org/2007/opf" ns0:role="aut">Markus Gylling</dc:creator>
+    <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/" id="bookid">urn:isbn:9781449329143</dc:identifier>
+    <dc:publisher xmlns:dc="http://purl.org/dc/elements/1.1/">O’Reilly Media, Inc.</dc:publisher>
+    <dc:date xmlns:dc="http://purl.org/dc/elements/1.1/">2013-12-14T21:00:00+00:00</dc:date>
+    <dc:rights xmlns:dc="http://purl.org/dc/elements/1.1/">Copyright © 2013 Matt Garrish and Markus Gylling</dc:rights>
+    <dc:contributor xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns3="http://www.idpf.org/2007/opf" ns3:role="bkp">calibre (3.46.0) [https://calibre-ebook.com]</dc:contributor>
+    <dc:language xmlns:dc="http://purl.org/dc/elements/1.1/">en</dc:language>
+    <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns4="http://www.idpf.org/2007/opf" ns4:scheme="calibre">ebd0121f-6056-48d1-be6d-62495947b825</dc:identifier>
+    <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns5="http://www.idpf.org/2007/opf" ns5:scheme="ISBN">9781449329143</dc:identifier>
+    <meta name="cover" content="cover-image"/>
+    <meta xmlns:dc="http://purl.org/dc/elements/1.1/" name="calibre:title_sort" content="EPUB 3 Best Practices"/>
+    <meta xmlns:dc="http://purl.org/dc/elements/1.1/" name="calibre:author_link_map" content="{&quot;Matt Garrish&quot;: &quot;&quot;, &quot;Markus Gylling&quot;: &quot;&quot;}"/>
+  </metadata>
+  <manifest>
+    <item id="cover" href="cover.html" media-type="application/xhtml+xml"/>
+    <item id="id510435" href="index.html" media-type="application/xhtml+xml"/>
+    <item id="id541245" href="pr01.html" media-type="application/xhtml+xml"/>
+    <item id="id496318" href="pr02.html" media-type="application/xhtml+xml"/>
+    <item id="id550338" href="ch01.html" media-type="application/xhtml+xml"/>
+    <item id="id550488" href="ch02.html" media-type="application/xhtml+xml"/>
+    <item id="id546066" href="ch03.html" media-type="application/xhtml+xml"/>
+    <item id="id491624" href="ch04.html" media-type="application/xhtml+xml"/>
+    <item id="id565790" href="ch05.html" media-type="application/xhtml+xml"/>
+    <item id="id578055" href="ch06.html" media-type="application/xhtml+xml"/>
+    <item id="id575664" href="ch07.html" media-type="application/xhtml+xml"/>
+    <item id="id584962" href="ch08.html" media-type="application/xhtml+xml"/>
+    <item id="id581743" href="ch09.html" media-type="application/xhtml+xml"/>
+    <item id="id589249" href="ch10.html" media-type="application/xhtml+xml"/>
+    <item id="id601207" href="ch11.html" media-type="application/xhtml+xml"/>
+    <item id="id603715" href="co01.html" media-type="application/xhtml+xml"/>
+    <item id="id610393" href="ix01.html" media-type="application/xhtml+xml"/>
+    <item id="id610375" href="copyright.html" media-type="application/xhtml+xml"/>
+    <item id="ncxtoc" media-type="application/x-dtbncx+xml" href="toc.ncx"/>
+    <item media-type="text/css" id="css" href="core.css"/>
+    <item id="cover-image" href="images/cover.png.jpg" media-type="image/jpeg"/>
+    <item id="id512946" href="images/epbp_0201.png" media-type="image/png"/>
+    <item id="id503481" href="images/epbp_0202.png" media-type="image/png"/>
+    <item id="id455609" href="images/epbp_0203.png" media-type="image/png"/>
+    <item id="id501228" href="images/epbp_0204.png" media-type="image/png"/>
+    <item id="id507354" href="images/epbp_0205.png" media-type="image/png"/>
+    <item id="id469420" href="images/epbp_0206.png" media-type="image/png"/>
+    <item id="id511655" href="images/epbp_0207.png" media-type="image/png"/>
+    <item id="id533880" href="images/epbp_0208.png.jpg" media-type="image/jpeg"/>
+    <item id="id501356" href="images/epbp_0209.png" media-type="image/png"/>
+    <item id="id543846" href="images/epbp_0210.png" media-type="image/png"/>
+    <item id="id517368" href="images/epbp_0211.png" media-type="image/png"/>
+    <item id="id524917" href="images/epbp_0212.png" media-type="image/png"/>
+    <item id="id558538" href="images/epbp_0301.png" media-type="image/png"/>
+    <item id="id533451" href="images/epbp_0302.png.jpg" media-type="image/jpeg"/>
+    <item id="id527768" href="images/epbp_0303.png" media-type="image/png"/>
+    <item id="id511127" href="images/epbp_0304.png" media-type="image/png"/>
+    <item id="id504066" href="images/epbp_0305.png.jpg" media-type="image/jpeg"/>
+    <item id="id459973" href="images/epbp_0306.png" media-type="image/png"/>
+    <item id="id460077" href="images/epbp_0307.png" media-type="image/png"/>
+    <item id="id537610" href="images/epbp_0308.png" media-type="image/png"/>
+    <item id="id563875" href="images/epbp_0309.png.jpg" media-type="image/jpeg"/>
+    <item id="id563924" href="images/epbp_0310.png.jpg" media-type="image/jpeg"/>
+    <item id="id566139" href="images/epbp_0401.png" media-type="image/png"/>
+    <item id="id566173" href="images/epbp_0402.png" media-type="image/png"/>
+    <item id="id566701" href="images/epbp_0403.png" media-type="image/png"/>
+    <item id="id566773" href="images/epbp_0404.png" media-type="image/png"/>
+    <item id="id566944" href="images/epbp_0405.png" media-type="image/png"/>
+    <item id="id566999" href="images/epbp_0406.png" media-type="image/png"/>
+    <item id="id567052" href="images/epbp_0407.png" media-type="image/png"/>
+    <item id="id567159" href="images/epbp_0408.png.jpg" media-type="image/jpeg"/>
+    <item id="id567382" href="images/epbp_0409.png" media-type="image/png"/>
+    <item id="id569400" href="images/epbp_0410.png.jpg" media-type="image/jpeg"/>
+    <item id="id572856" href="images/epbp_0501.png.jpg" media-type="image/jpeg"/>
+    <item id="id572913" href="images/epbp_0502.png.jpg" media-type="image/jpeg"/>
+    <item id="id573335" href="images/epbp_0503.png.jpg" media-type="image/jpeg"/>
+    <item id="id573879" href="images/epbp_0504.png.jpg" media-type="image/jpeg"/>
+    <item id="id576540" href="images/epbp_0505.png.jpg" media-type="image/jpeg"/>
+    <item id="id577493" href="images/epbp_0506.png.jpg" media-type="image/jpeg"/>
+    <item id="id578668" href="images/epbp_0601.png.jpg" media-type="image/jpeg"/>
+    <item id="id580359" href="images/epbp_0602.png" media-type="image/png"/>
+    <item id="id582365" href="images/epbp_0701.png" media-type="image/png"/>
+    <item id="id582394" href="images/epbp_0702.png.jpg" media-type="image/jpeg"/>
+    <item id="id586772" href="images/epbp_0801.png" media-type="image/png"/>
+    <item id="id586827" href="images/epbp_0802.png" media-type="image/png"/>
+    <item id="id587131" href="images/epbp_0803.png" media-type="image/png"/>
+    <item id="id587300" href="images/epbp_0804.png" media-type="image/png"/>
+    <item id="id587352" href="images/epbp_0805.png" media-type="image/png"/>
+    <item id="id587382" href="images/epbp_0806.png" media-type="image/png"/>
+    <item id="id587502" href="images/epbp_0807.png" media-type="image/png"/>
+    <item id="id587531" href="images/epbp_0808.png" media-type="image/png"/>
+    <item id="id587573" href="images/epbp_0809.png" media-type="image/png"/>
+    <item id="id587602" href="images/epbp_0810.png" media-type="image/png"/>
+    <item id="id588247" href="images/epbp_0811.png" media-type="image/png"/>
+    <item id="id588662" href="images/epbp_0812.png" media-type="image/png"/>
+    <item id="id597132" href="images/epbp_0901.png.jpg" media-type="image/jpeg"/>
+    <item id="id605306" href="images/epbp_1101.png" media-type="image/png"/>
+    <item id="id605723" href="images/epbp_1102.png" media-type="image/png"/>
+    <item id="id605813" href="images/epbp_1103.png" media-type="image/png"/>
+    <item id="id607212" href="images/epbp_1104.png" media-type="image/png"/>
+    <item id="id607248" href="images/epbp_1105.png" media-type="image/png"/>
+    <item id="id607397" href="images/epbp_1106.png.jpg" media-type="image/jpeg"/>
+    <item id="epub.embedded.font.2" href="DejaVuSans-Bold.otf" media-type="font/opentype"/>
+    <item id="epub.embedded.font.1" href="DejaVuSerif.otf" media-type="font/opentype"/>
+    <item id="epub.embedded.font.4" href="UbuntuMono-Bold.otf" media-type="font/opentype"/>
+    <item id="epub.embedded.font.5" href="UbuntuMono-BoldItalic.otf" media-type="font/opentype"/>
+    <item id="epub.embedded.font.6" href="UbuntuMono-Italic.otf" media-type="font/opentype"/>
+    <item id="epub.embedded.font.3" href="UbuntuMono-Regular.otf" media-type="font/opentype"/>
+  </manifest>
+  <spine toc="ncxtoc">
+    <itemref idref="cover" linear="yes"/>
+    <itemref idref="id510435"/>
+    <itemref idref="id541245"/>
+    <itemref idref="id496318"/>
+    <itemref idref="id550338"/>
+    <itemref idref="id550488"/>
+    <itemref idref="id546066"/>
+    <itemref idref="id491624"/>
+    <itemref idref="id565790"/>
+    <itemref idref="id578055"/>
+    <itemref idref="id575664"/>
+    <itemref idref="id584962"/>
+    <itemref idref="id581743"/>
+    <itemref idref="id589249"/>
+    <itemref idref="id601207"/>
+    <itemref idref="id603715"/>
+    <itemref idref="id610393"/>
+    <itemref idref="id610375"/>
+  </spine>
+  <guide>
+    <reference href="cover.html" type="cover" title="Cover"/>
+    <reference href="index.html" type="text"/>
+  </guide>
+</package>

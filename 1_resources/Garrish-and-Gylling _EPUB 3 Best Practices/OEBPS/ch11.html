@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Chapter 11. Validation</title><link rel="stylesheet" href="core.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"/></head><body><div class="chapter" title="Chapter 11. Validation"><div class="titlepage"><div><div><h1 class="title"><a id="_validation"/>Chapter 11. Validation</h1></div></div></div><p><a id="id605084" class="indexterm"/> <a id="id605096" class="indexterm"/>
+To paraphrase a common expression, there are three things you need to know about a finished EPUB 3 file: it must adhere to rules, rules, and damned rules.</p><p>Which is only to say that there is nothing unique about EPUB 3 as a document publishing format. The rules are there to ensure that your content can be opened and rendered by any reading system. They can’t tell you how your content will look on any given reading system, but they can alert you to bugs that are the result of bad markup. If you skip the validation stage and assume that just because it seemed to be fine testing in a reading system, or a program exported it so it must be valid, you run the risk of a lot of wasted time and effort later.</p><p>Some vendors will prevent your file from being distributed if it doesn’t validate (which is a good thing), in which case you’ll be forced back to this step right away should you try to avoid it. Others may not, or you might distribute the file yourself, in which case it might only be as you get flooded with angry emails from customers that you’ll learn all the things you did wrong. Once your reputation is tarnished, even if just in a comments section on a product page, it can be hard to get back. No one appreciates someone who hasn’t bothered to do basic validation to ensure their content renders, after all.</p><p>This chapter is last in the book not only because it wouldn’t make sense to talk about validation before understanding EPUB content, but also because it diverges slightly from the best practices pattern. The best practice is simply to validate your content. Instead, this chapter looks at how to get up and running with the <code class="literal">epubcheck</code> validation tool and then spends some time looking at some of the most common error messages you’re likely to encounter, including breaking down where they come from in the validation process.</p><div class="sect1" title="epubcheck"><div class="titlepage"><div><div><h1 class="title"><a id="_validation_epubcheck"/>epubcheck</h1></div></div></div><p><a id="id605126" class="indexterm"/> <a id="id605187" class="indexterm"/>
+The epubcheck tool is the gold standard as far as EPUB 3 validation goes. The tool has been around since the early EPUB 2 days. It was originally developed by Adobe but is now maintained as an open source tool by the IDPF. It’s free to use and modify as you need.</p><p>It has also improved significantly both in terms of the scope of what it checks for and the comprehensibility of the error messages it returns, part of a major upgrading it has undergone in conjunction with the release of EPUB 3. There’s still work to be done to add CSS and scripting support, but it’s come a long way from where it was.</p><div class="sect2" title="Installing"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_installing"/>Installing</h2></div></div></div><p><a id="id605147" class="indexterm"/>
+Before downloading epubcheck, you will need to verify that you have Java installed on your computer. Any version of the Java Runtime Environment will do, which is the version that gets installed when you install Java for your browser (available from <a class="ulink" href="http://www.java.com">the Java website</a>). <a id="id605161" class="indexterm"/></p><div class="note" title="Note"><h3 class="title">Note</h3><p>To simplify calling Java from the command line, you will need to add the path to the Java executable to the <code class="literal">PATH</code> environment variable. On Windows machines, for example, this path is typically <code class="literal">c:\program files\java\jre7</code>. Instructions on how to add this variable are operating system dependent, but plenty of resources exist on the Web. You can omit this step, but it means manually entering the full path to Java every time you want to run epubcheck.</p></div><p>epubcheck is currently hosted on a <a class="ulink" href="http://code.google.com/p/epubcheck/">Google projects site</a> under the same name. The latest stable build is typically linked to from the main page, but can also be found by clicking on the Downloads tab. <a id="id605271" class="indexterm"/></p><p>epubcheck does not have an installer, but instead comes as a ZIP file containing the necessary libraries to run. After downloading, simply unzip the contents to a directory in your operating system. The folder will contain the epubcheck <span class="emphasis"><em>.jar</em></span> file and a directory called <span class="emphasis"><em>lib</em></span>, which contains additional libraries that epubcheck depends on to run, as shown in <a class="xref" href="ch11.html#validate-files" title="Figure 11-1. epubcheck distribution files">Figure 11-1</a>. <a id="id605278" class="indexterm"/></p><p>That’s it. You now have epubcheck installed on your computer.</p><div class="figure"><a id="validate-files"/><div class="figure-contents"><div class="mediaobject"><img src="images/epbp_1101.png" alt=" Directory listing"/></div></div><p class="title">Figure 11-1. epubcheck distribution files</p></div></div><div class="sect2" title="Running"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_running"/>Running</h2></div></div></div><p><a id="ix_running" class="indexterm"/>
+epubcheck is a command-line tool, meaning that you’re going to have to become familiar with your operating system’s command shell. If you’re already familiar with the command line and how to run Java, you can skim this section to get the command line call. If not, the first task is bringing up the command shell:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+Windows users, click the Start menu button and type <code class="literal">cmd</code> in the Run box (XP users) or the new search box at the bottom of the Start menu (Vista and Windows 7).
+</li><li class="listitem">
+Mac users need to go to the <span class="emphasis"><em>Applications/Utilities</em></span> directory and double-click on Terminal.
+</li><li class="listitem">
+Linux users may find the shell in a number of different places, and under a number of different names, depending on the flavor and version of Linux they are running.
+</li></ul></div><p>One of the nuisances of a command-line tool like epubcheck is entering all the necessary paths in order to get it to run. Adding the <code class="literal">java</code> executable location to the <code class="literal">PATH</code> variable allows you to call it without having to type the full directory path, but what directory you invoke epubcheck from will affect the other paths you have to specify.</p><p>If you try to run epubcheck from the default directory your command shell opens in, you’ll need to add the full path to both the epubcheck <span class="emphasis"><em>.jar</em></span> file and your EPUB:</p><pre class="programlisting"><code class="gp">$</code> java -jar c:<code class="se">\e</code>pubcheck<code class="se">\e</code>pubcheck.jar c:<code class="se">\b</code>ooks<code class="se">\m</code>ybook<code class="se">\x</code>yz.epub</pre><p>If you change directories in the command shell to the epubcheck directory, you can avoid having to specify the full path to the <span class="emphasis"><em>.jar</em></span> file:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar c:/books/mybook/xyz.epub</pre><p>Conversely, if you navigate to your book directory, you just have to specify the path to the <span class="emphasis"><em>.jar</em></span> file.</p><div class="note" title="Note"><h3 class="title">Note</h3><p>The actual epubcheck <span class="emphasis"><em>.jar</em></span> file typically has a build number appended to the end of it (e.g., <span class="emphasis"><em>epubcheck-3.0-RC-1.jar</em></span>). This build number will be omitted from the examples in this chapter, because it is subject to change. <a id="id605459" class="indexterm"/></p></div><p>Either way is a nuisance, but you can use a couple tricks to speed things up. The simplest is to use the autocomplete feature that most command shells provide. If you start typing the name of a file or directory, you can press the Tab key to fill the name in automatically. For example, to quickly insert the epubcheck <span class="emphasis"><em>.jar</em></span> file, you could start by typing this:</p><pre class="programlisting"><code class="gp">$</code> java -jar c:<code class="se">\e</code>p</pre><p>Pressing the Tab key should expand the directory to <span class="emphasis"><em>epubcheck</em></span> (if you had another directory in your root drive starting with <span class="emphasis"><em>ep</em></span>, simply press the Tab key again to rotate through the possible options). You can then repeat this shortcut to add the <span class="emphasis"><em>.jar</em></span> file. Because there is only one file starting with the letter <span class="emphasis"><em>e</em></span> in the epubcheck folder, again you could type the one letter <code class="literal">e</code>:</p><pre class="programlisting"><code class="gp">$</code> java -jar c:<code class="se">\e</code>pubcheck<code class="se">\e</code></pre><p>Then press the Tab key to expand to the full <span class="emphasis"><em>.jar</em></span> file name.</p><p>If you don’t like typing at all, another option is to open both the epubcheck and book directories first (e.g., in a My Computer or Windows Explorer window on Windows, or a Finder window on Macs). You can then drag and drop the files into the command shell. For example, first type the Java commands:</p><pre class="programlisting"><code class="gp">$</code> java -jar</pre><p>Then drag the epubcheck <span class="emphasis"><em>.jar</em></span> file onto the Terminal window and drop it. The full path to the file will be automatically inserted:</p><pre class="programlisting"><code class="gp">$</code> java -jar C:<code class="se">\e</code>pubcheck<code class="se">\e</code>pubcheck.jar</pre><p>You could then do the same to add the EPUB file to validate.</p><p>A final option is to create a script to automatically run epubcheck for you. On Windows, create a new text file containing the following command:</p><pre class="programlisting"><code class="gp">$</code> java -jar c:<code class="se">\e</code>pubcheck<code class="se">\e</code>pubcheck.jar %*</pre><p>Save this file as <span class="emphasis"><em>epubcheck.bat</em></span> in the epubcheck directory. On Linux and Macs, an equivalent shell script might be:</p><pre class="programlisting"><code class="c">#!/bin/sh</code>
+java -jar ~/epubcheck/epubcheck.jar <code class="nv">$@</code></pre><p>Save this file as <span class="emphasis"><em>epubcheck.sh</em></span>.</p><p>You can now add the epubcheck folder to the <code class="literal">PATH</code> environment variable, as you did earlier for the Java executable. If you close and re-open your terminal window after making this change, you can now invoke epubcheck from any directory simply by typing the name of the file you just created, as shown in <a class="xref" href="ch11.html#validate-batch" title="Figure 11-2. Invoking the batch file on Windows">Figure 11-2</a>.</p><div class="figure"><a id="validate-batch"/><div class="figure-contents"><div class="mediaobject"><img src="images/epbp_1102.png" alt="epubcheck.bat file invoked with default output that at least one argument is expected"/></div></div><p class="title">Figure 11-2. Invoking the batch file on Windows</p></div><p>To validate a file, all you need to do now is specify its path after the script filename, regardless of what directory your terminal window initializes in:</p><pre class="programlisting"><code class="gp">$</code> epubcheck.bat c:/books/mybook.epub</pre><p>Again, you could drag and drop the EPUB file if that’s simpler.</p><div class="sidebar"><p class="title">Working in the Command Shell</p><p>For those not intimately familiar with command shells, a couple of commands come in extremely handy when validating:</p><div class="variablelist"><dl><dt><span class="term">
+cls | clear
+</span></dt><dd>
+  Typing this command clears the screen. When running epubcheck for the first time, it’s common to get a lengthy report of issues. As you fix them, you’ll want to rerun the program, but finding where one report ends and another begins can be extremely difficult. Clearing the screen between runs ensures that all the messages displayed are relevant. The Windows command shell uses <code class="literal">cls</code>, while Linux and Macs use <code class="literal">clear</code>.
+</dd><dt><span class="term">
+up arrow
+</span></dt><dd>
+  You don’t have to retype the command to invoke epubcheck every time you want to run a validation report. Pressing the up arrow will cycle through the commands you’ve already run. If you clear the screen between runs, for example, you just need to press the up arrow twice to get back to the epubcheck command.
+</dd></dl></div></div><p>One last trick you can use to improve the command-line experience is to pipe the output to a file for easier reading. Command shells are awfully little windows to try to read error messages in, and flipping between the window and your content to find and understand the problems quickly becomes a headache. Depending on how the command shell is configured, and how many errors and warnings your book has, you may not even be able to scroll back to the beginning of the report, meaning the most critical error might no longer be discoverable.</p><p>You aren’t restricted to working in the command shell, though. To pipe errors to a file, you add the number <code class="literal">2</code> followed by a right angle bracket (&gt;) to the end of the command that invokes epubcheck, and then include the path and name of the file to write to.</p><p>For example, to pipe errors to the file <code class="literal">c:/books/error.txt</code>, invoke epubcheck like this:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar c:/books/mybook.epub 2&gt; c:/books/error.txt</pre><p>As long as you are working with a text editor that automatically updates open files, you should be able to run the command over and over and immediately see the new results. The command shell window in <a class="xref" href="ch11.html#validate-errors" title="Figure 11-3. Redirecting epubcheck errors to a text file">Figure 11-3</a> shows only the information written to standard output. Errors are listed in the specified text file.<a id="id605886" class="indexterm"/></p><div class="figure"><a id="validate-errors"/><div class="figure-contents"><div class="mediaobject"><img src="images/epbp_1103.png" alt="Error messages are written to a text file, while general information remains in the command window"/></div></div><p class="title">Figure 11-3. Redirecting epubcheck errors to a text file</p></div></div><div class="sect2" title="Options"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_options"/>Options</h2></div></div></div><p>This section quickly reviews the different ways you can call epubcheck to validate EPUBs.</p><div class="sect3" title="Validating EPUB archives"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_archives"/>Validating EPUB archives</h3></div></div></div><p><a id="id605934" class="indexterm"/>
+The typical use for epubcheck is to validate a completed EPUB archive. To do so, simply include the path to your EPUB after invoking the epubcheck <span class="emphasis"><em>.jar</em></span> file:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar c:/books/mybook.epub</pre><p>Make sure there are no spaces in the directory path to your EPUB or in the filename itself. If there are, you must enclose the entire path in quotes:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar <code class="s2">"c:/Users/matt/My Documents/EPUBs/My Book.epub"</code></pre><p>or URI-escape the spaces as <code class="literal">%20</code>:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar c:/Users/matt/My%20Documents/EPUBs/My%20Book.epub</pre><p>If you forget to do this, the following cryptic error is generated:</p><pre class="programlisting"><code class="gp">$</code> java.lang.RuntimeException: For files other than epubs, mode must be
+<code class="go">specified!</code></pre><p>epubcheck will interpret the path as three separate arguments because of the spaces: <code class="literal">c:/Users/matt/My", "Documents/EPUBs/My</code> and <code class="literal">Book.epub</code>. Because the first part of the path does not appear to be an EPUB, since it has no extension, epubcheck will report that error and stop processing. The next couple of sections demonstrate what the <code class="literal">mode</code> argument does.</p></div><div class="sect3" title="Validating unpacked EPUBs"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_unpacked"/>Validating unpacked EPUBs</h3></div></div></div><p><a id="id606038" class="indexterm"/>
+Although most people reach the validation stage only at the very end of a project, when they have an archive file for distribution, it’s not the only workflow that epubcheck can handle. Being able to work on the unzipped files is extremely helpful, and if you have a folder containing the full structure of your EPUB (<span class="emphasis"><em>mimetype</em></span> file, <span class="emphasis"><em>META-INF</em></span> directory and content), you can run epubcheck on it using the <code class="literal">mode</code> argument as follows:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar c:/path/to/book -mode exp</pre><p>The <code class="literal">exp</code> value is short for <span class="emphasis"><em>expanded</em></span>, which doesn’t mean that epubcheck will run more tests, just that the input is an unpacked EPUB. This feature saves you from having to zip up your content each time you fix an error in order to see whether your publication will successfully validate.</p><p>A related, and largely unknown but extremely useful, feature of epubcheck is the ability to generate an EPUB archive after successful validation of an unpacked directory. If epubcheck returns a successful report (no errors, only warnings), you can request that it also zip up the directory contents by adding a <code class="literal">save</code> argument to the command:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar c:/path/to/book -mode exp -save</pre><p>If all goes well, you’ll find a finished <span class="emphasis"><em>.epub</em></span> file in the directory where you ran the command. epubcheck will use the folder name containing your publication for the finished file.</p><p>Note that if you get the following error message, it means that you’re working in a directory where you can’t write the finished archive file:</p><pre class="screen">java.lang.NullPointerException
+   at com.adobe.epubcheck.util.Archive.createArchive(Archive.java:102)
+   at com.adobe.epubcheck.tool.Checker.run(Checker.java:188)
+   at com.adobe.epubcheck.tool.Checker.main(Checker.java:177)</pre><p>The windows command shell initializes by default in the write-protected <span class="emphasis"><em>Windows\system32</em></span> folder, for example. If you change the current directory to one where you have write permissions, the process will run smoothly. Linux and Macs typically start in the user’s home directory, so this error should be less common, but if you can’t find the file after epubcheck builds it, always check from the directory in which you ran the command.</p></div><div class="sect3" title="Validating EPUB component files"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_components"/>Validating EPUB component files</h3></div></div></div><p><a id="id606190" class="indexterm"/>
+You also have the option to validate individual component files using epubcheck (e.g., to validate content before going through the process of zipping your content up into a distribution archive).</p><p>To invoke epubcheck on individual files, you need to add the following two arguments to the command line:</p><div class="variablelist"><dl><dt><span class="term">
+mode
+</span></dt><dd><p class="simpara">
+  The type of file that is being validated. The value must be one of the following:
+</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">mo</code>
+</span></dt><dd>
+  Media overlays
+</dd><dt><span class="term">
+<code class="literal">nav</code>
+</span></dt><dd>
+  Navigation document
+</dd><dt><span class="term">
+<code class="literal">opf</code>
+</span></dt><dd>
+  Package document
+</dd><dt><span class="term">
+<code class="literal">svg</code>
+</span></dt><dd>
+  SVG content document
+</dd><dt><span class="term">
+<code class="literal">xhtml</code>
+</span></dt><dd>
+  XHTML content document
+</dd></dl></div></dd><dt><span class="term">
+version
+</span></dt><dd>
+  The version of EPUB that the file conforms to. The value can be either <code class="literal">2.0</code> or <code class="literal">3.0</code>.
+</dd></dl></div><p>To validate a navigation document, for example, you’d invoke the following command:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar nav.xhtml -mode nav -version 3.0</pre><p>Although you can use any <code class="literal">mode</code> for EPUB 3 validation, only <code class="literal">opf</code>, <code class="literal">svg</code> and <code class="literal">xhtml</code> can be used to validate EPUB 2 content.</p></div><div class="sect3" title="Assessment reports"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_reports"/>Assessment reports</h3></div></div></div><p><a id="id606362" class="indexterm"/> <a id="ix_generating_assessment_reports" class="indexterm"/>
+A new experimental option has been included in the latest version of epubcheck: the ability to generate an assessment report. These reports are XML files that not only contain the errors and warnings generated by epubcheck, but also provide various metadata about the EPUB, such as the Dublin Core metadata properties that have been set, the language of the publication, and what properties are known about its content (e.g., that it contains audio, video, MathML, script, etc.).</p><p>To generate a report, you must use the <code class="literal">-out</code> argument followed by the file to write the assessment to:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar c:/path/to/book -mode exp -out c:/reports/book.xml</pre><p>At the time of this writing, the report format was not documented on the epubcheck site, but it is described as an extension of the <a class="ulink" href="http://www.fcla.edu/dls/md/docmd.xsd">documentMD format</a>. Each report contains a root <code class="literal">doc</code> element, which always contains a child <code class="literal">document</code> element. This element lists the extracted information:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+The <code class="literal">documentInformation</code> element lists the filename (<code class="literal">fileName</code>) of the EPUB followed by all Dublin Core properties found (each listed in an element corresponding to its local name).
+</li><li class="listitem">
+The <code class="literal">formatDesignation</code> element lists the EPUB mime type and version number (<code class="literal">formatName</code> and <code class="literal">formatVersion</code>, respectively).
+</li><li class="listitem">
+The <code class="literal">assessmentInformation</code> element indicates whether the validation run was successful or not (<code class="literal">outcome</code>). If warnings or errors are reported, each message will be included in an <code class="literal">outcomeDetailNote</code> element (the type of message is not identified in the markup, but can be determined by the presence of <code class="literal">WARNING</code> or <code class="literal">ERROR</code> at the start of the element).
+</li><li class="listitem">
+The <code class="literal">characterCount</code> element provides the total character count of all text data.
+</li><li class="listitem">
+The <code class="literal">Language</code> element provides the language of the publication as set in the package document.
+</li><li class="listitem">
+Zero or more <code class="literal">Font</code> elements list all embedded fonts.
+</li><li class="listitem">
+Zero or more <code class="literal">Reference</code> elements list all the external links and references.
+</li><li class="listitem">
+Zero or more <code class="literal">Features</code> elements list all the unique properties of the content, as defined in the <code class="literal">properties</code> attributes on manifest entries.
+</li></ul></div><p>Here’s an example of a condensed assessment report:</p><pre class="programlisting"><code class="nt">&lt;doc&gt;</code>
+ <code class="nt">&lt;document</code> <code class="na">creationDateTime=</code><code class="s">"2012-03-01T20:55:42-05:00"</code><code class="nt">&gt;</code>
+  <code class="nt">&lt;documentInformation&gt;</code>
+   <code class="nt">&lt;fileName&gt;</code>accessible_epub_3-20121006.epub<code class="nt">&lt;/fileName&gt;</code>
+   <code class="nt">&lt;identifier&gt;</code>urn:isbn:9781449328030<code class="nt">&lt;/identifier&gt;</code>
+   <code class="nt">&lt;title&gt;</code>Accessible EPUB 3<code class="nt">&lt;/title&gt;</code>
+   <code class="nt">&lt;creator&gt;</code>Matt Garrish<code class="nt">&lt;/creator&gt;</code>
+  <code class="nt">&lt;/documentInformation&gt;</code>
+  <code class="nt">&lt;formatDesignation&gt;</code>
+   <code class="nt">&lt;formatName&gt;</code>application/epub+zip<code class="nt">&lt;/formatName&gt;</code>
+   <code class="nt">&lt;formatVersion&gt;</code>3.0<code class="nt">&lt;/formatVersion&gt;</code>
+  <code class="nt">&lt;/formatDesignation&gt;</code>
+  <code class="nt">&lt;assessmentInformation</code> <code class="na">agentName=</code><code class="s">"epubcheck"</code> <code class="na">agentVersion=</code><code class="s">"3.0-RC-1"</code><code class="nt">&gt;</code>
+   <code class="nt">&lt;outcome&gt;</code>Not valid<code class="nt">&lt;/outcome&gt;</code>
+   <code class="nt">&lt;outcomeDetailNote&gt;</code>ERROR: FreeSerif.otf: resource missing<code class="nt">&lt;/outcomeDetailNote&gt;</code>
+  <code class="nt">&lt;/assessmentInformation&gt;</code>
+  <code class="nt">&lt;CharacterCount&gt;</code>208463<code class="nt">&lt;/CharacterCount&gt;</code>
+  <code class="nt">&lt;Language&gt;</code>en<code class="nt">&lt;/Language&gt;</code>
+  <code class="nt">&lt;Font</code> <code class="na">FontName=</code><code class="s">"Free Serif"</code> <code class="na">isEmbeded=</code><code class="s">"true"</code> <code class="nt">/&gt;</code>
+  <code class="nt">&lt;Reference&gt;</code>http://shop.oreilly.com/product/0636920025283.do<code class="nt">&lt;/Reference&gt;</code>
+  <code class="nt">&lt;Features&gt;</code>hasScript<code class="nt">&lt;/Features&gt;</code>
+ <code class="nt">&lt;/document&gt;</code>
+<code class="nt">&lt;/doc&gt;</code></pre><p>Although these reports are primarily designed for automated workflows, they provide an interesting peek into your EPUBs.</p><p>That’s as deep as we’ll go into this feature, though, because it’s still an early experiment and may have changed by the time you read this book. The epubcheck site should be updated to include more information as the report format is formalized, so you can check there for changes.
+<a id="id606576" class="indexterm"/></p></div><div class="sect3" title="Help"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_help"/>Help</h3></div></div></div><p><a id="id606854" class="indexterm"/>
+If you’re ever in doubt about how to call epubcheck or want to verify whether features are still supported or new ones have been added, you can request a help listing from the program. Simply add the <code class="literal">help</code> argument after calling the <span class="emphasis"><em>.jar</em></span> file:</p><pre class="programlisting"><code class="gp">$</code> java -jar epubcheck.jar -help</pre><p>You should get information about the program and a listing of options similar to the following:</p><pre class="screen">Epubcheck Version 3.0-RC-1
+
+When running this tool, the first argument should be the name (with the path) of
+the file to check.
+
+If checking a non-epub file, the epub version of the file must be specified
+using -v and the type of the file using -mode.
+
+The default version is: 3.0.
+
+Modes and versions supported:
+-mode opf -v 2.0
+-mode opf -v 3.0
+-mode xhtml -v 2.0
+-mode xhtml -v 3.0
+-mode svg -v 2.0
+-mode svg -v 3.0
+-mode nav -v 3.0
+-mode mo  -v 3.0 // For Media Overlays validation
+-mode exp        // For expanded EPUB archives
+
+This tool also accepts the following flags:
+-save        = saves the epub created from the expanded epub
+-out &lt;file&gt;  = ouput an assessment XML document in file (experimental)
+-? or -help  = displays this help message</pre></div></div><div class="sect2" title="Reading Errors"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_reading_errors"/>Reading Errors</h2></div></div></div><p><a id="id606929" class="indexterm"/>
+Now that you have a grasp on how to invoke epubcheck to run a validation report, the next challenge is reading the error reports that come back from it. Later sections of the chapter will get into much more detail about what the errors themselves indicate, but this section looks at how to make sense of all the information that gets reported to simplify tracking down and correcting errors.</p><p>A typical message from epubcheck follows this basic pattern:</p><pre class="screen">[ERROR|WARNING]: [file](line,offset): Message</pre><p>The following is a sample error message that results if a closing quote character is omitted from a <code class="literal">class</code> attribute, for example:</p><pre class="screen">ERROR: c:/epub/accessible_epub_3.epub/EPUB/ch01.xhtml(10,44): The value of
+attribute "class" associated with an element type "section" must not contain
+the '&lt;' character.</pre><p>Here you can see that this is an error (must be fixed to pass validation), that it is in the file <span class="emphasis"><em>/EPUB/ch01.xhtml</em></span> inside the EPUB archive <span class="emphasis"><em>c:/epub/accessible_epub_3.epub</em></span>, and that the error has been found 44 characters into line 10. Even if you don’t have an XML-aware editor, jumping to the exact line and character offset should be easy to do in any text editor.</p><p>You may not always get file, line, and offset information, depending on the problem. When epubcheck verifies that all items listed in the manifest are in the archive, it does not maintain information about the original package document XML. Consequently, if you have an entry for a nonexistent file, you’ll get an error like this:</p><pre class="screen">ERROR: c:/epub/accessible_epub_3.epub: OPS/XHTML file EPUB/pr01a.xhtml is missing</pre><p>This is when being able to interpret where errors are coming from and what they mean is going to be critical. You need to know that all your files are listed in the package document manifest to even begin figuring this kind of message out.</p><p>You may also find that the line and character offsets seem misleading. If you were to forget a closing <code class="literal">aside</code> tag early on in your file, it may not get reported as an error until the containing <code class="literal">section</code> gets closed:</p><pre class="programlisting"><code class="nt">&lt;section&gt;</code>
+   ...
+   <code class="nt">&lt;aside&gt;</code>
+      <code class="nt">&lt;p&gt;</code>...<code class="nt">&lt;/p&gt;</code>
+      <code class="err">&lt;</code>-- forgot a closing tag here on line 22
+   <code class="nt">&lt;p&gt;</code>...<code class="nt">&lt;/p&gt;</code>
+    ...
+   <code class="nt">&lt;p&gt;</code>...<code class="nt">&lt;/p&gt;</code>
+<code class="nt">&lt;/section&gt;</code> <code class="err">&lt;</code>-- but error reported here on line 196</pre><p>The error message resulting from this tagging might be as follows:</p><pre class="screen">ERROR: c:/epub/accessible_epub_3.epub/EPUB/ch01.xhtml(196,3): The element type
+"aside" must be terminated by the matching end-tag "&lt;/aside&gt;".</pre><p>People new to validation typically want to know why the error location isn’t reported on the opening tag to simplify fixing the problem, but you have to bear in mind that there is no problem with the opening tag. The problem is with the closing tag, or lack of one before the <code class="literal">section</code> closes, and that doesn’t occur until line 196 in this case. The validator does not backtrack to the opening tag to report where the <code class="literal">aside</code> opened, because validators simply report what is wrong. For all the validator knows, you simply forgot the end tag at that point.</p><p>Part of validating is doing the sleuthing to find where these kinds of problems originate. Just hope that there aren’t a lot of <code class="literal">aside</code>s in your file, because you’ll have to check each one in turn to find the broken one! An <code class="literal">aside</code> can contain another <code class="literal">aside</code>, like a <code class="literal">div</code> can contain a <code class="literal">div</code>, so the error could take a bit of time to track down.</p></div></div><div class="sect1" title="Beyond the Command Line"><div class="titlepage"><div><div><h1 class="title"><a id="_validation_beyond_cmd"/>Beyond the Command Line</h1></div></div></div><p>Running epubcheck from the command line is not the only option available. Integrating the library more seamlessly into internal workflows is an option, of course, but requires developer help. For those who don’t have those kinds of resources available, this section reviews a few other options that can simplify the validation process.</p><div class="sect2" title="Web Validation"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_web"/>Web Validation</h2></div></div></div><p><a id="ix_web-based_version" class="indexterm"/>
+The IDPF currently maintains a web-based version of epubcheck at <a class="ulink" href="http://validator.idpf.org/">http://validator.idpf.org/</a>. To run the validator, you simply select your EPUB file and click the Validate button on the page, as shown in <a class="xref" href="ch11.html#validate-web" title="Figure 11-4. IDPF EPUB Validator service">Figure 11-4</a>. <a id="id607200" class="indexterm"/></p><div class="figure"><a id="validate-web"/><div class="figure-contents"><div class="mediaobject"><img src="images/epbp_1104.png" alt=" Upload form includes a button to select the EPUB and another to begin validation"/></div></div><p class="title">Figure 11-4. IDPF EPUB Validator service</p></div><p>The current version of epubcheck also powers this web service, but instead of command shell error output, you receive messages in the more human-readable table format shown in <a class="xref" href="ch11.html#validate-web-result" title="Figure 11-5. Web validation results">Figure 11-5</a>.</p><div class="figure"><a id="validate-web-result"/><div class="figure-contents"><div class="mediaobject"><img src="images/epbp_1105.png" alt="Result table includes columns for type of error, location of the file, line and character offsets, and the error message"/></div></div><p class="title">Figure 11-5. Web validation results</p></div><p><a id="id607265" class="indexterm"/>
+The web results make it simpler to identify the error type, file, line, and character offset of the reported problem, but this information is the same as is provided in the command shell results shown previously.</p><p>Unfortunately, the web interface is not for use by anyone doing commercial validation, and it also has some limitations that work against it even for users who meet the use criteria. For one, you are capped to a maximum file size of 10 MB. While this is not going to be problematic for simple text works, any publication with images, audio and video content, or embedded fonts will quickly go over the cap. It can also be a nuisance, and waste of bandwidth, to continuously upload your EPUB over and over to the IDPF server in order to have it validated. It’s not the fastest or most effective use of time depending on how big your EPUB is. Learning to use epubcheck from the command line is a better long-term strategy.</p><p>The source for the web service is also not available for general download as of this writing, but it could be made available at a later date once the validator moves out of its beta phase. Installing the service locally, whether on an individual PC running a web server or in a corporate environment, would greatly simplify the validation process for anyone wanting to avoid command line and/or commercial options.</p><p>It is possible to use the <span class="emphasis"><em>.jar</em></span> file to create your own web service, but you would have to add a layer to it to parse and format the results in order to provide equivalent table markup.
+<a id="id607390" class="indexterm"/></p></div><div class="sect2" title="Graphical Interface"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_gui"/>Graphical Interface</h2></div></div></div><p>A much-desired feature for epubcheck has been to add a graphical interface to simplify the whole process we’ve just gone through of configuring programs and paths and selecting files. Unfortunately, at this time, it remains a much-desired feature. The developers are aware of the need, so stay tuned.</p></div><div class="sect2" title="Commercial Options"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_commercial"/>Commercial Options</h2></div></div></div><p>Although the process to manually call epubcheck can seem tedious, especially if you aren’t a developer who is regularly in the command shell, there are programs that natively integrate epubcheck and/or can be configured to run external tools like epubcheck from within them.</p><p>Prime among these is oXygen Editor (shown in <a class="xref" href="ch11.html#validate-oxygen" title="Figure 11-6. oXygen editing interface">Figure 11-6</a>), which has native support for EPUB 2 and 3 markup editing. oXygen allows you to drag and drop your EPUB archive directly into the program, enabling editing of the content files without having to unzip. It also includes built-in support for the latest epubcheck validator, so all you have to do is click a button to validate your archive. It is also nondestructive, in that it will not modify your source markup when saving and validating. <a id="id607284" class="indexterm"/></p><div class="figure"><a id="validate-oxygen"/><div class="figure-contents"><div class="mediaobject"><img src="images/epbp_1106.png.jpg" alt="Application has panes for browsing the EPUB archive, editing content documents, and reporting errors."/></div></div><p class="title">Figure 11-6. oXygen editing interface</p></div><p>Perhaps the most useful feature that oXygen provides is the ability to jump directly to the listed error. By double-clicking on an error in the result pane at the bottom of the program, the file will be automatically loaded (if not already open) and jumped to the corresponding line. oXygen also shows validation errors in red on the side of the text editor, enabling quick location and correction.</p></div></div><div class="sect1" title="Understanding Errors"><div class="titlepage"><div><div><h1 class="title"><a id="_validation_understanding"/>Understanding Errors</h1></div></div></div><p><a id="id607352" class="indexterm"/>
+It’s somewhat disheartening to discover that the program you used to author your EPUB has generated invalid content, but it’s not atypical. There often aren’t straight 1:1 mappings when dealing with export routines that go from an internal layout format to a distribution like EPUB. Adding to that, developers often try to help these processes through heuristic and natural language parsing tricks. The resulting content may appear to be okay in a reading system, but tag soup is not just invalid to the theoretical purity of specifications but causes real-world problems for anyone using the markup to navigate.</p><p>This chapter can’t possibly be a reference to every single error that you might encounter in every technology that EPUB incorporates, but this section will walk through the main validation stages and look at what can go wrong. Hopefully, with a sense of what epubcheck is doing, even if you can’t find your particular problem here, you’ll find some hints to where you should be looking.</p><p>The other consideration is that error messages change over time, with the hope of making them easier to understand. The obvious result is that the error messages you find in the following sections may not exactly match what epubcheck reports depending on the version you’re using.</p><p>If there is one best practice to give when it comes to understanding errors (one learned from many years validating markup data), it’s to <span class="emphasis"><em>always</em></span> start with the first error reported. Validators don’t generally stop at the first problem they find, and the result can be many, many erroneous errors that are simply related to the first problem (e.g., forgetting to include a closing tag can cause every following element to be reported as invalid).</p><p>A second, closely related tip, is to validate often. The way that errors cascade can result in some odd issues appearing in your report, so never assume you can always pick out which ones are related to an earlier problem and which ones are unique. That’s how you spend time searching for improbable solutions to problems that didn’t actually exist. Running validation reports is quick and free, so when in doubt, run the report again.</p><p>And finally, note that validators are not infallible. You might find errors being reported that shouldn’t be, but there’s a difference between an incorrect check of a specification requirement and not being sure what an error means. If you are unsure whether it is the validator that is wrong or your understanding of the message, seek assistance. The <a class="ulink" href="http://www.idpf.org/forums/">IDPF forums</a> are a friendly venue where you can ask for help deciphering error reports.</p><div class="sect2" title="Common XML Errors"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_xml_errors"/>Common XML Errors</h2></div></div></div><p><a id="ix_XML_errors" class="indexterm"/> <a id="ix_XML_validation_errors" class="indexterm"/>
+As EPUB is a predominantly XML-based format, there are a number of common errors that get reported across document types. If a document is not well formed, or does not meet schema requirements, the error message does not change, only the element and attribute names. Rather than list the same issues over and over, this section will tackle these problems once.</p><div class="sect3" title="Document errors"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_doc_errors"/>Document errors</h3></div></div></div><p><a id="id607448" class="indexterm"/>
+Each XML file must have a single root element (e.g., for XHTML documents, this is the <code class="literal">html</code> element). epubcheck will generate the following errors if it finds XML files that aren’t conformant to this requirement:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Content is not allowed in prolog</code>
+</span></dt><dd>
+  This error occurs when you have text content before the root element. Only the XML declaration, processing instructions, and doctype declarations can precede the root element. It may also be a sign that you’ve accidentally specified a text file with an XML media type in the manifest.
+</dd><dt><span class="term">
+<code class="literal">Content is not allowed in trailing section</code>
+</span></dt><dd>
+  This is the opposite error, where you have text or markup content after the closing root tag.
+</dd></dl></div></div><div class="sect3" title="Element errors"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_element"/>Element errors</h3></div></div></div><p><a id="id607591" class="indexterm"/>
+If your markup is not conformant to the schema for a given document type, you’ll receive the following errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Element X not allowed here; expected the element end-tag, text or </code><code class="literal">element A,B,C</code>
+</span></dt><dd><p class="simpara">
+  This is probably the most common element error you’ll encounter, and <code class="literal">A,B,C</code> usually ends up being a wildly long list of alternative elements. This error can occur either when you’ve used an element where it’s not allowed (e.g., putting a <code class="literal">div</code> inside of a <code class="literal">p</code> in a content document), or have accidentally forgotten to close an element (e.g., omit a closing <code class="literal">&lt;/p&gt;</code> tag and every following sibling block element will register as an error).
+</p><p class="simpara">This error can also indicate that you’ve inserted an element out of order. The <code class="literal">figcaption</code> must be the first or last element in a <code class="literal">figure</code>, for example. If you place it anywhere else, you’ll get this error on the elements that follow it. The same applies to table markup. The order of the major divisions in the package document is also enforced (<code class="literal">metadata</code>, <code class="literal">manifest</code>, <code class="literal">spine</code>, <code class="literal">guide</code>, <code class="literal">bindings</code>).</p><p class="simpara">This error can also occur if you forget a namespace. MathML and SVG in HTML5 do not require namespaces, for example, so if you forget to declare one, or copy an HTML5 example from the Web, the element might be reported as invalid.</p><p class="simpara">And finally, make sure that you’re using lowercase element names. XHTML is case sensitive, so you cannot use element names like <code class="literal">H1</code> and <code class="literal">SECTION</code>. If you do, you will also receive this error that they are not allowed. All elements names in the package document are also lowercase. It would be nicer if a distinction could be made between elements that aren’t defined and elements that aren’t allowed, as used to be the case, but that’s a limitation of the RelaxNG schemas you just have to work around.</p></dd><dt><span class="term">
+<code class="literal">Element X incomplete; expected A,B,C</code>
+</span></dt><dd>
+  This error often occurs in the package metadata if you omit one of the three required Dublin Core elements. XHTML content documents don’t have a lot of requirements, but they do exist (e.g., the <code class="literal">ruby</code> element requires at least one child <code class="literal">rt</code>). You’re more likely to encounter this error when you add MathML or SVG to your content documents, as there tend to be more dependencies.
+</dd><dt><span class="term">
+<code class="literal">The prefix X for element Y is not bound</code>
+</span></dt><dd>
+  You’ve used a prefix on an element without declaring it (e.g., <code class="literal">dc:</code> on the package metadata elements without declaring <code class="literal">xmlns:dc="http://purl.org/dc/terms/"</code>). XML declarations are often included on the root element but can be scoped to the most relevant element (e.g., the Dublin Core namespace is typically declared on the <code class="literal">metadata</code> element, not the root <code class="literal">package</code> element, because Dublin Core elements are not used outside of the metadata section). This error also occurs in content documents when MathML and SVG embedded without a namespace declared.
+</dd><dt><span class="term">
+<code class="literal">Element X missing required attribute Y</code>
+</span></dt><dd>
+  The specified attribute cannot be omitted. An example is the <code class="literal">unique-identifier</code> attribute on the <code class="literal">package</code> document. In content documents, forgetting <code class="literal">href</code> and <code class="literal">src</code> attributes is often the cause of this error.
+</dd><dt><span class="term">
+<code class="literal">Element type X must be followed by either attribute specifications, "&gt;" or "/&gt;"</code>
+</span></dt><dd>
+  This error occurs either when you’ve omitted a closing quote character on an attribute or have forgotten the closing angle bracket on the element.
+</dd></dl></div></div><div class="sect3" title="Attribute errors"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_attribute"/>Attribute errors</h3></div></div></div><p><a id="id607849" class="indexterm"/>
+Likewise, if you use attributes improperly, schema validation will return the following errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Attribute X not allowed here; expected attribute A,B,C</code>
+</span></dt><dd>
+  One error type that attributes share with elements is being used in the wrong place. It’s not valid to use a <code class="literal">name</code> attribute on <code class="literal">a</code> elements anymore in HTML5, for example. Attributes are also case sensitive, which can cause this error.
+</dd><dt><span class="term">
+<code class="literal">The prefix X for attribute Y associated with an element type Z is not bound</code>
+</span></dt><dd>
+  Forgetting to declare namespaces is another shared issue. If you receive this message, you don’t have an in-scope namespace declaration. This problem typically occurs when using the <code class="literal">epub:type</code> attribute without declaring the namespace on the root <code class="literal">html</code> element, for example.
+</dd><dt><span class="term">
+<code class="literal">Duplicate ID X</code>
+</span></dt><dd>
+  In this case, you have two or more <code class="literal">id</code> attributes in the same file with the same value. You will need to manually inspect the attributes to determine which one needs to be changed.
+</dd><dt><span class="term">
+<code class="literal">Value of attribute "id" is invalid; must be an XML name without colons</code>
+</span></dt><dd>
+  This error most often occurs when an <code class="literal">id</code> attribute value is numeric (e.g., <code class="literal">id="1"</code>), begins with a number, or contains invalid characters. Although HTML5 has relaxed the restriction that all <code class="literal">id</code>s start with an alphabetic character, other XML formats allowed in EPUB 3 must still conform to this naming.
+</dd><dt><span class="term">
+<code class="literal">The value of attribute X associated with an element type Y must not </code><code class="literal">contain the '&lt;' character</code>
+</span></dt><dd>
+  This error may indicate that you’ve included a left angle bracket character in an attribute, but more often is an indication that you missed a closing quote character on an attribute (i.e., the validator sees the next tag as part of the attribute value).
+</dd></dl></div></div><div class="sect3" title="Character encoding"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_encoding"/>Character encoding</h3></div></div></div><p><a id="id608010" class="indexterm"/>
+All XML formats defined by the EPUB specification, including XHTML content documents, must be encoded as UTF-8 or UTF-16. The following errors may occur if your documents do not conform:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Only UTF-8 and UTF-16 encodings are allowed, detected X</code>
+</span></dt><dd>
+  Verify that the file is actually encoded as UTF-8 or UTF-16 (don’t trust the XML declaration).
+</dd><dt><span class="term">
+<code class="literal">Malformed byte sequence: X. Check encoding</code>
+</span></dt><dd>
+  This error typically arises when content in one encoding is pasted into a document encoded in another, but can also occur if you transcode your content from one character set to another. It indicates that there is a sequence of bytes that don’t conform to the Unicode specification, so they cannot be resolved to a character. When you view the file, you may not see anything at the location, as the malformed byte may not show as character data. epubcheck does not provide more detailed information, so to find the exact location, you’ll typically need to open the invalid file in an XML editor that can report the exact location.
+</dd><dt><span class="term">
+<code class="literal">Any Publication Resource that is an XML-Based Media Type must be a </code><code class="literal">conformant XML 1.0 Document. XML Version retrieved: #</code>
+</span></dt><dd>
+  You cannot use XML version 1.1 for XML content. If you’ve included an XML declaration at the top of your file, make sure that the version pseudoattribute is set to <code class="literal">1.0</code> (<code class="literal">&lt;?xml version="1.0"?&gt;</code>)
+</dd></dl></div><p>Note that CSS style sheets must also be encoded as UTF-8 or UTF-16. If you create your CSS files as plain ASCII text files, you should not receive an error. The ASCII character set maps to the same range of characters in UTF-8, so all ASCII text files are valid UTF-8 files.</p></div><div class="sect3" title="Linking errors"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_linking"/>Linking errors</h3></div></div></div><p><a id="id608078" class="indexterm"/>
+One of the handier features of epubcheck is that it will verify all internal links to see if they can be resolved, and report problems if not:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">'X': referenced resource missing in the package</code>
+</span></dt><dd>
+  You’ve attempted to link to the file <span class="emphasis"><em>X</em></span>, but a matching resource could not be found in the container. Check that the resource exists and that there is an entry for it in the package document manifest.
+</dd><dt><span class="term">
+<code class="literal">'X': fragment identifier is not defined in 'Y'</code>
+</span></dt><dd>
+  The file <span class="emphasis"><em>Y</em></span> could be located, but there isn’t an element inside it with the <code class="literal">id</code> <code class="literal">X</code>. Typos and renamed IDs are the most common cause. <a id="id608189" class="indexterm"/> <a id="id608178" class="indexterm"/>
+</dd></dl></div></div></div><div class="sect2" title="Container Errors"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_container"/>Container Errors</h2></div></div></div><p><a id="id608211" class="indexterm"/> <a id="id608220" class="indexterm"/>
+Container errors can be some of the most perplexing to solve, because they often arise as a result of the way the content has been zipped up. In order to ensure that your EPUB can be opened and the content discovered, you need to ensure that there are no problems with the packaging. To that end, epubcheck verifies that your EPUB meets all the following conditions:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">File name contains characters disallowed in OCF file names: X</code>
+</span></dt><dd>
+  See <a class="ulink" href="http://idpf.org/epub/30/spec/epub30-ocf.html#sec-container-filenames">section 2.4 of the OCF specification</a> for a list of characters that must not be used in your EPUB filename or any files in it.
+</dd><dt><span class="term">
+<code class="literal">Filename contains spaces. Consider changing filename such that URI </code><code class="literal">escaping is not necessary</code>
+</span></dt><dd>
+  This message is actually just a warning. It is generated because it’s possible that a poorly designed reading system might break if there are spaces in your file names (e.g., failing to encode the spaces properly as <code class="literal">%20</code>), not because problems are expected.
+</dd><dt><span class="term">
+<code class="literal">File name contains non-ascii characters: X. Consider changing filename</code>
+</span></dt><dd>
+  This message is also a warning, similar to the preceding one. Although modern operating systems have no issue with non-ASCII characters in filenames, processing tools sometimes do. If you are targeting older EPUB 2 reading systems, this may be a concern, but it should not affect your decision to use these characters in EPUB 3.
+</dd><dt><span class="term">
+<code class="literal">Filename is not allowed to end with '.'</code>
+</span></dt><dd>
+  Ending filenames with a dot is a little more serious, so this is an error. Some operating systems do not handle filenames so named, which can break rendering.
+</dd><dt><span class="term">
+<code class="literal">Corrupted ZIP header</code>
+</span></dt><dd>
+  Occurs if the container does not begin with the string <code class="literal">PK</code> (i.e., it is not a valid ZIP file).
+</dd><dt><span class="term">
+<code class="literal">Cannot read header</code>
+</span></dt><dd>
+  Some form of file corruption has occurred that is preventing the ZIP file from being read.
+</dd><dt><span class="term">
+<code class="literal">Length of first filename in archive must be 8, but was #</code>
+</span></dt><dd>
+  If the first filename found in the archive is not eight characters, it cannot be the required <span class="emphasis"><em>mimetype</em></span> file. If you manually zip your archive, you must add the mimetype before you add any other files.
+</dd><dt><span class="term">
+<code class="literal">Mimetype entry missing or not the first in archive</code>
+</span></dt><dd>
+  This error is rare but can occur if the first file is eight characters long (to get past the previous check) but is not the <span class="emphasis"><em>mimetype</em></span> file. Again, check how the archive has been zipped.
+</dd><dt><span class="term">
+<code class="literal">Extra field length for first filename must be 0, but was #</code>
+</span></dt><dd>
+  Indicates that there is character data between the <span class="emphasis"><em>mimetype</em></span> filename and its content (the extra fields are being used). This error can occur if the program you’ve used to zip the container adds additional metadata.
+</dd><dt><span class="term">
+<code class="literal">Mimetype contains wrong type (application/epub+zip) expected</code>
+</span></dt><dd>
+  Ensure that the media type has been typed correctly.
+</dd><dt><span class="term">
+<code class="literal">Mimetype file should contain only the string "application/epub+zip"</code>
+</span></dt><dd>
+  Ensure that there are no extra spaces or linebreaks in the file.
+</dd></dl></div><p>epubcheck will also verify that the package document can be located by a reading system. The following errors indicate problems with this discovery process:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Required META-INF/container.xml resource is missing</code>
+</span></dt><dd>
+  Somewhat self explanatory. The <span class="emphasis"><em>container.xml</em></span> file is a required file in the <span class="emphasis"><em>META-INF</em></span> directory, because it identifies the path to the package file.
+</dd><dt><span class="term">
+<code class="literal">No rootfiles with media type 'application/oebps-package+xml'</code>
+</span></dt><dd>
+  The <span class="emphasis"><em>container.xml</em></span> file was found, but it does not contain an entry for the package file (check the <code class="literal">mediaType</code> attribute value correctly matches the one in the error).
+</dd><dt><span class="term">
+<code class="literal">Entry X not found in zip file</code>
+</span></dt><dd>
+  The package document could not be found at the location specified by the <code class="literal">rootfile</code> element.
+</dd></dl></div></div><div class="sect2" title="Package Validation"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_package"/>Package Validation</h2></div></div></div><p><a id="ix_pd_validation_errors_in" class="indexterm"/> <a id="ix_package_document_errors" class="indexterm"/>
+If you think of validation as a progression through Dante’s rings of hell, if your content is packaged properly, the next ring you’ll find yourself in is whether your package document has been properly constructed.</p><p>The following metadata problems will be reported:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">unique-identifier attribute in package element must reference an </code><code class="literal">existing identifier element id</code>
+</span></dt><dd>
+  The <code class="literal">unique-identifier</code> attribute does not point to the <code class="literal">id</code> value of a <code class="literal">dc:identifier</code> element in the metadata section.
+</dd><dt><span class="term">
+<code class="literal">character content of element "X" invalid; must be a string with length at least 1</code>
+</span></dt><dd>
+  All metadata must be at least one character in length (whitespace does not count). This error indicates that an empty value was found.
+</dd><dt><span class="term">
+<code class="literal">Package dcterms:modified meta element must occur exactly once</code>
+</span></dt><dd>
+  The <code class="literal">dcterms:modified</code> property indicates the last modification date of the EPUB, and is used to create the publication identifier, so only one can be included in the metadata.
+</dd><dt><span class="term">
+<code class="literal">dcterms:modified illegal syntax (expecting: 'CCYY-MM-DDThh:mm:ssZ')</code>
+</span></dt><dd>
+  Check the time and date specified in the <code class="literal">dcterms:modified</code> property matches the specified format. You cannot use abbreviated dates or omit the timestamp.
+</dd><dt><span class="term">
+<code class="literal">@refines missing target id: 'X'</code>
+</span></dt><dd>
+  If the <code class="literal">refines</code> attribute begins with a hash (<code class="literal">#</code>), it must reference the ID of an <code class="literal">item</code> in the manifest. This error occurs when a match cannot be found.
+</dd></dl></div><p>epubcheck will also check for problems with resources that should, or shouldn’t, be listed in the manifest:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">X file Y is missing</code>
+</span></dt><dd>
+  You have a reference to a missing resource. <span class="emphasis"><em>X</em></span> identifies the type of file, but is not the media type (<span class="emphasis"><em>OPS/XHTML</em></span> is used for XHTML content documents, <span class="emphasis"><em>image</em></span> is used for any image type, etc.)
+</dd><dt><span class="term">
+<code class="literal">item (X) exists in the zip file, but is not declared in the manifest file</code>
+</span></dt><dd>
+  Warning that you have a file in the container that is not listed in the manifest.
+</dd><dt><span class="term">
+<code class="literal">'http://X/Y/Z': remote resource reference not allowed; resource must be placed in the OCF</code>
+</span></dt><dd>
+  This error indicates that you’ve invalidly referenced a resource outside the container (e.g., a file on the Web from an <code class="literal">object</code> tag). In older versions of epubcheck, this error was also emitted when remote audio/video clips were not listed in the manifest.
+</dd></dl></div><p>epubcheck will also emit the following errors if resources don’t match the information supplied about them:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Item property: X is not defined for: Y</code>
+</span></dt><dd>
+  You’ve attached a <code class="literal">properties</code> attribute value to a file type to which it doesn’t belong (e.g., <code class="literal">mathml</code> on a JPEG)
+</dd><dt><span class="term">
+<code class="literal">This file should declare in opf the property: X</code>
+</span></dt><dd>
+  This message occurs when a content document contains a feature that hasn’t been declared in the <code class="literal">properties</code> attribute (e.g., scripting).
+</dd><dt><span class="term">
+<code class="literal">This file should not declare in opf the properties: X</code>
+</span></dt><dd>
+  The listed properties cannot be verified and should be removed from the <code class="literal">properties</code> attribute for the item.
+</dd><dt><span class="term">
+<code class="literal">Exactly one manifest item must declare the 'nav' property (number of 'nav' items: #).</code>
+</span></dt><dd>
+  You didn’t specify the navigation document or specified more than one.
+</dd><dt><span class="term">
+<code class="literal">Multiple occurrences of the 'cover-image' property (number of </code><code class="literal">'cover-image' items: #).</code>
+</span></dt><dd>
+  Similarly for the cover image.
+</dd><dt><span class="term">
+<code class="literal">Object type and the item media-type declared in manifest, do not match</code>
+</span></dt><dd>
+  The media type declared in the <code class="literal">media-type</code> attribute on the manifest entry does not match the <code class="literal">type</code> attribute specified on the <code class="literal">object</code> tag in the content file.
+</dd></dl></div><p>epubcheck will also alert you if you haven’t provided a core media type fallback for a foreign resource:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Manifest item element fallback attribute must resolve to another </code><code class="literal">manifest item (given reference was 'X')</code>
+</span></dt><dd>
+  The ID referenced in the <code class="literal">fallback</code> attribute does not point to another <code class="literal">item</code>. Check for a typo and that the fallback hasn’t been removed.
+</dd><dt><span class="term">
+<code class="literal">Spine item with non-standard media-type 'X' with no fallback</code>
+</span></dt><dd>
+  You’ve referenced a file that is not an XHTML or SVG content document from the spine without providing a fallback to one of those two.
+</dd><dt><span class="term">
+<code class="literal">Spine item with non-standard media-type 'X' with fallback to </code><code class="literal">non-spine-allowed media-type</code>
+</span></dt><dd>
+  Again, you’ve referenced a foreign resource from the spine, but this time the only fallback found is to another foreign resource.
+</dd><dt><span class="term">
+<code class="literal">Circular reference in fallback chain</code>
+</span></dt><dd>
+  Each fallback in a fallback chain must be to a unique resource. If one resource in the chain references another earlier in the chain, you end up in an endless loop of incompatible formats.
+</dd></dl></div><p>When adding media overlays, the required metadata is also verified:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Media overlay items must be of the 'application/smil+xml' type (given type was 'X')</code>
+</span></dt><dd>
+  Media overlays are SMIL files, so you must make sure the correct media type has been given (i.e., not <code class="literal">application/xml</code>).
+</dd><dt><span class="term">
+<code class="literal">Item media:duration meta element not set (expecting: meta property= </code><code class="literal">'media:duration' refines='#X')</code>
+</span></dt><dd>
+  When attaching a media overlay to a content document, you must add a <code class="literal">meta</code> element indicating the total audio duration for that document. This error indicates that this property is missing.
+</dd><dt><span class="term">
+<code class="literal">Global media:duration meta element not set</code>
+</span></dt><dd>
+  You must include a <code class="literal">meta</code> element with no <code class="literal">refines</code> attribute containing the cumulative time of all the individual overlays.
+</dd></dl></div><p>And finally, there are a couple of possible errors tested for if you include an NCX for rendering in EPUB 2 reading systems:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">spine element toc attribute must reference the NCX manifest item </code><code class="literal">(referenced media type was 'X')</code>
+</span></dt><dd>
+  The value of the <code class="literal">toc</code> attribute on the spine must be the same as the <code class="literal">id</code> attribute on the manifest entry for the NCX file.
+</dd><dt><span class="term">
+<code class="literal">spine element toc attribute must be set when an NCX is included in the publication</code>
+</span></dt><dd>
+  If you include an NCX, you must add a <code class="literal">toc</code> attribute to the <code class="literal">spine</code>.
+<a id="id609277" class="indexterm"/> <a id="id609292" class="indexterm"/>
+</dd></dl></div></div><div class="sect2" title="Content Validation"><div class="titlepage"><div><div><h2 class="title"><a id="_validation_content"/>Content Validation</h2></div></div></div><p><a id="ix_cd_validation_errors_in" class="indexterm"/> <a id="ix_content_document_errors" class="indexterm"/>
+Now, moving to the stage of validating content, providing lists of checks and error messages becomes more difficult. Although the EPUB 3 specification imposes some requirements and restrictions, error messages are more likely to come from the underlying technologies it employs.</p><p>Fortunately, many of the issues you’ll run into at the content level are similar in nature. In XHTML and SVG content documents, most errors are related to the invalid use of markup we covered in the generic XML errors section.</p><p>The following XHTML-specific errors may be reported by epubcheck.</p><p>General document and header errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">The lang and xml:lang attributes must have the same value</code>
+</span></dt><dd>
+  When using both language attributes on the same element, their values must match.
+</dd><dt><span class="term">
+<code class="literal">There must not be more than one meta element with a charset attribute per document</code>
+</span></dt><dd>
+  A document only has one character encoding, so specifying the value twice is redundant and will possibly conflict.
+</dd><dt><span class="term">
+<code class="literal">The sizes attribute must not be specified on link elements that do not have a rel attribute that specifies the icon keyword</code>
+</span></dt><dd>
+  The <code class="literal">sizes</code> attribute is only allowed to be used to specify the dimensions of an icon referenced by the <code class="literal">link</code> element.
+</dd><dt><span class="term">
+<code class="literal">For each Document, there must be no more than one time element with a pubdate attribute that does not have an ancestor article element</code>
+</span></dt><dd>
+  A document can only have a single publication date. If other <code class="literal">time</code> elements contain publication dates, they must each be inside a unique <code class="literal">article</code>.
+</dd><dt><span class="term">
+<code class="literal">For each article element, there must be no more than one time element child with a pubdate attribute</code>
+</span></dt><dd>
+  Another duplication error. Each <code class="literal">article</code> can only have a single publication date.
+</dd></dl></div><p>Map element errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Duplicate map name 'X'</code>
+</span></dt><dd>
+  Two or more <code class="literal">map</code> elements have the same <code class="literal">name</code> attribute value, but each must be unique.
+</dd><dt><span class="term">
+<code class="literal">The id attribute on the map element must have the same value as the name attribute</code>
+</span></dt><dd>
+  Just one of those quirky things that must be true.
+</dd></dl></div><p>Form element errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">A select element whose multiple attribute is not specified must not have more than one descendant option element with its selected attribute set</code>
+</span></dt><dd>
+  If you can pick only one option, it doesn’t make sense to specify that two or more are set by default.
+</dd></dl></div><p>Audio/video<a id="id609568" class="indexterm"/> <a id="id609575" class="indexterm"/> errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">The track element label attribute value must not be the empty string</code>
+</span></dt><dd>
+  The <code class="literal">label</code> is used to announce the track type to the readers, so it cannot be empty.
+</dd><dt><span class="term">
+<code class="literal">There must not be more than one track child of a media element with the default attribute specified</code>
+</span></dt><dd>
+  As its name suggests, the <code class="literal">default</code> attribute is used to indicate which track to use when no reader preference is available. Specifying more than one default defeats the purpose of the attribute.
+</dd></dl></div><p>Referencing errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">The X attribute must refer to an element in the same document (the ID 'Y' does not exist)</code>
+</span></dt><dd>
+  Some elements must reference other elements in the document. The <code class="literal">for</code> attribute on a <code class="literal">label</code> element, for example, must reference the <code class="literal">id</code> of the form element it labels.
+</dd><dt><span class="term">
+<code class="literal">The X attribute must refer to elements in the same document (target ID missing)</code>
+</span></dt><dd>
+  This error is the same as the last, but occurs when an attribute can reference more than one other element. There are a number of ARIA attributes that can reference multiple elements (<code class="literal">aria-describedby</code>, <code class="literal">aria-labelledby</code>, <code class="literal">aria-controls</code>, etc.). Check that each reference can be resolved.
+</dd><dt><span class="term">
+<code class="literal">The X attribute does not refer to an allowed target element (expecting: Y)</code>
+</span></dt><dd>
+  The attribute references another element, but it is the wrong kind of element. To use <code class="literal">label</code> again, it would be incorrect for it to point to anything but a form element.
+</dd></dl></div><p>The following errors impose additional restrictions on element and attribute usage that could not be enforced through the structural schema validation stage:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">The X element must have a Y attribute</code>
+</span></dt><dd>
+  This error occurs if the <code class="literal">bdo</code> element does not include a <code class="literal">dir</code> attribute.
+</dd><dt><span class="term">
+<code class="literal">The X element must not appear inside Y elements</code>
+</span></dt><dd>
+  This error occurs if you attempt to embed one element inside another where it would make no sense or would cause rendering issues, such as an <code class="literal">audio</code>/<code class="literal">video</code> tag inside another <code class="literal">audio</code> or <code class="literal">video</code>, an <code class="literal">address</code> inside an <code class="literal">address</code>, etc.
+</dd><dt><span class="term">
+<code class="literal">The X element must have an ancestor Y element</code>
+</span></dt><dd>
+  This error occurs when an element is found outside of its expected ancestor. This error specifically occurs when an <code class="literal">area</code> tag is found outside of a <code class="literal">map</code> and when an image map is not wrapped inside of an <code class="literal">a</code> tag.
+</dd></dl></div><p><code class="literal">epub:type</code> property errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Undefined property: X</code>
+</span></dt><dd>
+  If a property in the <code class="literal">epub:type</code> does not have a prefix, it must be defined in the EPUB Structural Semantics vocabulary.
+</dd><dt><span class="term">
+<code class="literal">Undeclared prefix: X</code>
+</span></dt><dd>
+  You have used a prefix that has not been declared in the <code class="literal">prefix</code> attribute on the root <code class="literal">html</code> element.
+</dd></dl></div><p>SSML <a id="id609909" class="indexterm"/>errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">The ssml:ph attribute must not be specified on a descendant of an </code><code class="literal">element that also carries this attribute</code>
+</span></dt><dd>
+  When you use the <code class="literal">ssml:ph</code> attribute, the pronunciation is used in place of the text content of the element it is attached to. If you include an <code class="literal">ssml:ph</code> on a descendant element, it will never be announced.
+</dd></dl></div><p>CSS <a id="id609945" class="indexterm"/>errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">The scoped style element must occur before any other flow content other than other style elements and inter-element whitespace</code>
+</span></dt><dd>
+  When adding CSS style definitions scoped to the current element, the <code class="literal">style</code> element must be the first child. This can be problematic when scoping styles for figures, as it is invalid to include the <code class="literal">style</code> element before a <code class="literal">figcaption</code> at the start of the figure.
+</dd></dl></div><p>Alt style sheet<a id="id610003" class="indexterm"/> errors:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">Conflicting attributes found: X</code>
+</span></dt><dd>
+  You’ve specified both <code class="literal">horizontal</code> and <code class="literal">vertical</code> or <code class="literal">night</code> and <code class="literal">day</code>.
+</dd></dl></div><div class="sect3" title="Entity errors"><div class="titlepage"><div><div><h3 class="title"><a id="_validation_entity"/>Entity errors</h3></div></div></div><p><a id="id610058" class="indexterm"/>
+The following errors occur when you include malformed entities:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">The entity &amp;xyz; was referenced, but not declared</code>
+</span></dt><dd>
+  You need to change the referenced named entity to a numeric one.
+</dd><dt><span class="term">
+<code class="literal">The entity name must immediately follow the '&amp;' in the entity reference</code>
+</span></dt><dd>
+  You have an <code class="literal">&amp;</code> in your document that needs to be changed to <code class="literal">&amp;amp;</code> to be valid.
+</dd><dt><span class="term">
+<code class="literal">The reference to entity X must end with the ';' delimiter</code>
+</span></dt><dd>
+  You’re missing a semicolon at the end of an entity.
+</dd></dl></div><p>Note that the following error is not related to the use of entities in your content:</p><pre class="screen">External entities are not allowed in XML. External entity declaration found: %OEBEntities</pre><p>If you receive this error, you need to remove an XHTML 1.1 DOCTYPE declaration from the invalid file. The current version of epubcheck now handles this issue with a more meaningful message:
+<a id="id610145" class="indexterm"/> <a id="id610157" class="indexterm"/></p><pre class="screen">Obsolete or irregular DOCTYPE statement. External DTD entities are not allowed.
+Use '&lt;!DOCTYPE html&gt;' instead.</pre></div></div></div><div class="sect1" title="Style"><div class="titlepage"><div><div><h1 class="title"><a id="_validation_style"/>Style</h1></div></div></div><p><a id="id610172" class="indexterm"/> <a id="id610187" class="indexterm"/>
+Although epubcheck does include some minimal CSS verification checks, it does not perform true CSS validation. It will not tell you if you’ve entered property names or values incorrectly or even if you have malformed syntax (incorrect shorthands, missing brackets on definitions, semicolon delimiters at the end of properties, etc.).</p><p>Integration of a CSS3-compliant validator is in the future for the program, but is not possible as of this writing. At this time, all you’ll be notified of is the presence of properties that are not recommended by the specification (e.g., using <code class="literal">position: fixed</code>).</p></div><div class="sect1" title="Scripting"><div class="titlepage"><div><div><h1 class="title"><a id="_validation_scripting"/>Scripting</h1></div></div></div><p><a id="id610205" class="indexterm"/> <a id="id610233" class="indexterm"/>
+A structural validator like epubcheck cannot assist you in finding errors in your code, because it does attempt to interpret any JavaScript you’ve included. To verify that your code will work as expected, you need to test it in reading systems. Debugging code within reading systems will present its own challenges, unless error reporting materializes with scripting functionality. <a id="id610241" class="indexterm"/></p><p>It may be possible to validate the code used in individual content files by opening them in a browser, but if your code depends on any EPUB extensions (such as the <code class="literal">epubReadingSystem</code> object), you won’t get a useful result. Restrictions on access to the DOM, to the Internet, etc., are only going to be verifiable within reading systems, but at least with these you can sprinkle your code with debugging alerts to verify what is happening under the hood.</p></div><div class="sect1" title="Accessibility"><div class="titlepage"><div><div><h1 class="title"><a id="_validation_accessibility"/>Accessibility</h1></div></div></div><p><a id="id610274" class="indexterm"/>
+Although verifying the structural integrity of your publication is a great first step in ensuring its ability to be read, it is only a small part of what is required to verify that a publication is accessible. A validator can typically only tell you if the markup you’ve used is valid. What it can’t do is tell you if you could have done things better.</p><p>epubcheck is no different. It cannot determine for you if content should be part of the logical reading order or not, for example, because that distinction can only be verified by humans. Whether or not elements have been appropriately used is likewise not something epubcheck is good at determining. The list goes on. <a class="xref" href="ch09.html" title="Chapter 9. Accessibility">Chapter 9</a> covers a number of issues, but there is more to making accessible content than can be covered in a chapter.</p><p>To help assist in understanding the issues and verifying that you have met key accessibility criteria, the IDPF is developing <a class="ulink" href="http://www.idpf.org/accessibility/guidelines/">reference accessibility guidelines</a> that can be used in conjunction with this book, with the goal of providing broader coverage of the many issues involved. The site also provides a quality assurance checklist, including the ability to <a class="ulink" href="http://bit.ly/U6f7pH">dynamically generate a checklist</a> depending on the features your EPUB contains.</p><p>The idea of creating an interactive validator for EPUB 3 content has been bandied about since the EPUB 3 specification was finalized, but as of this writing, work on one has not begun. The DAISY Consortium is currently investigating how to improve epubcheck to report accessibility issues and/or create this new tool, and seeking funding for the work, so there are positive signs that accessibility checking will improve in the near future. <a id="id610348" class="indexterm"/></p></div></div></body></html>

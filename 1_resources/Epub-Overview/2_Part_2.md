@@ -1,0 +1,2 @@
+# Part II
+This section focuses on the overarching architecture of EPUBs. The goal is to establish this up front to have a conceptual understanding of these zip files before getting into the specific files that make up an EPUB zip file. We'll start with 2.1 which discusses how an EPUB is a zip file. From there, 2.2 discusses the differences between Epub 2 and Epub 3 standards. Chapter 2.3 addresses the overarching file structure of an EPUB, before exploring the OPF Package Document (2.4), the navigation (2.5), and finally a file-by-file breakdown (2.6). 

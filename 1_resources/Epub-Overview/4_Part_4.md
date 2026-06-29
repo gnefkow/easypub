@@ -1,0 +1,2 @@
+# Part IV
+Once an ebook has been constructed, it is time to turn it into an EPUB! Part VI discusses the packaging process, including Accessibility considerations (4.1), validation and debugging pcractices (4.2), and the export and packaging process (4.3). 

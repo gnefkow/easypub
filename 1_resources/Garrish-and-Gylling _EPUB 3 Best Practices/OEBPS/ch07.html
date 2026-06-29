@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Chapter 7. Interactivity</title><link rel="stylesheet" href="core.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"/></head><body><div class="chapter" title="Chapter 7. Interactivity"><div class="titlepage"><div><div><h1 class="title"><a id="_interactivity"/>Chapter 7. Interactivity</h1></div><div><div class="author"><h3 class="author"><span class="othername">Liza Daly</span></h3><div class="affiliation"><span class="jobtitle">Vice-President of Engineering, Safari Books Online<br/></span></div></div></div></div></div><p><a id="id581691" class="indexterm"/>
+Why would you want a book to be interactive?</p><p>For many readers, a book’s immutability is a feature rather than a bug. A print book does not demand anything from the user but their full attention. It does not entice the reader to click, to comment, to share, or to tweet. It promises total immersion in the text, a direct conduit to the author’s thoughts.</p><p>Yet there are many cases where the static nature of the traditional book is perhaps an artifact of print technology rather than the canonical best form for the content. Books that aim to teach complex, real-world subjects could benefit from the opportunity for readers to engage with the material. New forms of storytelling can encourage readers to choose new paths, or let the reader dig deeply into the narrative, uncovering hidden motivations through careful discovery. Books packaged with their primary source material could be rich scholarly resources, allowing researchers to independently verify assertions or build follow-on experiments out of raw data. Far from being a de facto distraction, interactive publications have only begun to be explored.</p><p>EPUB 3 provides the capability to do all of the above, but author beware: interactivity remains at the vanguard of ebook support. The more the publication deviates from a traditional book, the less likely it is to be fully crossplatform. Many EPUB 3 reading systems will never support interactivity, and the standard is not specific about how conditional or partial support should be best implemented. Careful testing is required.</p><p>Support for interactive elements is described in <a class="ulink" href="http://idpf.org/epub/30/spec/epub30-contentdocs.html">EPUB 3 Content Documents</a>. This document will be referenced throughout this section. <a id="id581714" class="indexterm"/></p><div class="sect1" title="First Principles: Interaction Scope and Design"><div class="titlepage"><div><div><h1 class="title"><a id="_first_principles_interaction_scope_and_design"/>First Principles: Interaction Scope and Design</h1></div></div></div><p>The EPUB 3 specification defines two <span class="emphasis"><em>inclusion models</em></span> that affect
+the scope of the document that scripting can potentially
+modify in response to user input or script
+action. The larger the scope of the interaction, the less likely
+it is that the EPUB will be interoperable. <a id="id581761" class="indexterm"/><a id="id581799" class="indexterm"/></p><p>Ebooks present a particular challenge here for two reasons:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+Reading systems use different models of content display. While
+typically this is a choice between a paginated, print-like view and a
+scrolling, web-like view, it may also include viewportless readers
+(audio or Braille), specialized viewport sizes (serial presentation of
+very short snippets or single lines), or unusual configurations
+such as two-up or even three- or four-up page layouts. Any of these
+layouts may cause unexpected behavior when the DOM is modified in place.
+</li><li class="listitem">
+Unlike web browsers, ebook readers have a range of unique
+affordances to bring up navigation controls, settings, or metadata. A content
+author cannot know precisely which user events may be hijacked for the
+reading system’s own use, or the specific order in which events may
+fire.
+</li></ul></div><p>For both of these reasons, scripts should modify as
+little of the DOM as possible. The specification even has support
+for reading systems which <span class="emphasis"><em>prohibit</em></span> global modification of DOM. These
+systems are said to support only <span class="emphasis"><em>container-constrained scripting</em></span>
+and should indicate that as part of their <code class="literal">epubReadingSystem</code> object
+support. Conversely, potentially modifying any part of the DOM is
+known as <span class="emphasis"><em>spine-level scripting</em></span>, meaning such scripts are capable of modifying any DOM object that can be discovered via the reading system by traversing documents found in the Publications Metadata spine. <a id="id581874" class="indexterm"/> <a id="id581841" class="indexterm"/> <a id="id581901" class="indexterm"/> <a id="id581885" class="indexterm"/></p><div class="sect2" title="Progressive Enhancement"><div class="titlepage"><div><div><h2 class="title"><a id="_progressive_enhancement"/>Progressive Enhancement</h2></div></div></div><p><a id="id581917" class="indexterm"/> <a id="id581923" class="indexterm"/>
+Progressive enhancement is a design principle in which the goal is to develop the most accessible version of content first, as the primary version, and gradually add layers of enhancement based on the capabilities of the reading system, device, and end user. While the final product of a progressive enhancement workflow can be indistinguishable from one arrived at via a graceful degradation approach, the intent behind progressive enhancement is to view the accessible version of the content as the canonical one, rather than designing a high-resolution, heavily visual, interactive experience as the “real” content and then downgrading that presentation to an accessible version as an afterthought. <a id="id582012" class="indexterm"/></p><p>Progressive enhancement can be seen as complementary to a “mobile first” design approach. In both cases, the content creator understands that all users—regardless of ability—benefit from fast, concise, flexible access to information. By designing for a mobile and/or accessible audience first, the content creator is able to pare down the enhancements to only those that are most critical to consuming the content, and typically pays dividends in reducing unnecessary costly investment in eye candy that only serves to distract readers. <a id="id582004" class="indexterm"/></p><p>Because digital books are often specifically meant to educate, creating thoughtful publications that are highly accessible and cross-platform is even more critical than in general web development. All EPUB 3 content authors are strongly encouraged to consider developing interactive publications in a progressive enhancement approach, limiting those scripted qualities to only the most necessary, and ensuring that the nonscripted presentation contains valuable content in its own right.</p><div class="note" title="Note"><h3 class="title">Note</h3><p>The IDPF provides accessibility guidelines in the context of progressive enhancement techniques in its <a class="ulink" href="http://idpf.org/accessibility/guidelines/content/script/pe.php">EPUB 3 Accessibility Guidelines: Progressive Enhancement</a>. <a id="id582051" class="indexterm"/></p></div></div></div><div class="sect1" title="Procedural Interaction: JavaScript"><div class="titlepage"><div><div><h1 class="title"><a id="_procedural_interaction_javascript"/>Procedural Interaction: JavaScript</h1></div></div></div><p><a id="id581964" class="indexterm"/> <a id="ix_JavaScript" class="indexterm"/>
+Executing embedded source code from a procedural programming language is a prerequisite for most forms of ebook interactivity. While EPUB 3 does allow content creators to embed an arbitrary executable as the <code class="literal">object</code> element, in the majority of cases, interactive publications will be created through the use of in-book source code. Because JavaScript is the de facto standard scripting language for SVG and HTML5, EPUB 3 content documents can be assumed to be scriptable only if they contain JavaScript code. The standard does not define which versions of JavaScript (ECMAScript) are required for support; content creators should defer to the most commonly supported features in web browsers for best results.</p><div class="sect2" title="JavaScript in EPUB 2"><div class="titlepage"><div><div><h2 class="title"><a id="_javascript_in_epub_2"/>JavaScript in EPUB 2</h2></div></div></div><p><a id="id582061" class="indexterm"/>
+Use of scripts in EPUB 2 was discouraged though not explicitly forbidden. iBooks will run JavaScript code in both EPUB 2 and EPUB 3 documents, with specific implementation details as described in Apple’s proprietary best practices documentation. Developers should not expect to find widespread support of scripting in EPUB 2–only reading systems and should produce only EPUB 3 publications when scripting is required. <a id="id582143" class="indexterm"/> <a id="id582074" class="indexterm"/></p></div><div class="sect2" title="The EPUB 3 epubReadingSystem Object"><div class="titlepage"><div><div><h2 class="title"><a id="_the_epub_3_epubreadingsystem_object"/>The EPUB 3 epubReadingSystem Object</h2></div></div></div><p><a id="id582087" class="indexterm"/><a id="ix_object" class="indexterm"/>
+Reading systems that support scripting are required to provide the
+<code class="literal">navigator.epubReadingSystem</code> property. This allows developers to
+query the reading system about its scripting support and the specific
+scripting properties that it makes available.</p><p>A simple way to find out whether a script-aware reading system supports this property is to query the <code class="literal">epubReadingSystem</code> object: <a id="id582110" class="indexterm"/><a id="id582120" class="indexterm"/></p><pre class="programlisting"><code class="o">&lt;</code><code class="nx">script</code> <code class="nx">type</code><code class="o">=</code><code class="s2">"text/javascript"</code><code class="o">&gt;</code>
+<code class="nx">alert</code><code class="p">(</code><code class="s2">"Name: "</code> <code class="o">+</code> <code class="nx">navigator</code><code class="p">.</code><code class="nx">epubReadingSystem</code><code class="p">.</code><code class="nx">name</code> <code class="o">+</code>
+      <code class="s2">" / version: "</code> <code class="o">+</code> <code class="nx">navigator</code><code class="p">.</code><code class="nx">epubReadingSystem</code><code class="p">.</code><code class="nx">version</code> <code class="o">+</code>
+      <code class="s2">" / layoutStyle "</code> <code class="o">+</code> <code class="nx">navigator</code><code class="p">.</code><code class="nx">epubReadingSystem</code><code class="p">.</code><code class="nx">layoutStyle</code><code class="p">);</code>
+<code class="o">&lt;</code><code class="err">/script&gt;</code></pre><p>At this time, <code class="literal">navigator.epubReadingSystem</code> is supported in both iBooks (<a class="xref" href="ch07.html#ibooks-epubreadingsystem-object" title="Figure 7-1. Output from the epubReadingSystem object in iBooks">Figure 7-1</a>) and Readium (<a class="xref" href="ch07.html#readium-epubreadingsystem-object" title="Figure 7-2. Output from the epubReadingSystem object in Readium">Figure 7-2</a>).</p><div class="figure"><a id="ibooks-epubreadingsystem-object"/><div class="figure-contents"><div class="mediaobject"><img src="images/epbp_0701.png" alt="Name: iBooks / version 2.2 / layoutStyle paginated"/></div></div><p class="title">Figure 7-1. Output from the epubReadingSystem object in iBooks</p></div><div class="figure"><a id="readium-epubreadingsystem-object"/><div class="figure-contents"><div class="mediaobject"><img src="images/epbp_0702.png.jpg" alt="Name: Readium / version: 0.4.2 / layoutStyle paginated"/></div></div><p class="title">Figure 7-2. Output from the epubReadingSystem object in Readium</p></div><div class="note" title="Note"><h3 class="title">Note</h3><p>Consult the <a class="ulink" href="http://www.bisg.org/what-we-do-12-152-epub-30-support-grid.php">Book Industry Study Group (BISG) EPUB 3</a> support grid for updated information on support of this and other scripting properties. <a id="id582421" class="indexterm"/></p></div><div class="sect3" title="Detect features"><div class="titlepage"><div><div><h3 class="title"><a id="_detect_features"/>Detect features</h3></div></div></div><p><a id="id582446" class="indexterm"/>
+Through its <code class="literal">hasFeature()</code> method, <code class="literal">epubReadingSystem</code> allows content authors to query the exact characteristics of the reading system’s scripting support. The following features are required to be reported by any system that implements <code class="literal">epubReadingSystem</code>:</p><div class="variablelist"><dl><dt><span class="term">
+<code class="literal">dom-manipulation</code>
+</span></dt><dd>
+Spine-level scripts are allowed to make structural changes to the DOM. <a id="id582499" class="indexterm"/>
+</dd><dt><span class="term">
+<code class="literal">layout-changes</code>
+</span></dt><dd>
+Spine-level scripts may modify attributes and CSS styles that affect content layout.<a id="id582524" class="indexterm"/>
+</dd><dt><span class="term">
+<code class="literal">touch-events</code>
+</span></dt><dd>
+The device supports touch events and the reading system passes touch events to the content. <a id="id582554" class="indexterm"/>
+</dd><dt><span class="term">
+<code class="literal">mouse-events</code>
+</span></dt><dd>
+The device supports mouse events and the reading system passes mouse events to the content.  <a id="id582580" class="indexterm"/>
+</dd><dt><span class="term">
+<code class="literal">keyboard-events</code>
+</span></dt><dd>
+The device supports keyboard events and the reading system passes keyboard events to the content. <a id="id582607" class="indexterm"/>
+</dd><dt><span class="term">
+<code class="literal">spine-scripting</code>
+</span></dt><dd>
+Spine-level scripting is supported. <a id="id582626" class="indexterm"/>
+</dd></dl></div><p>Each of these will return <code class="literal">true</code> or <code class="literal">false</code> depending on the support available.</p><p>The important point to note about EPUB 3 event handlers is that the reading system passes the event to the content. Modern screen-based reading systems will naturally support input from a mouse or keyboard, but to provide consistent navigational interfaces, the reading system may choose to not pass those events down into the book’s DOM. This could be true even for reading systems implemented in JavaScript: they may deliberately suppress event propagation into the content viewport. <a id="id582644" class="indexterm"/></p><p>Even if a reading system explicitly does <span class="emphasis"><em>not</em></span> support passing through mouse events, it is safe to assume that it will still allow users to trigger ordinary hyperlink and anchor-based navigation. (If it doesn’t, consider reporting a bug!)</p><div class="note" title="Note"><h3 class="title">Note</h3><p>In its default implementation, <a class="ulink" href="http://bit.ly/11EhtQZ">Readium will return “true” for all but <code class="literal">touch-events</code></a>. The absence of <code class="literal">touch-events</code> should <span class="emphasis"><em>not</em></span> be taken to mean that the reading system is wholly touch-incompatible: since any web-based reading system could potentially be run on a touch-capable device, consider <code class="literal">touch-events</code> to mean events which are specific to <span class="emphasis"><em>touch only</em></span>, such as multitouch or swipe. Since touch events are typically delegated to mouse events in the absence of touch-specific listeners, most publications can safely concern themselves only with <code class="literal">mouse-events</code> when considering non-keyboard interaction. <a id="id582696" class="indexterm"/> <a id="id582698" class="indexterm"/></p></div></div><div class="sect3" title="Use preventDefault to avoid reading system default behavior"><div class="titlepage"><div><div><h3 class="title"><a id="_use_preventdefault_to_avoid_reading_system_default_behavior"/>Use preventDefault to avoid reading system default behavior</h3></div></div></div><p><a id="id582712" class="indexterm"/>
+If a particular area of text has interactivity
+triggers but is not wrapped in an <code class="literal">a</code> element, the reading system may
+call your custom event and then run its own behavior. If the user
+touched towards the edge of the margin, for example, the reading
+system may turn the page before your event has been processed by the
+reader (who probably didn’t want to turn the page after all).</p><p>Though not part of the specification, it is likely that most reading
+systems will honor the <code class="literal">preventDefault</code> method called on the event and
+not propagate the event further. However, it is important to ensure
+that <code class="literal">preventDefault</code> and other event code does not absolutely prevent
+the user from engaging with the reading system’s native controls. For
+example, don’t bind <code class="literal">preventDefault</code> to the entire HTML <code class="literal">body</code>!
+<a id="id582744" class="indexterm"/></p><div class="note" title="Note"><h3 class="title">Note</h3><p>At the time of this writing, Apple specifically endorses the use of <code class="literal">preventDefault</code> for scripts running inside of iBooks. <a id="id582775" class="indexterm"/></p></div></div><div class="sect3" title="Always query epubReadingSystem!"><div class="titlepage"><div><div><h3 class="title"><a id="_always_query_epubreadingsystem"/>Always query epubReadingSystem!</h3></div></div></div><p>Very simple scripted applications, especially container-constrained scripts, may not require testing any of the previous features. For example, a script that modifies only a fixed-size canvas without any user input does not necessarily care about the reading system’s layout style or what types of events are supported. Nevertheless, when authoring EPUB 3 scripted content you should always check <code class="literal">epubReadingSystem</code> before executing any code.</p><p>Because most EPUB 3 reading systems are implemented using HTML5-compatible browser rendering engines, they will typically have JavaScript support <span class="emphasis"><em>by default</em></span>. For security reasons, some choose to deliberately disable any in-book scripts, but others may not. Therefore, it is possible for a reading system to implicitly support JavaScript without explicitly supporting <span class="emphasis"><em>JavaScript in EPUB</em></span>. This could result in serious incompatibility between the reading system and the publication.</p><p>For maximum compatibility, content authors who want to include scripting should wrap <span class="emphasis"><em>all</em></span> executable code in a check for the existence of <code class="literal">epubReadingSystem</code>, to avoid unexpected behavior when a reading system was not intended to be script-compatible. The simplest way to do this is to wrap into an initialization function a check that the property exists: <a id="id582879" class="indexterm"/></p><pre class="programlisting"><code class="nb">document</code><code class="p">.</code><code class="nx">onload</code> <code class="o">=</code> <code class="kd">function</code> <code class="p">()</code> <code class="p">{</code>
+
+  <code class="k">if</code> <code class="p">(</code><code class="nx">navigator</code> <code class="o">&amp;&amp;</code> <code class="nx">navigator</code><code class="p">.</code><code class="nx">hasOwnProperty</code><code class="p">(</code><code class="s1">'epubReadingSystem'</code><code class="p">)</code> <code class="p">{</code>
+     <code class="nx">runEbookScripts</code><code class="p">();</code>  <code class="c1">// This is the only entry point to script documents</code>
+  <code class="p">}</code>
+<code class="p">};</code></pre></div></div><div class="sect2" title="Inclusion Models"><div class="titlepage"><div><div><h2 class="title"><a id="_inclusion_models"/>Inclusion Models</h2></div></div></div><p><a id="id582991" class="indexterm"/> <a id="id583002" class="indexterm"/>
+EPUB 3 scripted documents define the range of elements that can be accessed by interactive components using one of two inclusion models: container-constrained or spine-level scripting. The inclusion model describes the extent to which the script can access and manipulate the DOM of the parent, spine-level content document. For many applications, the container-constrained model would result in fairly onerous development, because it requires creation of discrete subdocuments for each interactive component. While most publications are likely to use the spine-level scripting model, understanding the intent of the container-constrained model is useful, because emulating that will provide the best results in cross-platform, accessible EPUBs.</p><div class="sect3" title="Container-constrained scripts"><div class="titlepage"><div><div><h3 class="title"><a id="_container_constrained_scripts"/>Container-constrained scripts</h3></div></div></div><p><a id="id583026" class="indexterm"/> <a id="id583038" class="indexterm"/>
+The container-constrained inclusion model requires that a script be
+associated only with an embedded subcomponent rather than the main
+content document. The most likely example would be an <code class="literal">iframe</code> with an
+explicit width and height that contained a smaller content document
+with its own script. The contained script would interact only with the
+DOM of its own content document, not the parent. <a id="id583048" class="indexterm"/></p><p>The potential advantage of this approach is that the scripted area has
+an explicitly defined bounding box, and thus could be laid out by the
+reading system without concern for shifts in numbers of pages or
+other document stability issues.</p><div class="note" title="Note"><h3 class="title">Note</h3><p>At the time of this writing, there are no scripting-enabled reading systems that support
+<span class="emphasis"><em>only</em></span> the container-constrained model.</p></div><p>The specification requires that reading systems that support scripting
+<span class="emphasis"><em>always</em></span> support the container-constrained model. It might be natural
+to assume, then, that a best practice would be to always use
+container-constrained markup if the use case supports it. But this would be a mistake, because wrapping each interactive component
+in an <code class="literal">object</code> or <code class="literal">iframe</code> is awkward and bears no resemblance to
+interactive content authoring on the Web. Additionally, iframes in
+EPUB publications are extremely uncommon (and sometimes explicitly
+disallowed in legacy EPUB 2 reading systems). It is unlikely that most
+reading systems have been extensively tested with documents that include
+<code class="literal">iframe</code>. At this time, we strongly recommend avoiding creating EPUB
+3 documents with the container-constrained inclusion model.</p><div class="note" title="Note"><h3 class="title">Note</h3><p>Container-constrained scripts as defined by the specification are not
+inherently <span class="emphasis"><em>safer</em></span> from a privacy or security
+perspective; they are only more likely to be interoperable. A
+container-constrained script may still have the ability
+to access user data, such as reading preferences or form input, or even
+have access outside of the reading system itself. True
+security is implemented at the level of the reading system or
+device, not the EPUB 3 specification. See
+<a class="ulink" href="http://bit.ly/11ELuzY">EPUB
+3 and Scripted Content Documents</a> by Joseph Pearson for a good
+analysis of the difference between security considerations and ebook
+rendering stability. <a id="id583122" class="indexterm"/></p></div></div><div class="sect3" title="Spine-level scripting"><div class="titlepage"><div><div><h3 class="title"><a id="_spine_level_scripting"/>Spine-level scripting</h3></div></div></div><p><a id="id583139" class="indexterm"/> <a id="id583157" class="indexterm"/>
+Spine-level scripts have access to the DOM of the primary EPUB 3
+Content Document as referenced by the Publications Metadata. This is
+the inclusion model employed by all script-aware EPUB 3 readers
+today and is likely to remain dominant. Content
+authors are probably safe to expect this inclusion model, but it is
+always worth checking via the <code class="literal">epubReadingSystem</code> object.</p><p>Even though the specific container-constrained inclusion model is
+<span class="emphasis"><em>not</em></span> recommended for real-world use, the overall intent of the model
+is well considered: spine-level publications should seek to minimize
+the number of changes to document metrics (particularly length but
+also width or overall document layout).</p><div class="note" title="Note"><h3 class="title">Note</h3><p>One way to minimize negative effects on pagination when employing
+content transformations via scripting is to pair scripted documents
+with a fixed-layout rendering mode. Here too, though, content authors
+must take care not to allow scripts to exceed the defined boundaries of
+the fixed-layout page, because the reading system will not automatically be
+able to scroll or repaginate the viewport accordingly. And, of course,
+fixed-layout documents come with their own downsides and accessibility
+concerns. <a id="id583220" class="indexterm"/></p></div></div></div><div class="sect2" title="Ebook State and Storage"><div class="titlepage"><div><div><h2 class="title"><a id="_ebook_state_and_storage"/>Ebook State and Storage</h2></div></div></div><p><a id="id583208" class="indexterm"/>
+Scripts can directly modify only the EPUB content document to
+which they are attached. This is not a limitation for most simple
+interactivity use cases, where the script drives a quiz or animated
+example. It does present a challenge when a choice a user makes in one
+chapter should affect content presentation in another—for example, in
+a branching story. In nonfiction, the restriction could also be a
+problem for authors who want to have large interactive publications,
+such as textbooks, and want to track student
+performance on in-book quizzes throughout the reading experience. <a id="id583217" class="indexterm"/></p><p>One solution to this problem of intra-publication communication is to
+store information in a globally accessible place and have each content
+document check that area for updated data. HTML5
+offers a number of storage options, from traditional web cookies to
+the <code class="literal">localStorage</code> and <code class="literal">sessionStorage</code> models, to one of the
+full-blown HTML5 database APIs such as <code class="literal">IndexedDB</code> or the
+now-deprecated but widely available <code class="literal">Web SQL</code>.</p><p>The EPUB 3 specification neither requires or prohibits
+the presence or use of any of the storage mechanisms above. Indeed,
+like JavaScript itself, many of these will come “for free” with the
+HTML rendering engine packaged with the ebook reader. However, reading
+system developers may choose to exclude or block access to any of
+those APIs. In some cases, they may be unofficially supported in one
+version and then removed in a later version. Ebook ecosystems which
+support syncing across devices are not likely to sync ancillary
+storage or state. Publications that use these features may need to
+clearly communicate their limitations to readers, and provide adequate
+fallbacks for reading systems that support scripting but <span class="emphasis"><em>not</em></span> the
+desired storage mechanism. <a id="id583361" class="indexterm"/></p></div><div class="sect2" title="Identifying Scripted Content Documents"><div class="titlepage"><div><div><h2 class="title"><a id="_identifying_scripted_content_documents"/>Identifying Scripted Content Documents</h2></div></div></div><p><a id="id583286" class="indexterm"/> <a id="id583295" class="indexterm"/>
+A content document that includes scripts of either inclusion model <span class="emphasis"><em>must</em></span>
+be declared as such in the Publication Metadata, as defined in the
+<a class="ulink" href="http://idpf.org/epub/30/spec/epub30-publications.html#scripted">Publications
+3.0 specification</a>. The property <code class="literal">scripted</code> must be included as part
+of the <code class="literal">item</code> definition for that document:<a id="id583355" class="indexterm"/> <a id="id583233" class="indexterm"/><a id="id583241" class="indexterm"/></p><pre class="programlisting"><code class="nt">&lt;item</code>
+      <code class="na">properties=</code><code class="s">"scripted"</code>
+      <code class="na">id=</code><code class="s">"c1"</code>
+      <code class="na">href=</code><code class="s">"chapter-with-scripting.xhtml"</code>
+      <code class="na">media-type=</code><code class="s">"application/xhtml+xml"</code> <code class="nt">/&gt;</code></pre><div class="sect3" title="Creating fallbacks"><div class="titlepage"><div><div><h3 class="title"><a id="_creating_fallbacks"/>Creating fallbacks</h3></div></div></div><p><a id="id583426" class="indexterm"/><a id="id583434" class="indexterm"/>
+If a reading system encounters a scripted publication and does <span class="emphasis"><em>not</em></span>
+support scripting, it has two options according to the specification:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+Look for
+<a class="ulink" href="http://bit.ly/VwO4Us">manifest-level
+fallbacks</a> in the Publication Metadata.
+</li><li class="listitem">
+Look for an
+<a class="ulink" href="http://bit.ly/W4NlKL"><code class="literal">epub:switch</code> block</a> inside the scripted content document and execute the defined
+fallback. <a id="id583499" class="indexterm"/>
+</li></ul></div><p>At the time of this writing, it is unknown how many reading systems will implement
+<code class="literal">epub:switch</code>. It was a mechanism included in EPUB 2 [as
+<a class="ulink" href="http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section2.6.3"><code class="literal">opf:switch</code></a>]
+that did not see wide adoption. Similarly, publication-level
+fallbacks may also not be widely used or deployed. <a id="id583501" class="indexterm"/></p><p>A third, and likely best, fallback mechanism is to implement the
+scripted content as <span class="emphasis"><em>progressive enhancement</em></span> rather than with any
+explicit declarative fallback mechanism: create the fallback content
+as the native HTML markup and <span class="emphasis"><em>replace</em></span> that content with the
+scripted enhancement through JavaScript itself. For example: <a id="id583544" class="indexterm"/></p><pre class="programlisting"><code class="nt">&lt;div</code> <code class="na">class=</code><code class="s">"quiz"</code><code class="nt">&gt;</code>
+  <code class="nt">&lt;p</code> <code class="na">class=</code><code class="s">"question"</code><code class="nt">&gt;</code>How much wood could a woodchuck chuck? <code class="nt">&lt;/p&gt;</code>
+  <code class="nt">&lt;ol</code> <code class="na">class=</code><code class="s">"answers"</code><code class="nt">&gt;</code>
+    <code class="nt">&lt;li&gt;</code> <code class="nt">&lt;a</code> <code class="na">href=</code><code class="s">"answers.html#correct"</code> <code class="na">role=</code><code class="s">"button"</code><code class="nt">&gt;</code>Two<code class="nt">&lt;/a&gt;</code> <code class="nt">&lt;/li&gt;</code>
+    <code class="nt">&lt;li&gt;</code> <code class="nt">&lt;a</code> <code class="na">href=</code><code class="s">"answers.html#correct"</code> <code class="na">role=</code><code class="s">"button"</code><code class="nt">&gt;</code>Five<code class="nt">&lt;/a&gt;</code> <code class="nt">&lt;/li&gt;</code>
+    <code class="nt">&lt;li&gt;</code> <code class="nt">&lt;a</code> <code class="na">href=</code><code class="s">"answers.html#incorrect"</code> <code class="na">role=</code><code class="s">"button"</code><code class="nt">&gt;</code>Ten<code class="nt">&lt;/a&gt;&lt;/li&gt;</code>
+  <code class="nt">&lt;/ol&gt;</code>
+<code class="nt">&lt;/div&gt;</code></pre><p>In this example, the EPUB would contain a static page that simply
+displayed “correct” or “incorrect” based on the quiz and could be
+traversed as a normal hyperlink in a non-scripted reading environment.
+But packaged with a script, the script could “hijack” the anchor link, instead display an in-page pop up with the answer, and potentially
+even tally the number of correct/incorrect results. No explicit
+fallback required. <a id="id583794" class="indexterm"/></p></div></div></div><div class="sect1" title="Animation and Graphics: Canvas"><div class="titlepage"><div><div><h1 class="title"><a id="_animation_and_graphics_canvas"/>Animation and Graphics: Canvas</h1></div></div></div><p><a id="id583802" class="indexterm"/> <a id="id583813" class="indexterm"/> <a id="ix_canvas_element" class="indexterm"/>
+The HTML5 <code class="literal">canvas</code> element allows a publication to contain an almost unlimited variety of widgets. Canvas-based interactivity has a number of attractive qualities for a content author:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+Canvas is widely supported in all modern browser engines, with almost no cross-browser compatibility issues.
+</li><li class="listitem">
+A <code class="literal">canvas</code> element is naturally of a fixed height and width, meaning it provides a <span class="emphasis"><em>container-constrained</em></span> space for interactive components, and thus is not subject to layout issues involving pagination.
+</li><li class="listitem">
+A number of popular JavaScript graphics libraries are compatible with <code class="literal">canvas</code>, including <a class="ulink" href="http://processingjs.org/">Processing.js</a>. <a id="id583858" class="indexterm"/>
+</li></ul></div><p>A significant downside is that <span class="emphasis"><em>canvas is not natively accessible</em></span>. Content authors should take care to provide thoughtful fallbacks to canvas-based interactivity. <a id="id583913" class="indexterm"/></p><div class="sect2" title="Best Practices in Canvas Usage"><div class="titlepage"><div><div><h2 class="title"><a id="_best_practices_in_canvas_usage"/>Best Practices in Canvas Usage</h2></div></div></div><p>It is possible to simply place textual canvas fallbacks inside the <code class="literal">canvas</code> element itself:</p><pre class="programlisting"><code class="nt">&lt;canvas</code> <code class="na">width=</code><code class="s">"200"</code> <code class="na">height=</code><code class="s">"200"</code> <code class="na">id=</code><code class="s">"leaves"</code><code class="nt">&gt;</code>
+  An interactive animation that, when clicked, presents an image of trees
+  changing their leaf color and then shedding their leaves.
+<code class="nt">&lt;/canvas&gt;</code></pre><p>However, typically, the purpose of a <code class="literal">canvas</code> element is to convey information that would be difficult to express using textual information itself. (If the canvas is simple enough to describe in words, it probably didn’t need to be coded in the first place!) Also, just because a <code class="literal">canvas</code> element exists doesn’t mean that it’s impossible to make it accessible. WAI-ARIA roles can instead help to describe the canvas and potentially let a visually impaired user interact with it. <a id="id583981" class="indexterm"/></p><p>In this case, <code class="literal">role="button"</code> informs the reading system that the canvas is one that a user can click on to interact:</p><pre class="programlisting"><code class="nt">&lt;canvas</code> <code class="err">...</code> <code class="na">role=</code><code class="s">"button"</code> <code class="na">tabindex=</code><code class="s">"0"</code> <code class="na">aria-label=</code><code class="s">"Tree leaf demo"</code><code class="nt">&gt;</code>
+  An interactive animation that, when clicked, presents an image of trees
+  changing their leaf color and then shedding their leaves.
+<code class="nt">&lt;/canvas&gt;</code></pre><p>Another option to creating an accessible canvas is to wrap it in elements that are themselves more accessible, such as <code class="literal">figure</code>:</p><pre class="programlisting"><code class="nt">&lt;figure&gt;</code>
+   <code class="nt">&lt;figcaption&gt;</code>
+      <code class="nt">&lt;span</code> <code class="na">class=</code><code class="s">"caption"</code><code class="nt">&gt;</code>Figure 1 — During certain seasons, trees will drop
+      their leaves in preparation for cold weather. The leaves typically change
+      color from green to red, orange, or yellow just before falling.<code class="nt">&lt;/span&gt;</code>
+   <code class="nt">&lt;/figcaption&gt;</code>
+   <code class="nt">&lt;canvas</code> <code class="na">width=</code><code class="s">"200"</code> <code class="na">height=</code><code class="s">"200"</code> <code class="na">id=</code><code class="s">"leaves"</code> <code class="na">role=</code><code class="s">"button"</code>
+           <code class="na">tabindex=</code><code class="s">"0"</code> <code class="na">aria-label=</code><code class="s">"Tree leaf demo"</code><code class="nt">&gt;</code>
+     An interactive animation that, when clicked, presents an image of trees
+     changing their leaf color and then shedding their leaves.
+  <code class="nt">&lt;/canvas&gt;</code>
+<code class="nt">&lt;/figure&gt;</code></pre><p>This approach is likely to be appropriate for many uses of canvas in EPUB 3, where they are typically playing the role of an illustrative figure.</p><p>The most accessible approach is to prepare a complete <a class="ulink" href="http://msdn.microsoft.com/en-us/library/hh968259(v=vs.85).aspx">shadow DOM</a>
+inside the <code class="literal">canvas</code> element. In this implementation, the script
+controlling the canvas also manipulates fallback elements.
+This approach works best when presenting textual data, such
+as charts or graphs, but can also be used to hook into audio events or to present semantic elements that help
+explicate the text. <a id="id584080" class="indexterm"/> <a id="id584245" class="indexterm"/></p><p>In this final example, the shadow DOM elements can be revealed one after the other, read either by a screenreader or through embedded audio, conveying the progressive nature of tree leaf change even without the benefit of the canvas animation or any kind of visual presentation:</p><pre class="programlisting"><code class="nt">&lt;figure&gt;</code>
+   <code class="nt">&lt;figcaption&gt;</code>
+      <code class="nt">&lt;span</code> <code class="na">class=</code><code class="s">"caption"</code><code class="nt">&gt;</code>Figure 1 — During certain seasons, trees will drop
+      their leaves in preparation for cold weather. The leaves typically change
+      color from green to red, orange, or yellow just before falling.<code class="nt">&lt;/span&gt;</code>
+   <code class="nt">&lt;/figcaption&gt;</code>
+   <code class="nt">&lt;canvas</code> <code class="na">width=</code><code class="s">"200"</code> <code class="na">height=</code><code class="s">"200"</code> <code class="na">id=</code><code class="s">"leaves"</code> <code class="na">role=</code><code class="s">"button"</code>
+           <code class="na">tabindex=</code><code class="s">"0"</code> <code class="na">aria-label=</code><code class="s">"Tree leaf demo"</code><code class="nt">&gt;</code>
+    <code class="nt">&lt;header&gt;</code>
+       This demonstration describes the stages of leaf change that deciduous
+       trees undergo during transition to the cold seasion.
+    <code class="nt">&lt;/header&gt;</code>
+    <code class="nt">&lt;ol&gt;</code>
+      <code class="nt">&lt;li&gt;</code>Trees will respond to decreasing length of daylight with a series of
+         chemical changes that reduce the presence of chlorophyll in the
+         leaves.<code class="nt">&lt;/li&gt;</code>
+      <code class="nt">&lt;li&gt;</code>When chlorophyll disappears from a leaf, previously hidden colors of
+          red, orange, and yellow are revealed.<code class="nt">&lt;/li&gt;</code>
+      <code class="nt">&lt;li&gt;</code>Gradually the leaves turn from their fall colors
+          into dead leaves.<code class="nt">&lt;/li&gt;</code>
+      <code class="nt">&lt;li&gt;</code>Eventually the dead leaves fall from the tree due to wind, rain, or
+         their own weight.<code class="nt">&lt;/li&gt;</code>
+   <code class="nt">&lt;/ol&gt;</code>
+  <code class="nt">&lt;/canvas&gt;</code>
+<code class="nt">&lt;/figure&gt;</code></pre><div class="note" title="Note"><h3 class="title">Note</h3><p>The IDPF provides updated guidelines on accessible canvas implementations, called <a class="ulink" href="http://idpf.org/accessibility/guidelines/content/script/canvas.php">EPUB 3 Accessibility Guidelines: Canvas.</a>  <a id="id584481" class="indexterm"/></p></div></div><div class="sect2" title="Canvas in a Nonscripted Reading System"><div class="titlepage"><div><div><h2 class="title"><a id="_canvas_in_a_nonscripted_reading_system"/>Canvas in a Nonscripted Reading System</h2></div></div></div><p>A curious consequence of using HTML5-compatible rendering engines as
+ebook readers is that there may be cases where the reading system does
+not want to support scripted content, but may not default to rendering
+an inline canvas fallback.</p><p>The
+<a class="ulink" href="http://bit.ly/10ms2Yq">HTML5
+canvas specification</a> requires that the absence of JavaScript
+support be sufficient to trigger the display of <code class="literal">canvas</code> fallbacks: <a id="id584538" class="indexterm"/></p><div class="blockquote"><blockquote class="blockquote"><p>In non-visual media, and in visual media if scripting is disabled for the canvas element or
+if support for canvas elements has been disabled, the canvas element represents its fallback
+ content instead. <a id="id584525" class="indexterm"/></p></blockquote></div><p>However, some reading systems may only be post facto disabling
+JavaScript in contained publications, while retaining JavaScript use
+for their own purposes (or may be implemented entirely in
+JavaScript). In this scenario, the reading system cannot rely on the
+browser’s canvas fallback behavior and will have to implement fallback
+rendering itself.</p><p>Since it is unclear whether this will occur in practice, content
+authors should consider using <code class="literal">canvas</code> as part of a progressive
+enhancement approach, injecting the <code class="literal">canvas</code> element <span class="emphasis"><em>with JavaScript</em></span>,
+while authoring the document markup using an image or other
+fallback. For best results, ensure that the block
+to be replaced has the same dimensions as the <code class="literal">canvas</code>, to
+allow the reading system to properly paginate as soon as the DOM is
+available. If a <code class="literal">canvas</code> or other element is added by JavaScript after
+rendering/pagination, unexpected results may occur. <a id="id584588" class="indexterm"/> <a id="id584604" class="indexterm"/></p></div></div><div class="sect1" title="Object"><div class="titlepage"><div><div><h1 class="title"><a id="_object"/>Object</h1></div></div></div><p><a id="id584615" class="indexterm"/> <a id="id584621" class="indexterm"/>
+EPUB 3 supports the <code class="literal">object</code> element for use with arbitrary embedded
+executables that are not natively supported in EPUB 3 reading
+systems. A common use case would be to include proprietary applets or Adobe Flash applications. <a id="id584635" class="indexterm"/></p><p>For the most portable, accessible publication, insert the <code class="literal">object</code> inside the content of an <code class="literal">epub:switch</code> element and provide an equivalent fallback. The fallback should itself be highly accessible; don’t create a fallback that is simply an image if it would be possible to include descriptive text as well.</p><p>Don’t use Flash to embed multimedia assets like video or audio if it would be possible to use the native <code class="literal">video</code> or <code class="literal">audio</code> elements with a compatible codec. <a id="id584675" class="indexterm"/></p><div class="note" title="Note"><h3 class="title">Note</h3><p>While the <code class="literal">embed</code> element is part of HTML5 and is theoretically included in EPUB 3, content creators are strongly discouraged from using it, because there is no prescribed method for including a fallback. It is extremely unlikely that one will encounter an EPUB 3 reading system which supports <code class="literal">embed</code> but not <code class="literal">object</code>. <a id="id584696" class="indexterm"/></p></div><p>In general, <code class="literal">object</code> is likely to be appropriate only for publications
+that are meant to be used within a well-defined reading
+ecosystem. Mobile devices are typically
+limited in their support of third-party binaries, and users can rarely
+install extensions inside of ebook readers. When possible, prefer components that use native HTML5 APIs
+(i.e., canvas, video, audio, with or without JavaScript) to provide
+interactive experiences in EPUB 3. <a id="id584709" class="indexterm"/></p></div><div class="sect1" title="Other Graphical Interaction Models"><div class="titlepage"><div><div><h1 class="title"><a id="_other_graphical_interaction_models"/>Other Graphical Interaction Models</h1></div></div></div><p><a id="id584734" class="indexterm"/>
+Though not specifically designed for scripted interactivity, SVG may
+be attractive as an alternative to <code class="literal">canvas</code> or <code class="literal">object</code> for the following reasons:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+SVG is a native content document type in EPUB 3, and its support is required of reading systems.
+</li><li class="listitem">
+SVG <span class="emphasis"><em>may</em></span> be more accessible than <code class="literal">canvas</code> due to its declarative nature (but it is not inherently more accessible).
+</li><li class="listitem">
+A number of JavaScript libraries use SVG as their drawing engine as it provides some advantages over <code class="literal">canvas</code>, especially in line-drawing applications where a vector library is highly optimized.
+</li></ul></div><p>Content authors producing for any number of technical fields should
+specifically consider the <a class="ulink" href="http://d3js.org/">D3 visualization library</a>, which is seeing
+wide use on the Web. D3 can produce beautiful, high-performance results
+and has been adopted by <span class="emphasis"><em>The New York Times</em></span> and others for data-driven
+interactive graphs, charts, and complex visualizations. <a id="id584809" class="indexterm"/> <a id="id584795" class="indexterm"/></p><p>Other graphical libraries, such as
+<a class="ulink" href="http://mrdoob.github.com/three.js/">three.js</a>, allow the developer to choose between <code class="literal">canvas</code> or <code class="literal">svg</code> as the output engine. (three.js also
+supports WebGL, but EPUB 3 has no requirement that reading systems
+support WebGL and its presence should not be automatically expected). <a id="id584836" class="indexterm"/> <a id="id584851" class="indexterm"/> <a id="id584861" class="indexterm"/></p><p>Note, however that most visualization libraries do not have
+accessibility as a primary use case and may need extensive work to
+provide interactive but accessible implementations. You might need to employ static fallbacks instead.</p></div><div class="sect1" title="Accessibility and Scripting Summary"><div class="titlepage"><div><div><h1 class="title"><a id="_accessibility_and_scripting_summary"/>Accessibility and Scripting Summary</h1></div></div></div><p><a id="id584883" class="indexterm"/>
+<a class="xref" href="ch09.html" title="Chapter 9. Accessibility">Chapter 9</a> addresses a number of important considerations when providing script-driven content (especially with an element that is natively not accessible, like <code class="literal">canvas</code>). Consult the
+accessibility guidelines, but the important points can be summarized as such:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+Avoid creating publications that <span class="emphasis"><em>require</em></span> scripting support.
+</li><li class="listitem">
+Test your scripted publications with JavaScript disabled.
+</li><li class="listitem">
+Use <a class="ulink" href="http://www.w3.org/TR/wai-aria/">WAI-ARIA</a> attributes to guide screenreaders in rendering rich interactive components. <a id="id584951" class="indexterm"/>
+</li><li class="listitem">
+Use a progressive enhancement approach to scripting, canvas, and object-based elements.
+</li></ul></div></div></div></body></html>

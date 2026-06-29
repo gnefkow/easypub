@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Introduction</title><link rel="stylesheet" href="core.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"/></head><body><div class="preface" title="Introduction"><div class="titlepage"><div><div><h1 class="title"><a id="introduction"/>Introduction</h1></div></div></div><p>Before jumping right into the best practices, let’s take a brief moment to answer the question: what exactly is an EPUB?</p><p>If you’re already familiar with the inner workings of the format, whether from creating EPUB 2 content or experimenting with EPUB 3, you can safely skip ahead to <a class="xref" href="ch01.html" title="Chapter 1. Package Document and Metadata">Chapter 1</a>, but this introduction will take everyone else through a quick tour of the format (at the macro level, instead of the micro level to come) to see how the pieces fit together.</p><p>Since you’re reading a book about EPUB, you must already be familiar with the term, but you may have seen or heard it incorrectly being used as a synonym for <span class="emphasis"><em>ebook</em></span> (as a shorthand for talking about <span class="emphasis"><em>electronic books</em></span>). Although the two terms share a common relation in electronic book production, they aren’t interchangeable. EPUB is a <span class="emphasis"><em>format</em></span> for representing documents in electronic form. <span class="emphasis"><em>Ebook</em></span>, on the other hand, is just an abstract term used to encompass any electronic representation of a book, including formats such as PDF, HTML, ASCII text, Word, and a host of others, in addition to EPUB. <a id="id464211" class="indexterm"/></p><p>EPUB is designed to be a general-purpose document format, and it can be used to represent many kinds of publications other than just books: from magazines to newspapers to journals, and on through office documents and policies and beyond. Just about any document type you want to distribute electronically can be represented as an EPUB. Likewise, this book is not just about how to create books in electronic form, but how to optimally use the EPUB format for any content production. A natural bias to book production will be evident at times, but recommendations should be read as publication-agnostic.</p><p>On a practical level, EPUB defines both the format for your content and how reading systems go about discovering it and rendering it to readers (we’ll avoid the word <span class="emphasis"><em>display</em></span> for what a reading system does with content, because EPUBs aren’t only for the sighted and don’t contain only visual content).</p><p>But perhaps the best way to understand what goes into an EPUB is to quickly break down the creation process:</p><div class="orderedlist"><ol class="orderedlist"><li class="listitem">
+The first step in making an EPUB is to create your <span class="emphasis"><em>content document(s)</em></span>. These must be either XHTML5 documents, SVG images, or a mixture of the two. <a class="xref" href="ch03.html" title="Chapter 3. Content Documents">Chapter 3</a> begins looking at the issues involved in creating these documents. <a id="id489552" class="indexterm"/> <a id="id517264" class="indexterm"/>
+</li><li class="listitem">
+Once you’ve crafted your content, the next step is to create the <span class="emphasis"><em>package document</em></span>, a special document used by reading systems to glean information about your publication (for ordering in your bookshelf, to render the content, and the like). The first step in creating this file is to list all of the resources you assembled in the content creation step in the <span class="emphasis"><em>manifest section</em></span> of the package document. Reading systems need this list to determine whether a publication is complete and to discover which remote files will have to be retrieved. All your publication metadata (title, author, etc.) also goes in this file, consolidating it in a single, common location so that it can be easily extracted and used in distribution channels and by reading systems. You also have to include the default reading order in the <span class="emphasis"><em>spine section</em></span> (a sequential list of your content files, from the first one to display to the last). Understanding metadata and packaging is key to understanding the EPUB format, as you might imagine, and that’s why this book begins by exploring these issues in <a class="xref" href="ch09.html#_metadata" title="Metadata">Metadata</a>. <a id="id465186" class="indexterm"/> <a id="id494682" class="indexterm"/> <a id="id538401" class="indexterm"/>
+</li><li class="listitem">
+The last step is to zip up your content documents, associated resources, and the package document into a single file for distribution. This process isn’t quite as simple as a standard zipping, however: a special mimetype file has to be added first to indicate that your ZIP file contains an EPUB and not something else, and a file called <span class="emphasis"><em>container.xml</em></span> has to go in a directory named <span class="emphasis"><em>META-INF</em></span> to tell reading systems where to find your package document. <a id="id557981" class="indexterm"/> <a id="id477888" class="indexterm"/>
+</li></ol></div><p>This manual process is not one you will typically carry out in full, because there are programs that allow you to focus on creating your content while taking care of the export and packaging for you. It’s invaluable to get clear in your head, though, because content and the package document are interrelated in many ways that will be explored throughout this book.</p><div class="note" title="Note"><h3 class="title">Note</h3><p>If you read the previous numbered list in reverse, you’ll also understand how reading systems work: they examine your ZIP container, determine it’s an EPUB, find the package document, and from there discover how to render the resources to readers.</p></div><p>The other aspect of EPUB to understand before getting started is that it draws many of its capabilities and its versatility from web technologies, but the Web alone doesn’t tell the whole story of EPUB. Without the complementary technologies the EPUB format brings under its common umbrella, the ability to create distributable publications would be much more complex.</p><p>Some of the technologies used in EPUBs have been specially developed by the International Digital Publishing Forum (IDPF), but most of the standards that have been leveraged are internationally recognized. The key ones you’ll find in EPUB 3 publications include: <a id="id477465" class="indexterm"/></p><div class="variablelist"><dl><dt><span class="term">
+XHTML5
+</span></dt><dd>
+<a id="id527193" class="indexterm"/> <a id="id508759" class="indexterm"/> <a id="id528777" class="indexterm"/> <a id="id552264" class="indexterm"/>
+  For representing text and multimedia content, which now includes native support for MathML equations, ruby pronunciation markup, and embedded SVG images
+</dd><dt><span class="term">
+SVG 1.1
+</span></dt><dd>
+  For representing graphical works (for example, manga and comics)
+</dd><dt><span class="term">
+CSS 2.1 and 3
+</span></dt><dd>
+<a id="id505896" class="indexterm"/> <a id="id528802" class="indexterm"/>
+  To facilitate visual display and rendering of content
+</dd><dt><span class="term">
+JavaScript
+</span></dt><dd>
+<a id="id499725" class="indexterm"/>
+  For interactivity and automation
+</dd><dt><span class="term">
+TrueType and WOFF
+</span></dt><dd>
+<a id="id533729" class="indexterm"/> <a id="id539467" class="indexterm"/>
+  To provide font support beyond the minimal base set that reading systems typically have available
+</dd><dt><span class="term">
+SSML/PLS/CSS3 Speech
+</span></dt><dd>
+<a id="id492415" class="indexterm"/> <a id="id528944" class="indexterm"/> <a id="id533709" class="indexterm"/>
+  For improved text-to-speech rendering
+</dd><dt><span class="term">
+SMIL3
+</span></dt><dd>
+<a id="id513480" class="indexterm"/>
+  For synchronizing text and audio playback
+</dd><dt><span class="term">
+RDF vocabularies
+</span></dt><dd>
+  For embedding semantic information<a id="id550450" class="indexterm"/> about the publication and content
+</dd><dt><span class="term">
+XML
+</span></dt><dd>
+  A number of specialized grammars<a id="id531881" class="indexterm"/> facilitate the discovery and processing aspects of EPUBs
+</dd><dt><span class="term">
+ZIP
+</span></dt><dd>
+<a id="id506851" class="indexterm"/>
+  To wrap all the resources up into a single file
+</dd></dl></div><p>You’ll learn more about how to use all of these technologies as you progress through the chapters.</p><p>The EPUB format is specifically designed to be free and open for anyone to use without having to sift through a litany of patent encumbrances and restrictions. EPUB’s widespread adoption has been due in no small part to the fact that basic text editing tools can be used to create publications, and the EPUB 3 revision of the specification has not deviated from this core tenet.</p><p>But that’s really all there is to an EPUB file under the hood. If you feel comfortable with the concept of an EPUB as a predictable, discoverable container of your content, you’re ready to begin tackling the best practices.
+<a id="id557479" class="indexterm"/> <a id="id488524" class="indexterm"/></p><div class="sidebar"><p class="title">The EPUB 3.0 Specifications</p><p>Although EPUB 3 aggregates a number of technologies, an EPUB is not just a loose collection of these technologies. The term <span class="emphasis"><em>EPUB 3</em></span> actually encompasses four separate specification documents, each of which details an aspect of how the employed technologies interact. This allows anyone to author an EPUB without struggling through all the related specifications, and allows the development of reading systems that can predictably process them. Another way to think of EPUB 3 is as the glue that binds these technologies into a usable reading experience.</p><p>The number and size of the specification documents can be intimidating the first time you go looking in them for guidance, but once you understand which aspect of the content creation and rendering process each handles, they’re not very difficult reads. Pointers to the specifications are provided throughout this book where relevant, but we’ll quickly break the documents down here so you can also explore them on your own as you go:</p><div class="variablelist"><dl><dt><span class="term">
+<a class="ulink" href="http://idpf.org/epub/30/spec/epub30-publications.html">EPUB Publications 3.0</a>
+</span></dt><dd>
+  The Publications specification defines the XML format used in the package document to store information about a publication. As noted earlier, the package document contains metadata about the publication (such as the title, author, and language), lists all the resources used, defines the default reading order, and indicates where to find the navigation document. <a id="id529023" class="indexterm"/>
+  The Publications specification also defines general content requirements that all EPUBs must adhere to, such as required content types and when and how to provide fallbacks for content that isn’t guaranteed to render on all devices.
+</dd><dt><span class="term">
+<a class="ulink" href="http://idpf.org/epub/30/spec/epub30-contentdocs.html">EPUB Content Documents 3.0</a>
+</span></dt><dd>
+  The Content Documents specification defines profiles of XHTML5, SVG 1.1, and CSS 2.1 and 3 for use in authoring content. A <span class="emphasis"><em>profile</em></span> can perhaps best be described as a snapshot of the specific functionality that you are allowed to use (that is, you may not get to use everything defined in those specifications just because it exists). If you skip or skim this specification, not only might you wind up using illegal elements, styles, and features, but you also might miss the additions that EPUB makes to improve the reading experience. <a id="id472531" class="indexterm"/>
+  The Content Documents specification also defines the format of the special navigation document. This document contains the table of contents for a publication, but it may also include other navigational aids, from tables of figures and illustrations to specialized tours of content.
+</dd><dt><span class="term">
+<a class="ulink" href="http://idpf.org/epub/30/spec/epub30-mediaoverlays.html">EPUB Media Overlays 3.0</a>
+</span></dt><dd>
+  For those already familiar with EPUB 2, the Media Overlays specification is the new kid on the specification block. The ability to include audio content in EPUB 3 does not limit you just to embedding audio clips in your documents. Media Overlays take advantage of the SMIL specification to enable the text content rendered in the reading system’s display area to be synchronized with audio narration, so that, for example, words can be highlighted as they are narrated. <a id="id513793" class="indexterm"/>
+</dd><dt><span class="term">
+<a class="ulink" href="http://idpf.org/epub/30/spec/epub30-ocf.html">EPUB Open Container Format (OCF) 3.0</a>
+</span></dt><dd>
+  And, finally, the Container specification defines how you bundle all your resources together into a single file. As noted previously, creating an EPUB file is more complex than just a simple instruction to zip up content, and this specification defines the discovery aspects discussed previously. <a id="id504220" class="indexterm"/>
+</dd></dl></div></div></div></body></html>
