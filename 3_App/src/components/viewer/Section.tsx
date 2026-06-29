@@ -24,6 +24,7 @@ type SectionProps = {
   onRequestCancelEdit: () => void
   onSelectSpellWord: (word: string | null) => void
   onAddToDictionary: (word: string) => void
+  fetchSpellcheckHtml: (html: string) => Promise<string | null>
 }
 
 export default memo(function Section({
@@ -48,6 +49,7 @@ export default memo(function Section({
   onRequestCancelEdit,
   onSelectSpellWord,
   onAddToDictionary,
+  fetchSpellcheckHtml,
 }: SectionProps) {
   return (
     <div
@@ -80,6 +82,7 @@ export default memo(function Section({
           onRequestCancelEdit={onRequestCancelEdit}
           onSelectSpellWord={onSelectSpellWord}
           onAddToDictionary={onAddToDictionary}
+          fetchSpellcheckHtml={fetchSpellcheckHtml}
         />
       ))}
     </div>

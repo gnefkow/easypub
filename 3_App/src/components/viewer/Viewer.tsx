@@ -53,6 +53,7 @@ type ViewerProps = {
   selectedSpellWord: string | null
   onSelectSpellWord: (word: string | null) => void
   onAddToDictionary: (word: string) => void
+  fetchSpellcheckHtml: (html: string) => Promise<string | null>
 }
 
 export default function Viewer({
@@ -94,6 +95,7 @@ export default function Viewer({
   selectedSpellWord,
   onSelectSpellWord,
   onAddToDictionary,
+  fetchSpellcheckHtml,
 }: ViewerProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const visibilityRatiosRef = useRef<Map<number, number>>(new Map())
@@ -304,6 +306,7 @@ export default function Viewer({
                   onRequestCancelEdit={onRequestCancelEdit}
                   onSelectSpellWord={onSelectSpellWord}
                   onAddToDictionary={onAddToDictionary}
+                  fetchSpellcheckHtml={fetchSpellcheckHtml}
                 />
                 {boundaryProps && <SectionBoundaryCard {...boundaryProps} />}
               </Fragment>

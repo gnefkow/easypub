@@ -78,6 +78,19 @@ THEN:
   - When handling `esc` inside the textarea to cancel editing, do not also trigger the "exit focus" behavior in the document-level key handler (i.e., prevent the Escape event from also clearing block focus).
 
 
+----------------------------------------------------------------------------------------------------
+
+
+## **Spellcheck**
+
+Text blocks support optional spellcheck (red unknown words, green dictionary words in view mode). Spellcheck is toggled from the TopBar and does not modify saved epub content.
+
+- **View mode:** Server-processed highlight spans in the block HTML display layer.
+- **Edit mode:** TipTap (`TextBlockRichEditor`) with server-driven red underlines via ProseMirror decorations; browser native spellcheck is disabled.
+
+Full behaviour, architecture, dictionary, API, and file map: **[PRD 1.6: Spellcheck and Dictionary](PRD_1.6_Spellcheck-and-Dictionary.md)**.
+
+When working on spellcheck in `TextBlock` or `TextBlockRichEditor`, treat PRD 1.6 as the source of truth — not browser spellcheck defaults or ad-hoc TipTap marks.
 
 
 

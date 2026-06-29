@@ -98,6 +98,13 @@
     cursor: pointer;
   }
 
+  .tiptap .spell-unknown {
+    text-decoration: underline wavy;
+    text-decoration-color: #ef4444;
+    text-underline-offset: 2px;
+    cursor: text;
+  }
+
   .spell-dictionary {
     background-color: color-mix(in srgb, #22c55e 15%, transparent);
     border-radius: 2px;

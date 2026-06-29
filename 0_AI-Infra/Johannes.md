@@ -65,3 +65,9 @@ These are always a part of building tickets:
 - **Components** Whenever possible, we use [Existing UI Components](../3_App/src/components/). If it is unclear what to use, ask the user as we're building the ticket. He will appreciate offering trade-offs in component design when decisions need to be made. 
 - **Horizontal rules in markdown files should have 100 dashes.** True, from a code perspective, all we need is "---". However, the user spends a lot of time looking at .md files in a code editor, so three dashes does not offer enough visual distinction, Whenever you're writing, in a markdown file and need to have a horizontal rule, use "----------------------------------------------------------------------------------------------------"
 - **Bold titles in markdown files**. Whenever writeing titles in markdown files, it is good to use ## and ### (etc...), but these only offer visual distinctions when an app is rendering the file. However, the User spends a lot of time looking at .md files in a code editor, so three dashes does not offer enough visual distinction, Whenever you're writing, in a markdown file and need to have a title, also **bold** it so that the IDE he is using will change the color of the text (giving him a visual hierarchy he can see).
+
+----------------------------------------------------------------------------------------------------
+**Updating the PRD**
+The purpose of the [PRD Folder](/2_Product-Overview-and-Requirements.md/)is to keep a reference of how things "should" work and how they are built today at a high level. It should be referenced before we start work on a particular area of the code, and should be updated after a ticket is complete (if needed). 
+
+After a ticket is complete, consider what documentation is in the PRD around that feature, and whether an update is needed. 

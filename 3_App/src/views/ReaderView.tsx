@@ -121,6 +121,24 @@ export default function ReaderView() {
   bookRef.current = book
   const selectedWorkingFileRef = useRef(selectedWorkingFile)
   selectedWorkingFileRef.current = selectedWorkingFile
+  const spellcheckEnabledRef = useRef(spellcheckEnabled)
+  spellcheckEnabledRef.current = spellcheckEnabled
+
+  const fetchSpellcheckHtml = useCallback(async (html: string) => {
+    const filename = selectedWorkingFileRef.current
+    if (!filename || !spellcheckEnabledRef.current) return null
+    const res = await fetch(
+      `/api/working-files/${encodeURIComponent(filename)}/spellcheck-block`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ html }),
+      },
+    )
+    if (!res.ok) return null
+    const data = await res.json()
+    return data?.spellcheckHtml ?? null
+  }, [])
 
   const getBlockByRef = useCallback((ref: BlockRef | null) => {
     if (!ref) return null
@@ -2006,6 +2024,7 @@ export default function ReaderView() {
             selectedSpellWord={selectedSpellWord}
             onSelectSpellWord={setSelectedSpellWord}
             onAddToDictionary={handleAddToDictionary}
+            fetchSpellcheckHtml={fetchSpellcheckHtml}
           />
         )}
         <Modal

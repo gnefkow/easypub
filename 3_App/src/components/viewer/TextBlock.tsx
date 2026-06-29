@@ -28,6 +28,7 @@ type TextBlockProps = {
   onRequestCancelEdit: () => void
   onSelectSpellWord: (word: string | null) => void
   onAddToDictionary: (word: string) => void
+  fetchSpellcheckHtml: (html: string) => Promise<string | null>
 }
 
 export default memo(function TextBlock({
@@ -53,6 +54,7 @@ export default memo(function TextBlock({
   onRequestCancelEdit,
   onSelectSpellWord,
   onAddToDictionary,
+  fetchSpellcheckHtml,
 }: TextBlockProps) {
   const tag = block.tag.toLowerCase()
   const Tag = tag as ElementType
@@ -197,6 +199,8 @@ export default memo(function TextBlock({
         <TextBlockRichEditor
           initialHtml={block.html}
           typographyClass={textareaTypographyClass}
+          spellcheckEnabled={spellcheckEnabled}
+          fetchSpellcheckHtml={fetchSpellcheckHtml}
           onCommit={(nextHtml) => {
             shouldAutoCommitRef.current = false
             onRequestCommitEdit(nextHtml)

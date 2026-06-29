@@ -6,10 +6,14 @@ import Superscript from '@tiptap/extension-superscript'
 import { Button } from 'counterfoil-starter-kit'
 import InlineFormatToolbar from './InlineFormatToolbar'
 import sanitizeInlineHtml from './sanitizeInlineHtml'
+import { SpellcheckDecoration } from './SpellcheckDecoration'
+import useEditModeSpellcheck from './useEditModeSpellcheck'
 
 type TextBlockRichEditorProps = {
   initialHtml: string
   typographyClass: string
+  spellcheckEnabled: boolean
+  fetchSpellcheckHtml: (html: string) => Promise<string | null>
   onCommit: (html: string) => void
   onCancel: () => void
 }
@@ -17,6 +21,8 @@ type TextBlockRichEditorProps = {
 export default function TextBlockRichEditor({
   initialHtml,
   typographyClass,
+  spellcheckEnabled,
+  fetchSpellcheckHtml,
   onCommit,
   onCancel,
 }: TextBlockRichEditorProps) {
@@ -42,6 +48,7 @@ export default function TextBlockRichEditor({
       }),
       Superscript,
       Subscript,
+      SpellcheckDecoration,
     ],
     content: initialHtml,
     autofocus: 'end',
@@ -70,6 +77,7 @@ export default function TextBlockRichEditor({
       attributes: {
         class: `textblock-edit-textarea w-full rounded resize-none overflow-hidden border border-input-border bg-input-bg px-3 py-2 font-contentTypeface text-slate-900 placeholder:text-input-placeholder focus:outline-none focus-visible:ring-2 focus-visible:ring-input focus-visible:ring-offset-2 ${typographyClass}`,
         style: 'min-height: 1.5em',
+        spellcheck: 'false',
       },
     },
   })
@@ -89,6 +97,8 @@ export default function TextBlockRichEditor({
       editor?.destroy()
     }
   }, [editor])
+
+  useEditModeSpellcheck({ editor, spellcheckEnabled, fetchSpellcheckHtml })
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
