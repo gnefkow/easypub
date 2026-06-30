@@ -601,6 +601,7 @@ const allowedTags = new Set([
   'section',
   'article',
   'img',
+  'hr',
 ])
 
 const collectAllowedBlocks = (rootNode) => {
@@ -910,7 +911,35 @@ const ensureEasypubStylesheet = (zip, opfPath, opfData) => {
   const cssZipPath = path.posix.normalize(
     path.posix.join(opfDir, 'easypub-styles.css')
   )
-  const cssContent = 'body {\n  hyphens: auto;\n  -webkit-hyphens: auto;\n}\n'
+  const cssContent = `body {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+p {
+  margin: 0;
+  text-indent: 1em;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid;
+  height: 0;
+  margin: 1.5em auto;
+  width: 25%;
+}
+
+h1 + p,
+h2 + p,
+h3 + p,
+h4 + p,
+h5 + p,
+h6 + p,
+hr + p,
+p:first-child {
+  text-indent: 0;
+}
+`
 
   if (existingCss) {
     zip.updateFile(cssZipPath, Buffer.from(cssContent, 'utf-8'))
@@ -1449,7 +1478,14 @@ app.post('/api/working-files/:filename/queue', async (req, res) => {
     }
 
     if (action.action === 'add-block') {
-      const { fromHref, afterBlockId, afterSelector, afterIndex, insertedText } = action
+      const {
+        fromHref,
+        afterBlockId,
+        afterSelector,
+        afterIndex,
+        insertedText,
+        insertPosition,
+      } = action
       if (!fromHref) {
         continue
       }
@@ -1486,7 +1522,56 @@ app.post('/api/working-files/:filename/queue', async (req, res) => {
       const nextElement = $(`<${nextTag}></${nextTag}>`)
       nextElement.attr('data-easypub-id', randomUUID())
       nextElement.text(nextText)
-      target.after(nextElement)
+      const position = insertPosition === 'before' ? 'before' : 'after'
+      if (position === 'before') {
+        target.before(nextElement)
+      } else {
+        target.after(nextElement)
+      }
+
+      zip.updateFile(targetPath, Buffer.from($.xml(), 'utf-8'))
+    }
+
+    if (action.action === 'add-space-break') {
+      const {
+        fromHref,
+        afterBlockId,
+        afterSelector,
+        afterIndex,
+        insertPosition,
+      } = action
+      if (!fromHref) {
+        continue
+      }
+      const targetPath = resolveHref(opfPath, fromHref)
+      const targetEntry = zip.getEntry(targetPath)
+      if (!targetEntry) {
+        continue
+      }
+      const html = zip.readAsText(targetEntry)
+      const $ = cheerio.load(html, { xmlMode: true })
+      let target = null
+      if (afterBlockId) {
+        target = findBlockById($, afterBlockId)
+      }
+      if ((!target || !target.length) && afterSelector) {
+        target = $(afterSelector).first()
+      }
+      if ((!target || !target.length) && typeof afterIndex === 'number') {
+        target = findBlockByIndex($, afterIndex)
+      }
+      if (!target || !target.length) {
+        continue
+      }
+
+      const hrElement = $('<hr/>')
+      hrElement.attr('data-easypub-id', randomUUID())
+      const position = insertPosition === 'before' ? 'before' : 'after'
+      if (position === 'before') {
+        target.before(hrElement)
+      } else {
+        target.after(hrElement)
+      }
 
       zip.updateFile(targetPath, Buffer.from($.xml(), 'utf-8'))
     }

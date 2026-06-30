@@ -47,6 +47,7 @@ export type QueueItem = {
     | 'edit-html'
     | 'change-justify'
     | 'add-block'
+    | 'add-space-break'
   fromHref: string
   toHref: string
   label: string
@@ -75,4 +76,5 @@ export type QueueItem = {
   afterIndex?: number
   insertedText?: string
   insertedTagHint?: string
+  insertPosition?: 'before' | 'after'
 }

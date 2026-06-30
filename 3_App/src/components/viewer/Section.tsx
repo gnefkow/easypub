@@ -57,10 +57,11 @@ export default memo(function Section({
       data-component="Section"
       className="viewer-section space-y-4 rounded-md"
     >
-      {section.blocks.map((block) => (
+      {section.blocks.map((block, index) => (
         <TextBlockComponent
           key={block.id}
           block={block}
+          previousBlock={index > 0 ? section.blocks[index - 1] : null}
           sectionIndex={section.index}
           viewerLanguage={viewerLanguage}
           isFocused={powerMode && focusedBlockId === block.id}

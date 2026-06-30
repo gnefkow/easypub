@@ -19,9 +19,15 @@ import Home from './Home'
 import {
   buildAddBlockQueueItem,
   getAddBlockQueueItemId,
-  optimisticallyInsertBlockAfter,
+  optimisticallyInsertBlock,
   removeOptimisticAddBlock,
+  type InsertPosition,
 } from './reader/addBlock'
+import {
+  buildAddSpaceBreakQueueItem,
+  getAddSpaceBreakQueueItemId,
+  optimisticallyInsertSpaceBreak,
+} from './reader/addSpaceBreak'
 import { usePowerModeState, type BlockRef, isSameBlockRef } from './reader/usePowerMode'
 import { DEFAULT_VIEWER_LANGUAGE } from '../utils/languages'
 import sanitizeInlineHtml, { stripHtmlTags } from '../components/viewer/richText/sanitizeInlineHtml'
@@ -299,6 +305,10 @@ export default function ReaderView() {
       console.log('[section] No blocks in this section — server will not be contacted')
       return
     }
+    const spellcheckBlocks = blocks.filter((block) => block.tag.toLowerCase() !== 'hr')
+    if (spellcheckBlocks.length === 0) {
+      return
+    }
     try {
       const res = await fetch(
         `/api/working-files/${encodeURIComponent(filename)}/spellcheck-section`,
@@ -308,7 +318,7 @@ export default function ReaderView() {
           body: JSON.stringify({
             sectionIndex,
             href,
-            blocks: blocks.map((b) => ({ tag: b.tag, html: b.html })),
+            blocks: spellcheckBlocks.map((b) => ({ tag: b.tag, html: b.html })),
           }),
         }
       )
@@ -342,12 +352,18 @@ export default function ReaderView() {
       setSections((prev) =>
         prev.map((section) => {
           if (section.index !== sectionIndex) return section
+          let spellcheckIndex = 0
           return {
             ...section,
-            blocks: section.blocks.map((block, i) => ({
-              ...block,
-              spellcheckHtml: data.blocks[i]?.spellcheckHtml ?? block.spellcheckHtml,
-            })),
+            blocks: section.blocks.map((block) => {
+              if (block.tag.toLowerCase() === 'hr') {
+                return block
+              }
+              const spellcheckHtml =
+                data.blocks[spellcheckIndex]?.spellcheckHtml ?? block.spellcheckHtml
+              spellcheckIndex += 1
+              return { ...block, spellcheckHtml }
+            }),
           }
         })
       )
@@ -598,6 +614,7 @@ export default function ReaderView() {
       'SECTION',
       'ARTICLE',
       'IMG',
+      'HR',
     ])
 
     // Replace noteref <a> elements with placeholder text before extracting block HTML
@@ -627,7 +644,9 @@ export default function ReaderView() {
           const html =
             tagName === 'IMG'
               ? (element as HTMLImageElement).outerHTML
-              : element.innerHTML
+              : tagName === 'HR'
+                ? ''
+                : element.innerHTML
           const inlineStyle = element.getAttribute('style') || ''
           const alignMatch = inlineStyle.match(/text-align:\s*(left|right|center|justify)/)
           const justify = alignMatch ? alignMatch[1] : undefined
@@ -1081,6 +1100,7 @@ export default function ReaderView() {
               afterIndex,
               insertedText,
               insertedTagHint,
+              insertPosition,
             }) => ({
               action,
               fromHref,
@@ -1109,6 +1129,7 @@ export default function ReaderView() {
               afterIndex,
               insertedText,
               insertedTagHint,
+              insertPosition,
             })
           ),
         }),
@@ -1417,8 +1438,12 @@ export default function ReaderView() {
     }
   }, [handleRemoveQueueItem])
 
-  const handleAddTextBlock = (sectionIndex: number, afterBlock: TextBlock) => {
-    const id = getAddBlockQueueItemId(afterBlock)
+  const handleAddTextBlock = (
+    sectionIndex: number,
+    anchorBlock: TextBlock,
+    position: InsertPosition
+  ) => {
+    const id = getAddBlockQueueItemId(anchorBlock, position)
     if (queueItemsRef.current.some((item) => item.id === id)) {
       return
     }
@@ -1432,7 +1457,7 @@ export default function ReaderView() {
         if (section.index !== sectionIndex) {
           return section
         }
-        const inserted = optimisticallyInsertBlockAfter(section.blocks, afterBlock)
+        const inserted = optimisticallyInsertBlock(section.blocks, anchorBlock, position)
         if (!inserted) {
           return section
         }
@@ -1445,7 +1470,42 @@ export default function ReaderView() {
     }
 
     setOptimisticAddBlocksByQueueId((prev) => ({ ...prev, [id]: tempBlockId! }))
-    setQueueItems((prev) => [...prev, buildAddBlockQueueItem(afterBlock)])
+    setQueueItems((prev) => [...prev, buildAddBlockQueueItem(anchorBlock, position)])
+  }
+
+  const handleAddSpaceBreak = (
+    sectionIndex: number,
+    anchorBlock: TextBlock,
+    position: InsertPosition
+  ) => {
+    const id = getAddSpaceBreakQueueItemId(anchorBlock, position)
+    if (queueItemsRef.current.some((item) => item.id === id)) {
+      return
+    }
+    if (optimisticAddBlocksByQueueIdRef.current[id]) {
+      return
+    }
+
+    let tempBlockId: string | null = null
+    setSections((prev) =>
+      prev.map((section) => {
+        if (section.index !== sectionIndex) {
+          return section
+        }
+        const inserted = optimisticallyInsertSpaceBreak(section.blocks, anchorBlock, position)
+        if (!inserted) {
+          return section
+        }
+        tempBlockId = inserted.tempBlockId
+        return { ...section, blocks: inserted.nextBlocks }
+      })
+    )
+    if (!tempBlockId) {
+      return
+    }
+
+    setOptimisticAddBlocksByQueueId((prev) => ({ ...prev, [id]: tempBlockId! }))
+    setQueueItems((prev) => [...prev, buildAddSpaceBreakQueueItem(anchorBlock, position)])
   }
 
   const handleSelectAction = useCallback((
@@ -1457,8 +1517,20 @@ export default function ReaderView() {
       setCodePanelBlockId(block.id)
       return
     }
-    if (action === 'add-block') {
-      handleAddTextBlock(sectionIndex, block)
+    if (action === 'add-block-above') {
+      handleAddTextBlock(sectionIndex, block, 'before')
+      return
+    }
+    if (action === 'add-block-below') {
+      handleAddTextBlock(sectionIndex, block, 'after')
+      return
+    }
+    if (action === 'add-space-break-above') {
+      handleAddSpaceBreak(sectionIndex, block, 'before')
+      return
+    }
+    if (action === 'add-space-break-below') {
+      handleAddSpaceBreak(sectionIndex, block, 'after')
       return
     }
     if (action === 'delete') {

@@ -53,6 +53,36 @@
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
   }
 
+  .modal-card--sticky-footer {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  .modal-card--sticky-footer .modal-card__header {
+    flex-shrink: 0;
+  }
+
+  .modal-card--sticky-footer .modal-card__body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .modal-card--sticky-footer .modal-card__footer {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+    width: calc(100% + 2rem);
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding: 1rem;
+    background-color: var(--bg-primary);
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+
   /* Viewer section: uses tokens directly (Tailwind bg-* not reliably generated) */
   .viewer-section {
     background-color: var(--bg-primary);

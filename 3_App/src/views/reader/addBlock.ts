@@ -1,5 +1,7 @@
 import type { QueueItem, TextBlock } from '../../types/reader'
 
+export type InsertPosition = 'before' | 'after'
+
 const DEFAULT_INSERTED_TEXT = 'New Text Block'
 
 const escapeHtml = (value: string) =>
@@ -11,56 +13,64 @@ const escapeHtml = (value: string) =>
     .replace(/'/g, '&#039;')
     .replace(/\n/g, '<br />')
 
-const normalizeOrders = (blocks: TextBlock[]) =>
+export const normalizeOrders = (blocks: TextBlock[]) =>
   blocks.map((block, index) => ({ ...block, order: index }))
 
 export const getInsertedTagHint = (afterBlock: TextBlock) =>
   afterBlock.tag.toLowerCase() === 'li' ? 'li' : 'p'
 
-export const getAddBlockQueueItemId = (afterBlock: TextBlock) => {
-  const key = afterBlock.blockId || afterBlock.selector || String(afterBlock.order)
-  return `add-block|${afterBlock.href}|${key}`
+export const getAddBlockQueueItemId = (
+  anchorBlock: TextBlock,
+  position: InsertPosition
+) => {
+  const key = anchorBlock.blockId || anchorBlock.selector || String(anchorBlock.order)
+  return `add-block|${position}|${anchorBlock.href}|${key}`
 }
 
 export const buildAddBlockQueueItem = (
-  afterBlock: TextBlock,
+  anchorBlock: TextBlock,
+  position: InsertPosition,
   insertedText: string = DEFAULT_INSERTED_TEXT
 ): QueueItem => {
-  const insertedTagHint = getInsertedTagHint(afterBlock)
+  const insertedTagHint = getInsertedTagHint(anchorBlock)
+  const positionLabel = position === 'before' ? 'before' : 'after'
   return {
-    id: getAddBlockQueueItemId(afterBlock),
+    id: getAddBlockQueueItemId(anchorBlock, position),
     action: 'add-block',
-    fromHref: afterBlock.href,
-    toHref: afterBlock.href,
-    label: `Add text block after ${afterBlock.tag.toUpperCase()}`,
-    afterBlockId: afterBlock.blockId,
-    afterSelector: afterBlock.selector,
-    afterIndex: afterBlock.order,
+    fromHref: anchorBlock.href,
+    toHref: anchorBlock.href,
+    label: `Add text block ${positionLabel} ${anchorBlock.tag.toUpperCase()}`,
+    afterBlockId: anchorBlock.blockId,
+    afterSelector: anchorBlock.selector,
+    afterIndex: anchorBlock.order,
     insertedText,
     insertedTagHint,
+    insertPosition: position,
   }
 }
 
-const makeTempBlockId = (afterBlock: TextBlock) => {
+const makeTempBlockId = (anchorBlock: TextBlock) => {
   const entropy =
     typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
       ? crypto.randomUUID()
       : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
-  return `temp-add-block|${afterBlock.href}|${entropy}`
+  return `temp-add-block|${anchorBlock.href}|${entropy}`
 }
 
-export const optimisticallyInsertBlockAfter = (
+export const optimisticallyInsertBlock = (
   blocks: TextBlock[],
-  afterBlock: TextBlock,
+  anchorBlock: TextBlock,
+  position: InsertPosition,
   insertedText: string = DEFAULT_INSERTED_TEXT
 ): { nextBlocks: TextBlock[]; tempBlockId: string } | null => {
-  const afterIndex = blocks.findIndex((block) => block.id === afterBlock.id)
-  if (afterIndex === -1) {
+  const anchorIndex = blocks.findIndex((block) => block.id === anchorBlock.id)
+  if (anchorIndex === -1) {
     return null
   }
 
-  const tempBlockId = makeTempBlockId(afterBlock)
-  const nextTag = getInsertedTagHint(afterBlock)
+  const tempBlockId = makeTempBlockId(anchorBlock)
+  const insertIndex = position === 'before' ? anchorIndex : anchorIndex + 1
+  const nextTag = getInsertedTagHint(anchorBlock)
 
   const nextBlock: TextBlock = {
     id: tempBlockId,
@@ -68,22 +78,28 @@ export const optimisticallyInsertBlockAfter = (
     tag: nextTag,
     html: escapeHtml(insertedText),
     selector: '',
-    href: afterBlock.href,
+    href: anchorBlock.href,
     order: 0,
     justify: undefined,
   }
 
   const nextBlocks = normalizeOrders([
-    ...blocks.slice(0, afterIndex + 1),
+    ...blocks.slice(0, insertIndex),
     nextBlock,
-    ...blocks.slice(afterIndex + 1),
+    ...blocks.slice(insertIndex),
   ])
 
   return { nextBlocks, tempBlockId }
 }
 
+/** @deprecated Use optimisticallyInsertBlock with position 'after' */
+export const optimisticallyInsertBlockAfter = (
+  blocks: TextBlock[],
+  afterBlock: TextBlock,
+  insertedText?: string
+) => optimisticallyInsertBlock(blocks, afterBlock, 'after', insertedText)
+
 export const removeOptimisticAddBlock = (
   blocks: TextBlock[],
   tempBlockId: string
 ): TextBlock[] => normalizeOrders(blocks.filter((block) => block.id !== tempBlockId))
-

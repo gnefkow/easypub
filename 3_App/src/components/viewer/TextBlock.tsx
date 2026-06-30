@@ -4,9 +4,11 @@ import type { TextBlock as TextBlockType } from '../../types/reader'
 import { Button } from 'counterfoil-starter-kit'
 import TextBlockToolbar from './TextBlockToolbar'
 import TextBlockRichEditor from './richText/TextBlockRichEditor'
+import { shouldIndentParagraph } from '../../views/reader/paragraphIndent'
 
 type TextBlockProps = {
   block: TextBlockType
+  previousBlock: TextBlockType | null
   sectionIndex: number
   viewerLanguage: string
   isFocused: boolean
@@ -33,6 +35,7 @@ type TextBlockProps = {
 
 export default memo(function TextBlock({
   block,
+  previousBlock,
   sectionIndex,
   viewerLanguage,
   isFocused,
@@ -99,12 +102,19 @@ export default memo(function TextBlock({
 
   const displayHtml = useSpellcheckHtml ? block.spellcheckHtml! : block.html
 
+  const paragraphIndent =
+    !isEditing && tag === 'p'
+      ? shouldIndentParagraph(tag, block.order, previousBlock?.tag ?? null)
+        ? '1em'
+        : 0
+      : undefined
+
   const handleBlockClick = () => {
     if (powerMode) {
       onRequestFocusBlock(sectionIndex, block.id)
       return
     }
-    if (!isEditing && tag !== 'img') {
+    if (!isEditing && tag !== 'img' && tag !== 'hr') {
       onSelectSpellWord(null)
       onRequestEditBlock(sectionIndex, block.id)
     }
@@ -112,7 +122,7 @@ export default memo(function TextBlock({
 
   const handleContentClick = (event: ReactMouseEvent<HTMLElement>) => {
     if (powerMode) {
-      if (tag === 'img') return
+      if (tag === 'img' || tag === 'hr') return
       const target = event.target as unknown
       if (
         target instanceof Element &&
@@ -210,6 +220,8 @@ export default memo(function TextBlock({
             onRequestCancelEdit()
           }}
         />
+      ) : tag === 'hr' ? (
+        <div className="py-2 text-center font-mono text-sm text-tertiary">&lt;hr/&gt;</div>
       ) : tag === 'img' ? (
         <div
           className={`text-slate-900 font-contentTypeface ${tagTypographyClass[tag] ?? 'text-body-1'}`}
@@ -224,6 +236,7 @@ export default memo(function TextBlock({
           style={{
             textAlign: (block.justify as CSSProperties['textAlign']) || undefined,
             margin: 0,
+            textIndent: paragraphIndent,
           }}
           lang={shouldHyphenate ? viewerLanguage : undefined}
           onClick={handleContentClick}
@@ -302,7 +315,11 @@ export default memo(function TextBlock({
           </div>
           <div className="max-h-64 overflow-auto px-3 py-2 text-xs text-slate-700">
             <pre className="whitespace-pre-wrap break-words font-mono">
-              {tag === 'img' ? block.html : `<${tag}>${block.html}</${tag}>`}
+              {tag === 'img'
+                ? block.html
+                : tag === 'hr'
+                  ? '<hr/>'
+                  : `<${tag}>${block.html}</${tag}>`}
             </pre>
           </div>
         </div>

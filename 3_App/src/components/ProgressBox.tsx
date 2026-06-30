@@ -59,9 +59,21 @@ export default function ProgressBox({
   ]
 
   return (
-    <Modal open={visible} title={displayTitle} onClose={onDismiss}>
+    <Modal
+      open={visible}
+      title={displayTitle}
+      onClose={onDismiss}
+      stickyFooter={isComplete}
+      footer={
+        isComplete ? (
+          <Button variant="primary" size="lg" onClick={onDismiss}>
+            Great!
+          </Button>
+        ) : undefined
+      }
+    >
       <div
-        className="mt-3 max-h-64 space-y-2 overflow-auto text-xs text-slate-700"
+        className="mt-3 space-y-2 text-xs text-slate-700"
         data-component="ProgressBox"
       >
         {steps.map((step) => (
@@ -79,13 +91,6 @@ export default function ProgressBox({
           </div>
         ))}
       </div>
-      {isComplete && (
-        <div className="mt-4 flex justify-end">
-          <Button variant="primary" size="lg" onClick={onDismiss}>
-            Great!
-          </Button>
-        </div>
-      )}
     </Modal>
   )
 }
