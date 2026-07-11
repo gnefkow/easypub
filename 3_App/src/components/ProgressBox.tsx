@@ -15,7 +15,8 @@ type ProgressBoxProps = {
     | 'complete'
   visible: boolean
   showDebug: boolean
-  onDismiss: () => void
+  onContinueEditing: () => void
+  onBackHome: () => void
 }
 
 export default function ProgressBox({
@@ -24,7 +25,8 @@ export default function ProgressBox({
   completed,
   phase,
   visible,
-  onDismiss,
+  onContinueEditing,
+  onBackHome,
 }: ProgressBoxProps) {
   const isComplete = phase === 'complete'
   const displayTitle = isComplete ? 'Epub update complete!' : title
@@ -62,13 +64,17 @@ export default function ProgressBox({
     <Modal
       open={visible}
       title={displayTitle}
-      onClose={onDismiss}
       stickyFooter={isComplete}
       footer={
         isComplete ? (
-          <Button variant="primary" size="lg" onClick={onDismiss}>
-            Great!
-          </Button>
+          <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-end">
+            <Button variant="secondary" size="lg" onClick={onBackHome}>
+              Back Home
+            </Button>
+            <Button variant="primary" size="lg" onClick={onContinueEditing}>
+              Continue editing
+            </Button>
+          </div>
         ) : undefined
       }
     >

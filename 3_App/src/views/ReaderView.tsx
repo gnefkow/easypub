@@ -420,6 +420,65 @@ export default function ReaderView() {
     setEditHistory(data.history || [])
   }
 
+  const ensureBlockIdsForFile = async (filename: string) => {
+    const response = await fetch(
+      `/api/working-files/${encodeURIComponent(filename)}/ensure-block-ids`,
+      { method: 'POST' }
+    )
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}))
+      throw new Error(err?.error || 'Failed to ensure block ids.')
+    }
+  }
+
+  const dismissProgressModal = () => {
+    setProgressVisible(false)
+    setForceProgressVisible(false)
+    setProgressModalOpen(false)
+    setProgressPhase('idle')
+  }
+
+  const handleContinueEditing = async () => {
+    if (!selectedWorkingFile) {
+      dismissProgressModal()
+      return
+    }
+    setIsLoading(true)
+    try {
+      await ensureBlockIdsForFile(selectedWorkingFile)
+      await loadWorkingFile(selectedWorkingFile)
+    } catch (err) {
+      console.error('Continue editing failed:', err)
+    } finally {
+      setIsLoading(false)
+      dismissProgressModal()
+    }
+  }
+
+  const handleBackHome = () => {
+    if (book?.destroy) {
+      book.destroy()
+    }
+    setBook(null)
+    setSections([])
+    setSectionMeta([])
+    setDisplayedSections({})
+    setSplitMarkers([])
+    setNextSectionIndex(null)
+    setQueueItems([])
+    setOptimisticAddBlocksByQueueId({})
+    setCodePanelBlockId(null)
+    setEndnotes([])
+    setEditingEndnoteUid(null)
+    setQueueOpen(false)
+    setEndnotesOpen(false)
+    setFocusedBlock(null)
+    setEditingBlock(null)
+    setSelectedWorkingFile('')
+    selectedWorkingFileRef.current = ''
+    dismissProgressModal()
+  }
+
   const loadWorkingFile = async (filename: string) => {
     if (!filename) {
       return
@@ -540,6 +599,11 @@ export default function ReaderView() {
     await refreshWorkingFiles()
     if (data?.filename) {
       setSelectedWorkingFile(data.filename)
+      try {
+        await ensureBlockIdsForFile(data.filename)
+      } catch (err) {
+        console.error('Failed to stamp block ids on upload:', err)
+      }
       await loadWorkingFile(data.filename)
     }
     setQueueItems([])
@@ -557,7 +621,14 @@ export default function ReaderView() {
     setQueueItems([])
     setOptimisticAddBlocksByQueueId({})
     setCodePanelBlockId(null)
-    void loadWorkingFile(value)
+    void (async () => {
+      try {
+        await ensureBlockIdsForFile(value)
+      } catch (err) {
+        console.error('Failed to stamp block ids on open:', err)
+      }
+      await loadWorkingFile(value)
+    })()
   }
 
   const buildPathSelector = (element: Element, doc: Document) => {
@@ -1182,6 +1253,7 @@ export default function ReaderView() {
     setOptimisticAddBlocksByQueueId({})
     setSplitMarkers([])
     setCodePanelBlockId(null)
+    // Reload clean zip under the modal (no ID stamp — Continue editing does that).
     setProgressPhase('reloading')
     await loadWorkingFile(selectedWorkingFile)
     setIsLoading(false)
@@ -2038,12 +2110,10 @@ export default function ReaderView() {
           (showDebug && progressPhase !== 'idle')
         }
         showDebug={showDebug}
-        onDismiss={() => {
-          setProgressVisible(false)
-          setForceProgressVisible(false)
-          setProgressModalOpen(false)
-          setProgressPhase('idle')
+        onContinueEditing={() => {
+          void handleContinueEditing()
         }}
+        onBackHome={handleBackHome}
       />
       <AppLayout
         header={header}

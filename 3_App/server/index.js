@@ -644,6 +644,76 @@ const ensureBlockIdsInHtml = (html) => {
   return changed ? $.xml() : html
 }
 
+const stripBlockIdsInHtml = (html) => {
+  const $ = cheerio.load(html, { xmlMode: true })
+  const withIds = $('[data-easypub-id]')
+  if (!withIds.length) {
+    return html
+  }
+  withIds.removeAttr('data-easypub-id')
+  return $.xml()
+}
+
+const mapSpineContentHtml = (zip, opfPath, opfData, transformHtml) => {
+  let anyChanged = false
+  const manifestItems = getManifestItems(opfData)
+  const spineItems = getSpineItems(opfData)
+  const hrefById = new Map(
+    manifestItems.map((item) => [item['@_id'], item['@_href']])
+  )
+  spineItems.forEach((item) => {
+    const href = hrefById.get(item['@_idref'])
+    if (!href) {
+      return
+    }
+    const targetPath = resolveHref(opfPath, href)
+    const entry = zip.getEntry(targetPath)
+    if (!entry) {
+      return
+    }
+    const html = zip.readAsText(entry)
+    const updated = transformHtml(html)
+    if (updated !== html) {
+      zip.updateFile(targetPath, Buffer.from(updated, 'utf-8'))
+      anyChanged = true
+    }
+  })
+  return anyChanged
+}
+
+const mapManifestXhtmlHtml = (zip, opfPath, opfData, transformHtml) => {
+  let anyChanged = false
+  const manifestItems = getManifestItems(opfData)
+  manifestItems.forEach((item) => {
+    const media = String(item['@_media-type'] || '')
+    if (!media.includes('html')) {
+      return
+    }
+    const href = item['@_href']
+    if (!href) {
+      return
+    }
+    const targetPath = resolveHref(opfPath, href)
+    const entry = zip.getEntry(targetPath)
+    if (!entry) {
+      return
+    }
+    const html = zip.readAsText(entry)
+    const updated = transformHtml(html)
+    if (updated !== html) {
+      zip.updateFile(targetPath, Buffer.from(updated, 'utf-8'))
+      anyChanged = true
+    }
+  })
+  return anyChanged
+}
+
+const ensureBlockIdsInZip = (zip, opfPath, opfData) =>
+  mapSpineContentHtml(zip, opfPath, opfData, ensureBlockIdsInHtml)
+
+const stripBlockIdsInZip = (zip, opfPath, opfData) =>
+  mapManifestXhtmlHtml(zip, opfPath, opfData, stripBlockIdsInHtml)
+
 const findBlockById = ($, blockId) => {
   if (!blockId) {
     return null
@@ -1122,6 +1192,33 @@ app.get('/api/working-files/:filename', async (req, res) => {
   }
 })
 
+app.post('/api/working-files/:filename/ensure-block-ids', async (req, res) => {
+  const requested = ensureSafeFilename(req.params.filename)
+  const filePath = path.join(workingDir, requested)
+  try {
+    await fs.access(filePath)
+  } catch {
+    res.status(404).json({ error: 'File not found.' })
+    return
+  }
+
+  try {
+    const zip = new AdmZip(filePath)
+    const opfPath = getContainerOpfPath(zip)
+    const { data: opfData } = parseOpf(zip, opfPath)
+    const changed = ensureBlockIdsInZip(zip, opfPath, opfData)
+    if (changed) {
+      zip.writeZip(filePath)
+    }
+    res.json({ ok: true, changed })
+  } catch (err) {
+    console.error('[ensure-block-ids] error:', err)
+    res.status(500).json({
+      error: err?.message || 'Failed to ensure block ids.',
+    })
+  }
+})
+
 app.get('/api/working-files/:filename/history', async (req, res) => {
   const requested = ensureSafeFilename(req.params.filename)
   const history = await readHistory(requested)
@@ -1310,22 +1407,7 @@ app.post('/api/working-files/:filename/queue', async (req, res) => {
         }
       })
 
-      spineItems.forEach((item) => {
-        const href = hrefById.get(item['@_idref'])
-        if (!href) {
-          return
-        }
-        const targetPath = resolveHref(opfPath, href)
-        const entry = zip.getEntry(targetPath)
-        if (!entry) {
-          return
-        }
-        const html = zip.readAsText(entry)
-        const updated = ensureBlockIdsInHtml(html)
-        if (updated !== html) {
-          zip.updateFile(targetPath, Buffer.from(updated, 'utf-8'))
-        }
-      })
+      ensureBlockIdsInZip(zip, opfPath, opfData)
 
   const appendSources = new Set(
     actions
@@ -1826,6 +1908,7 @@ app.post('/api/working-files/:filename/queue', async (req, res) => {
   })
 
   await yieldToEventLoop()
+  stripBlockIdsInZip(zip, opfPath, opfData)
   writeOpf(zip, opfPath, opfData)
   zip.writeZip(filePath)
 
