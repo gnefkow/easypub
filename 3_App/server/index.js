@@ -1797,12 +1797,13 @@ app.post('/api/working-files/:filename/queue', async (req, res) => {
     await yieldToEventLoop()
   }
 
+  const cssHref = ensureEasypubStylesheet(zip, opfPath, opfData)
+  linkStylesheetInContentDocs(zip, opfPath, opfData, cssHref)
+
   const hasFullJustify = actions.some(
     (a) => a.action === 'change-justify' && a.toJustify === 'justify'
   )
   if (hasFullJustify) {
-    const cssHref = ensureEasypubStylesheet(zip, opfPath, opfData)
-    linkStylesheetInContentDocs(zip, opfPath, opfData, cssHref)
     ensureLangAttributes(zip, opfPath, opfData)
   }
 
