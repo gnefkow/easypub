@@ -595,7 +595,9 @@ export default function ReaderView() {
       return []
     }
 
-    const allowedTags = new Set([
+    // Container tags (Pandoc / EPUB3 wrappers) — recurse into children, do not create blocks.
+    const containerTags = new Set(['SECTION', 'ARTICLE'])
+    const blockTags = new Set([
       'P',
       'H1',
       'H2',
@@ -611,8 +613,6 @@ export default function ReaderView() {
       'TABLE',
       'UL',
       'OL',
-      'SECTION',
-      'ARTICLE',
       'IMG',
       'HR',
     ])
@@ -637,10 +637,14 @@ export default function ReaderView() {
     const walk = (node: Node) => {
       if (node.nodeType === Node.ELEMENT_NODE) {
         const element = node as Element
-        if (allowedTags.has(element.tagName.toUpperCase())) {
+        const tagName = element.tagName.toUpperCase()
+        if (containerTags.has(tagName)) {
+          node.childNodes.forEach(walk)
+          return
+        }
+        if (blockTags.has(tagName)) {
           const blockId = element.getAttribute('data-easypub-id') || undefined
           const order = blocks.length
-          const tagName = element.tagName.toUpperCase()
           const html =
             tagName === 'IMG'
               ? (element as HTMLImageElement).outerHTML

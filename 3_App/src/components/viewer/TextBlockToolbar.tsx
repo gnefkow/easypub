@@ -7,7 +7,7 @@ import Tooltip from '../Tooltip'
 const TAG_OPTIONS = [
   'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
   'blockquote', 'li', 'pre', 'figure', 'figcaption',
-  'table', 'ul', 'ol', 'section', 'article', 'img',
+  'table', 'ul', 'ol', 'img',
 ]
 
 const JUSTIFY_OPTIONS = [

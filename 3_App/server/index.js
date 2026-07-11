@@ -582,7 +582,9 @@ const mergeHtmlBodies = (aHtml, bHtml) => {
   return $a.xml()
 }
 
-const allowedTags = new Set([
+// Container tags (Pandoc / EPUB3 wrappers) — recurse into children, do not create blocks.
+const containerTags = new Set(['section', 'article'])
+const blockTags = new Set([
   'p',
   'h1',
   'h2',
@@ -598,8 +600,6 @@ const allowedTags = new Set([
   'table',
   'ul',
   'ol',
-  'section',
-  'article',
   'img',
   'hr',
 ])
@@ -610,7 +610,13 @@ const collectAllowedBlocks = (rootNode) => {
     if (!node) return
     if (node.type === 'tag') {
       const tag = (node.name || '').toLowerCase()
-      if (allowedTags.has(tag)) {
+      if (containerTags.has(tag)) {
+        if (node.children) {
+          node.children.forEach(walk)
+        }
+        return
+      }
+      if (blockTags.has(tag)) {
         blocks.push(node)
         return
       }
