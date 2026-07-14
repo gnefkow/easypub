@@ -570,6 +570,80 @@ const setSpineItems = (opfData, items) => {
   opfData.package.spine.itemref = items
 }
 
+const propertyTokens = (props) =>
+  String(props || '')
+    .split(/\s+/)
+    .map((t) => t.trim())
+    .filter(Boolean)
+
+const hasManifestProperty = (item, name) => propertyTokens(item?.['@_properties']).includes(name)
+
+const addManifestProperty = (item, name) => {
+  const tokens = propertyTokens(item['@_properties'])
+  if (!tokens.includes(name)) {
+    tokens.push(name)
+  }
+  item['@_properties'] = tokens.join(' ')
+}
+
+const isImageManifestItem = (item) =>
+  typeof item?.['@_media-type'] === 'string' && item['@_media-type'].startsWith('image/')
+
+const getMetadataMetas = (opfData) => {
+  const metadata = opfData?.package?.metadata
+  if (!metadata) {
+    return []
+  }
+  const meta = metadata.meta
+  if (!meta) {
+    return []
+  }
+  return Array.isArray(meta) ? meta : [meta]
+}
+
+const setMetadataMetas = (opfData, metas) => {
+  if (!opfData.package) {
+    opfData.package = {}
+  }
+  if (!opfData.package.metadata) {
+    opfData.package.metadata = {}
+  }
+  opfData.package.metadata.meta = metas
+}
+
+/** Sync EPUB 2 + EPUB 3 cover declarations when exactly one side is present. Mutates opfData. */
+const normalizeCoverMetadata = (opfData) => {
+  const manifestItems = getManifestItems(opfData)
+  const coverImageItems = manifestItems.filter(
+    (item) => hasManifestProperty(item, 'cover-image') && isImageManifestItem(item)
+  )
+  if (coverImageItems.length > 1) {
+    return
+  }
+
+  const coverImageItem = coverImageItems[0] || null
+  const metas = getMetadataMetas(opfData)
+  const coverMeta = metas.find((m) => m && m['@_name'] === 'cover' && m['@_content'])
+  const coverMetaTarget = coverMeta
+    ? manifestItems.find(
+        (item) => item['@_id'] === coverMeta['@_content'] && isImageManifestItem(item)
+      )
+    : null
+
+  if (coverImageItem && !coverMeta) {
+    setMetadataMetas(opfData, [
+      ...metas,
+      { '@_name': 'cover', '@_content': coverImageItem['@_id'] },
+    ])
+    return
+  }
+
+  if (coverMetaTarget && !coverImageItem) {
+    addManifestProperty(coverMetaTarget, 'cover-image')
+    setManifestItems(opfData, manifestItems)
+  }
+}
+
 const mergeHtmlBodies = (aHtml, bHtml) => {
   const $a = cheerio.load(aHtml, { xmlMode: true })
   const $b = cheerio.load(bHtml, { xmlMode: true })
@@ -1925,6 +1999,7 @@ app.post('/api/working-files/:filename/queue', async (req, res) => {
   await yieldToEventLoop()
   normalizeTextAlignLeftInZip(zip, opfPath, opfData)
   stripBlockIdsInZip(zip, opfPath, opfData)
+  normalizeCoverMetadata(opfData)
   writeOpf(zip, opfPath, opfData)
   zip.writeZip(filePath)
 
