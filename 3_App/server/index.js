@@ -795,16 +795,25 @@ const changeElementTagById = (html, blockId, newTag) => {
   return $.xml()
 }
 
+// SE: use text-align: initial (not left) so reading systems can still justify.
+const cssTextAlignValue = (justify) =>
+  justify === 'left' ? 'initial' : justify
+
+const setElementTextAlign = (element, justify) => {
+  const align = cssTextAlignValue(justify)
+  const existing = element.attr('style') || ''
+  const cleaned = existing.replace(/text-align:\s*[^;]+;?/g, '').trim()
+  const newStyle = cleaned
+    ? `${cleaned}; text-align: ${align};`
+    : `text-align: ${align};`
+  element.attr('style', newStyle)
+}
+
 const changeElementJustifyById = (html, blockId, justify) => {
   const $ = cheerio.load(html, { xmlMode: true })
   const element = findBlockById($, blockId)
   if (!element || !element.length) return html
-  const existing = element.attr('style') || ''
-  const cleaned = existing.replace(/text-align:\s*[^;]+;?/g, '').trim()
-  const newStyle = cleaned
-    ? `${cleaned}; text-align: ${justify};`
-    : `text-align: ${justify};`
-  element.attr('style', newStyle)
+  setElementTextAlign(element, justify)
   return $.xml()
 }
 
@@ -812,14 +821,20 @@ const changeElementJustifyByIndex = (html, blockIndex, justify) => {
   const $ = cheerio.load(html, { xmlMode: true })
   const element = findBlockByIndex($, blockIndex)
   if (!element || !element.length) return html
-  const existing = element.attr('style') || ''
-  const cleaned = existing.replace(/text-align:\s*[^;]+;?/g, '').trim()
-  const newStyle = cleaned
-    ? `${cleaned}; text-align: ${justify};`
-    : `text-align: ${justify};`
-  element.attr('style', newStyle)
+  setElementTextAlign(element, justify)
   return $.xml()
 }
+
+/** Rewrite legacy text-align: left → initial in content XHTML (SE). */
+const normalizeTextAlignLeftInHtml = (html) => {
+  if (!/text-align:\s*left/i.test(html)) {
+    return html
+  }
+  return html.replace(/text-align:\s*left/gi, 'text-align: initial')
+}
+
+const normalizeTextAlignLeftInZip = (zip, opfPath, opfData) =>
+  mapManifestXhtmlHtml(zip, opfPath, opfData, normalizeTextAlignLeftInHtml)
 
 const updateHtmlTitle = (html, title) => {
   const $ = cheerio.load(html, { xmlMode: true })
@@ -1908,6 +1923,7 @@ app.post('/api/working-files/:filename/queue', async (req, res) => {
   })
 
   await yieldToEventLoop()
+  normalizeTextAlignLeftInZip(zip, opfPath, opfData)
   stripBlockIdsInZip(zip, opfPath, opfData)
   writeOpf(zip, opfPath, opfData)
   zip.writeZip(filePath)

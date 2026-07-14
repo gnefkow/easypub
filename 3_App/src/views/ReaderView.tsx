@@ -723,8 +723,13 @@ export default function ReaderView() {
                 ? ''
                 : element.innerHTML
           const inlineStyle = element.getAttribute('style') || ''
-          const alignMatch = inlineStyle.match(/text-align:\s*(left|right|center|justify)/)
-          const justify = alignMatch ? alignMatch[1] : undefined
+          const alignMatch = inlineStyle.match(
+            /text-align:\s*(left|right|center|justify|initial)/i
+          )
+          const rawAlign = alignMatch ? alignMatch[1].toLowerCase() : undefined
+          // SE writes initial for left; UI still shows Left
+          const justify =
+            rawAlign === 'initial' ? 'left' : rawAlign
           blocks.push({
             id: blockId || `${sectionIndex}-${order}`,
             blockId,
