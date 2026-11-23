@@ -59,7 +59,7 @@ When EasyPub writes a Space Break to the epub, it follows [SE Semantics](https:/
 | Self-closing tag | `<hr/>` style (same as `<br/>`) | `<hr/>`, not `<hr>` or `<hr></hr>` |
 | Tag casing | Lowercase | Lowercase |
 | Indentation | Tabs | Tabs (when we align with SE code style) |
-| Cleanup | No non-standard attributes in output | Strip `data-easypub-id` on save |
+| Cleanup | No non-standard attributes in output | Strip `data-easypub-id` on every Update Epub (re-stamp on open / Continue editing) |
 
 **Example — what EasyPub should write:**
 
@@ -79,6 +79,11 @@ When EasyPub writes a Space Break to the epub, it follows [SE Semantics](https:/
 SE ships a `core.css` in every ebook. EasyPub does not bundle `core.css`, but `easypub-styles.css` must include the rules that affect indentation and break appearance. These match [SE `core.css`](https://github.com/standardebooks/jane-austen_pride-and-prejudice/blob/master/src/epub/css/core.css):
 
 ```css
+body {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
 p {
 	margin: 0;
 	text-indent: 1em;
@@ -92,17 +97,70 @@ hr {
 	width: 25%;
 }
 
-hr + p {
+h1 + p,
+h2 + p,
+h3 + p,
+h4 + p,
+h5 + p,
+h6 + p,
+hr + p,
+p:first-child {
 	text-indent: 0;
 }
 ```
 
 | What it does | SE behavior |
 |--------------|-------------|
+| `body` | Enables automatic hyphenation (also used when the user sets a block to full justify) |
 | `hr` | Renders a short centered rule with vertical margin (`1.5em`) — the visible “space break” in the ereader |
 | `hr + p` | Resets first-line indent on the paragraph immediately following the break |
+| `h1 + p` … `h6 + p`, `p:first-child` | Resets first-line indent on opening paragraphs after headings or at the start of a container |
 | `p` | Indents all other consecutive paragraphs by `1em` |
 
 **Note:** Some print editions show a break as white space only (no visible rule). SE’s default is the short rule above. EasyPub follows the SE default unless we later add a project-level CSS override — not a per-block user setting.
+
+
+----------------------------------------------------------------------------------------------------
+
+
+## **When and How Export CSS Runs**
+
+Indentation is handled differently in the **viewer** vs the **saved epub**. Both should match; they use different mechanisms.
+
+### **Viewer (in-app preview)**
+
+- The viewer does **not** rely on `easypub-styles.css` while you edit.
+- In **view mode**, each `<p>` block gets a computed `text-indent: 1em` or `0` via inline style, using the same logical rules as the export CSS (`shouldIndentParagraph` in `paragraphIndent.ts` — block order and previous block tag).
+- In **edit mode**, paragraphs are always flush-left so editing is not disorienting.
+- This is display-only in the app; it is not written into the epub XHTML.
+
+### **Save pipeline (epub file)**
+
+When the user clicks **Update Epub** (POST `/api/working-files/:filename/queue`), after all queued actions are applied the server **always** runs:
+
+1. **`ensureEasypubStylesheet`** — writes or updates `easypub-styles.css` in the epub zip with the rules above (hyphenation + indentation + `<hr/>` styling). Adds the file to the OPF manifest if it is not there yet.
+2. **`linkStylesheetInContentDocs`** — appends `<link rel="stylesheet" … href="…easypub-styles.css" />` to the `<head>` of each spine content document that does not already link it.
+3. **`stripBlockIdsInZip`** — removes all `data-easypub-id` attributes from XHTML in the epub so the saved working file has no EasyPub editing residue. IDs are re-stamped on open / **Continue editing** (see [ticket 112](../3_Tickets/112_Strip-easypub-ids-on-export.md)).
+
+This runs on **every save**, whether or not the queue includes text edits, space breaks, or justify changes. Indentation in Apple Books and other ereaders depends on the stylesheet steps — saving is required for export indent to appear outside the app. The ID strip keeps every saved epub clean for SE / handoff.
+
+**Related, justify-only step:** If the queue includes a full-justify action (`change-justify` → `justify`), the server also runs **`ensureLangAttributes`** — sets `lang` / `xml:lang` on content documents when missing, so hyphenation can resolve correctly. That step remains justify-specific; the stylesheet and strip steps do not.
+
+**Cascade:** `easypub-styles.css` is linked after existing book stylesheets in each content doc, so its indentation rules supplement (and typically override) book CSS at equal specificity. Books that ship Standard Ebooks `core.css` may already indent correctly; EasyPub’s stylesheet ensures consistent behavior for all epubs we touch.
+
+Implementation: [`ensureEasypubStylesheet`, `linkStylesheetInContentDocs`, and `stripBlockIdsInZip` in `server/index.js`](../../3_App/server/index.js). Stylesheet work built in [ticket 109](../3_Tickets/109_Indentation-and-Space-Breaks.md); ID strip in [ticket 112](../3_Tickets/112_Strip-easypub-ids-on-export.md).
+
+
+----------------------------------------------------------------------------------------------------
+
+
+## **Tickets**
+
+| Ticket | Path | Status |
+|--------|------|--------|
+| **109 — Indentation and Space Breaks** | [3_Tickets/109_Indentation-and-Space-Breaks.md](../3_Tickets/109_Indentation-and-Space-Breaks.md) | Implemented (export CSS, viewer indent, `<hr/>` blocks, plus-menu inserts) |
+| **112 — Strip easypub IDs on export** | [3_Tickets/112_Strip-easypub-ids-on-export.md](../3_Tickets/112_Strip-easypub-ids-on-export.md) | Implemented (strip on save; stamp on open / Continue editing) |
+
+When in doubt about intended behavior, this PRD is the source of truth.
 
 

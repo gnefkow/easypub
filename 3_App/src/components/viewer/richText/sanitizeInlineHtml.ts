@@ -39,3 +39,30 @@ export function stripHtmlTags(html: string): string {
   const doc = new DOMParser().parseFromString(html, 'text/html')
   return doc.body.textContent ?? ''
 }
+
+const PLACEHOLDER_ANCHOR_RE = /<a>placeholder-[a-z0-9]+<\/a>/gi
+
+/** Strip noteref placeholders and noteref `<a>` elements before block → endnote conversion. */
+export function stripNoterefAnchorsFromBlockHtml(html: string): string {
+  let stripped = html.replace(PLACEHOLDER_ANCHOR_RE, '')
+  const doc = new DOMParser().parseFromString(
+    `<div>${stripped}</div>`,
+    'text/html',
+  )
+  const root = doc.body.firstElementChild
+  if (!root) {
+    return stripped
+  }
+
+  root.querySelectorAll('a').forEach((anchor) => {
+    const href = anchor.getAttribute('href') ?? ''
+    const epubType = anchor.getAttribute('epub:type') ?? ''
+    if (epubType === 'noteref' || href.includes('endnotes.xhtml')) {
+      anchor.remove()
+    } else {
+      anchor.replaceWith(...Array.from(anchor.childNodes))
+    }
+  })
+
+  return root.innerHTML
+}

@@ -10,6 +10,17 @@ Where the SE manual is silent, the directive is to follow the **Chicago Manual o
 ----------------------------------------------------------------------------------------------------
 
 
+## **Closed gaps**
+
+| Closed | Pillar | Notes |
+|--------|--------|-------|
+| **`data-easypub-id` cleanup** | Export Compliance (XHTML) | Stripped before every Update Epub write; re-stamped on open / Continue editing. [Ticket 112](../3_Tickets/112_Strip-easypub-ids-on-export.md). |
+| **`text-align: initial` not `left`** | Export Compliance (CSS) | **Resolved.** Choosing Left writes `text-align: initial` (not `left`); legacy `text-align: left` is rewritten on Update Epub. Untouched paragraphs still omit `text-align`. [Ticket 113](../3_Tickets/113_Global-Justification.md). |
+
+
+----------------------------------------------------------------------------------------------------
+
+
 ## **How We're Thinking About This**
 
 Three pillars, in priority order:
@@ -38,7 +49,7 @@ These are things the user shouldn't have to think about -- EasyPub should just g
 | Attributes | Alphabetical order | Not enforced | 🔴 Gap |
 | Attribute values | Lowercase (except IETF lang tags) | Not enforced | 🔴 Gap |
 | Phrasing content | Single line, no whitespace around content | Not enforced | 🔴 Gap |
-| `data-easypub-id` cleanup | SE wouldn't allow non-standard attributes | **IDs persist in output** | 🔴 Gap |
+| `data-easypub-id` cleanup | SE wouldn't allow non-standard attributes | Stripped before every Update Epub write; re-stamped on open / Continue editing (ticket 112) | ✅ Done |
 | Self-closing tags | `<br/>` style | ❓ Need to verify cheerio output | ❓ Need to verify |
 
 ### **CSS Code Style**
@@ -49,7 +60,7 @@ These are things the user shouldn't have to think about -- EasyPub should just g
 | Indentation | Tabs | Not enforced | 🔴 Gap |
 | Selectors/properties/values | Lowercase | Not enforced | ❓ Need to verify |
 | Properties | Alphabetical order | Not enforced | 🔴 Gap |
-| `text-align` | Use `initial` not `left` | EasyPub writes `text-align: left` | 🔴 Gap |
+| `text-align` | Use `initial` not `left` | **Resolved (ticket 113).** Left → `initial` on write; legacy `left` normalized on Update Epub | ✅ Done |
 | Font sizes | Never less than `1em` | N/A currently | ✅ N/A |
 | Height/top/bottom | Use `vh` not `%` | N/A currently | ✅ N/A |
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+<head>
+	<meta name="dtb:uid" content="urn:uuid:b2f1c981-e01c-4ea1-8485-b91f078c3f2d"/>
+</head>
+<docTitle><text>Do Artifacts Have Politics?</text></docTitle>
+<navMap>
+	<navPoint id="navpoint-1" playOrder="1">
+		<navLabel><text>Cover</text></navLabel>
+		<content src="text/cover.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-2" playOrder="2">
+		<navLabel><text>Title</text></navLabel>
+		<content src="text/title_page.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-3" playOrder="3">
+		<navLabel><text>Essay</text></navLabel>
+		<content src="text/ch001.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-4" playOrder="4">
+		<navLabel><text>Endnotes</text></navLabel>
+		<content src="text/endnotes.xhtml"/>
+	</navPoint>
+</navMap>
+</ncx>

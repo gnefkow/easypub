@@ -1,3 +1,9 @@
 nspell
 ProseMirror
 TipTap
+spellcheck
+decorations
+SpellcheckDecoration
+spellcheck-block
+spell-unknown
+ticket 107

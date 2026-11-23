@@ -285,6 +285,7 @@ Spellcheck highlights and the custom dictionary are **session/working-file metad
 - **Viewer and TextBlock** ([PRD 1.3](PRD_1.3_Viewer_and_Text_Block.md)): Spellcheck layers on block rendering in both view and edit mode. View mode uses `spellcheckHtml` spans; edit mode uses TipTap with server-driven decorations. Clicking a highlighted word in view mode selects it for dictionary add (does not enter edit mode). Queue actions, save path, and Power Mode are otherwise unchanged.
 - **Sections** (PRD 1.2): Spellcheck runs per section as sections are loaded or navigated to. The section sidebar row click triggers server sync even for already-loaded sections.
 - **Endnotes** (PRD 1.4): Endnote placeholder text in body blocks is spell-checked like any other inline HTML. Endnote sidebar content is out of scope for v1.
+- **Indentation and export CSS** ([PRD 1.7](PRD_1.7_Indentation-and-Space-Breaks.md)): Spellcheck does not run during save and does not write into the epub. The save pipeline does run other server steps on every **Update Epub** — notably `easypub-styles.css` (indentation, `<hr/>` styling, hyphenation). See PRD 1.7 § **When and How Export CSS Runs** for when that happens and how it differs from in-app viewer indent.
 
 
 ----------------------------------------------------------------------------------------------------

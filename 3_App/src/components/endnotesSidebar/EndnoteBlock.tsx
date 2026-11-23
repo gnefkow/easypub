@@ -126,11 +126,11 @@ export default function EndnoteBlock({
   if (isEditing) {
     return (
       <div
-        className="rounded-md border border-slate-200 bg-white p-2"
+        className="endnote-block-item endnote-block-item--editing"
         onClick={(e) => e.stopPropagation()}
         data-component="EndnoteBlock"
       >
-        <div className="mb-1 flex items-center gap-1.5">
+        <div className="endnote-block-item__meta">
           <span className="text-xs font-mono text-slate-400">placeholder-{endnote.uid}</span>
         </div>
         {editor && <InlineFormatToolbar editor={editor} />}
@@ -153,11 +153,11 @@ export default function EndnoteBlock({
 
   return (
     <div
-      className="group cursor-pointer rounded-md px-2 py-1.5 hover:bg-bg-secondary-hover transition"
+      className="endnote-block-item group"
       onClick={() => onRequestEdit(endnote.uid)}
       data-component="EndnoteBlock"
     >
-      <div className="flex items-center justify-between mb-1">
+      <div className="endnote-block-item__meta">
         <span className="text-xs font-mono text-slate-400">
           placeholder-{endnote.uid}
         </span>
@@ -172,7 +172,7 @@ export default function EndnoteBlock({
         </Tooltip>
       </div>
       <p
-        className="text-sm text-slate-700 font-contentTypeface"
+        className="endnote-block-item__body text-sm text-slate-700 font-contentTypeface"
         dangerouslySetInnerHTML={{ __html: endnote.text || '<em>Empty endnote</em>' }}
       />
     </div>

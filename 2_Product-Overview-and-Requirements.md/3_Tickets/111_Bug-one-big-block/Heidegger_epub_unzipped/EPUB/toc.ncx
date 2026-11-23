@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+<head>
+	<meta name="dtb:uid" content="urn:uuid:unknown"/>
+</head>
+<docTitle><text>The question concerning technology, and other essays</text></docTitle>
+<navMap>
+	<navPoint id="navpoint-1" playOrder="1">
+		<navLabel><text>Cover</text></navLabel>
+		<content src="cover.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-2" playOrder="2">
+		<navLabel><text>The question concerning technology, and other essays</text></navLabel>
+		<content src="nav.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-3" playOrder="3">
+		<navLabel><text>Cover Page 2</text></navLabel>
+		<content src="chap_0001.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-4" playOrder="4">
+		<navLabel><text>Internet Archive Note</text></navLabel>
+		<content src="section-72540066.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-5" playOrder="5">
+		<navLabel><text>Cover Page 3</text></navLabel>
+		<content src="section-78707135.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-6" playOrder="6">
+		<navLabel><text>Also By Martin Heidegger</text></navLabel>
+		<content src="section-10954298.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-7" playOrder="7">
+		<navLabel><text>Table of Contents</text></navLabel>
+		<content src="chap_0002.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-8" playOrder="8">
+		<navLabel><text>Acknowledgments</text></navLabel>
+		<content src="section-44424344.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-9" playOrder="9">
+		<navLabel><text>Preface</text></navLabel>
+		<content src="section-05352563.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-10" playOrder="10">
+		<navLabel><text>Introduction</text></navLabel>
+		<content src="section-22063025.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-11" playOrder="11">
+		<navLabel><text>The Question Concerning Technology</text></navLabel>
+		<content src="section-76435316.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-12" playOrder="12">
+		<navLabel><text>The Turning</text></navLabel>
+		<content src="section-52674941.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-13" playOrder="13">
+		<navLabel><text>Part II</text></navLabel>
+		<content src="section-41267453.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-14" playOrder="14">
+		<navLabel><text>The Word of Nietzsche:&quot;God is Dead&quot;</text></navLabel>
+		<content src="section-27385217.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-15" playOrder="15">
+		<navLabel><text>Part III</text></navLabel>
+		<content src="section-86876829.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-16" playOrder="16">
+		<navLabel><text>The Age of the World Picture</text></navLabel>
+		<content src="section-75937998.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-17" playOrder="17">
+		<navLabel><text>Science and Reflection</text></navLabel>
+		<content src="section-71950362.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-18" playOrder="18">
+		<navLabel><text>End Matter</text></navLabel>
+		<content src="section-23205740.xhtml"/>
+	</navPoint>
+	<navPoint id="navpoint-19" playOrder="19">
+		<navLabel><text>Endnotes</text></navLabel>
+		<content src="text/endnotes.xhtml"/>
+	</navPoint>
+</navMap>
+</ncx>

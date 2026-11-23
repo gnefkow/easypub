@@ -4,7 +4,7 @@ EasyPub is an application that enables users to format (edit) epub files. Users:
     - Users can queue up edits, then execute the changes to the Epub files as a batch process by pushing the "Update Epub" button.
 
 **`Edit Session`**: An "Edit Session" refers to the full cycle of a user:
-> Load Epub -> Queue Changes -> Execute changes with the "Update Epub" button. 
+> Load Epub (IDs stamped for editing) -> Queue Changes -> Update Epub (IDs stripped; clean working file) -> Continue editing or Back Home.
 
 The viewer loads up content based on Epub Content Documents. In EasyPub, a Content Document is called `Section`
 Epub Content Document = "Section"
@@ -39,7 +39,7 @@ The `Section Sidebar` (src/components/sectionSidebar folder contains the compone
 Edits to Epub are batched. 
 **From a user's perspective** the user can use the EasyPub `Viewer`'s `TextBlock(s)`, `SectionBoundaryCard(s)`, and `sectionSideBar` to queue up edits that will be processed on the Epub. 
 
-WHEN the user clicks the `Update Epub` Button, THEN a process runs that re-organizes the `Queue`. It then executes the changes, then creates a new Epub file. 
+WHEN the user clicks the `Update Epub` Button, THEN a process runs that re-organizes the `Queue`. It then executes the changes, strips EasyPub-only markup (`data-easypub-id`), and writes the working Epub file. A blocking completion modal offers **Continue editing** (re-stamp IDs and stay in the reader) or **Back Home** (leave the file clean). Closing the app without choosing either also leaves the file clean.
 
 
 # Tech Stack
@@ -59,20 +59,23 @@ WHEN the user clicks the `Update Epub` Button, THEN a process runs that re-organ
 - src/components/sectionSidebar/ — Section navigation sidebar
 - src/components/QueueSidebar.tsx — Shows queued edits
 - src/components/TopBar.tsx — Header with file controls
+- src/components/ProgressBox.tsx — Update Epub progress / completion modal
 - src/types/reader.ts — Core type definitions (TextBlock, LoadedSection, SectionMeta, QueueItem)
-- server/index.js — Express backend: EPUB upload, parsing, queue execution, history/undo
+- server/index.js — Express backend: EPUB upload, parsing, queue execution, history/undo, ensure/strip block IDs
 - workingFiles/ — Where uploaded EPUBs are stored; .history/ subfolder for backups
 
 # Data Flow Overview
 Loading flow:
-User selects file on Home → POST /api/working-files uploads to workingFiles/
+User selects file on Home → POST /api/working-files/:filename/ensure-block-ids stamps `data-easypub-id` on content blocks
 loadWorkingFile() fetches the EPUB binary → epubjs parses it client-side
-Each section is rendered via section.render() → parseSectionBlocks() extracts blocks using DOMParser
+Each section is rendered via section.render() → parseSectionBlocks() extracts blocks using DOMParser (including `blockId` from `data-easypub-id`)
 Blocks are stored in sections state → rendered as TextBlock components
 Editing flow:
-User actions on TextBlocks/SectionBoundaryCards → items added to queueItems state
+User actions on TextBlocks/SectionBoundaryCards → items added to queueItems state (prefer `blockId` for targeting)
 User clicks "Update Epub" → handleExecuteQueue() POSTs the full queue to /api/working-files/:filename/queue
-Server processes actions sequentially using cheerio to manipulate HTML and adm-zip to rewrite the EPUB
+Server ensures IDs, processes actions sequentially (cheerio + adm-zip), then strips all `data-easypub-id` before writeZip
 Client polls /api/working-files/:filename/progress every 500ms for progress updates
-On completion → EPUB is reloaded from scratch (full re-parse)
+On completion → clean EPUB reloaded under a blocking modal
+  - Continue editing → ensure-block-ids again → reload → stay in reader
+  - Back Home (or close app) → leave working file clean of EasyPub IDs
 

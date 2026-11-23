@@ -1,5 +1,5 @@
 ---
-**Keywords**: indentation, text-indent, space break, hr, thematic break, easypub-styles.css, export CSS, TextBlock, add-block, TextBlockToolbar, Dropdown, Plus button, PRD 1.7, Standard Ebooks
+**Keywords**: indentation, text-indent, first-line indent, paragraph indent, space break, hr, hr block, thematic break, easypub-styles.css, export CSS, Standard Ebooks, SE core.css, TextBlock, TextBlockToolbar, Section.tsx, ReaderView, add-block, add-space-break, addBlock.ts, addSpaceBreak.ts, paragraphIndent.ts, insertPosition, before, after, Plus button, Dropdown, QueueSidebar, server/index.js, view mode, edit mode, text-tertiary, PRD 1.7, ticket 109
 ---
 
 This ticket is for implementation of [PRD 1.7 concerning indentation and space breaks](/2_Product-Overview-and-Requirements.md/2_PRD/PRD_1.7_Indentation-and-Space-Breaks.md).
@@ -73,7 +73,7 @@ Today EasyPub has no paragraph-indent logic anywhere:
 - WHEN the user chooses **Add Space Break Above**, THEN a bare `<hr/>` is inserted **immediately before** the anchor block and queued for save
 - WHEN the user chooses **Add Space Break Below**, THEN a bare `<hr/>` is inserted **immediately after** the anchor block and queued for save
 - WHEN a `<p>` directly follows an inserted `<hr/>`, THEN that paragraph is flush-left in view mode and on export (`hr + p`)
-- WHEN the epub is saved, THEN `easypub-styles.css` contains the PRD indentation rules and `<hr/>` elements are written as bare self-closing tags
+- WHEN the epub is saved, THEN `easypub-styles.css` contains the PRD indentation rules, the stylesheet is linked in spine content docs, and `<hr/>` elements are written as bare self-closing tags — **regardless of whether the queue includes a justify action**
 
 
 ----------------------------------------------------------------------------------------------------
@@ -118,6 +118,8 @@ p:first-child {
 Keep `@charset` out for now unless we tackle that as part of a broader SE CSS gap — the PRD example omits it and existing epubs may already have their own stylesheets. Our rules supplement (not replace) book CSS via cascade.
 
 **Verify:** Save an epub → open `easypub-styles.css` in the zip → confirm rules present → spot-check in an ereader or browser that consecutive paragraphs indent and paragraphs after `<hr/>` do not.
+
+**Save-path fix (bug found during QA):** `ensureEasypubStylesheet` and `linkStylesheetInContentDocs` were only called when the queue included a full-justify action (`hasFullJustify`). The viewer applies indent via inline styles, so indentation looked correct in-app but was missing from exported epubs opened in Apple Books unless the user had justified a paragraph before saving. **Fix:** call both functions on every save. Keep `ensureLangAttributes` gated behind `hasFullJustify` — that remains hyphenation-specific.
 
 
 ### **Step 2: Add `hr` to the block model (client + server)**
@@ -263,6 +265,7 @@ Prerequisites: `npm run dev` (both 5173 and 5174 — restart if server changes d
 8. **Delete hr block** → queued delete → save → `<hr/>` removed from file
 9. **Regression:** Tag change, justify, append, merge, split section, spellcheck still work on normal text blocks
 10. **Regression:** `hr` block does not enter edit mode on click (non-power mode)
+11. **Export without justify:** Save with no justify actions in queue → `easypub-styles.css` present in zip with indent rules → consecutive paragraphs indent in Apple Books (or other ereader)
 
 
 ### **Step 10: PRD update (after implementation)**

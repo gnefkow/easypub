@@ -30,7 +30,10 @@ import {
 } from './reader/addSpaceBreak'
 import { usePowerModeState, type BlockRef, isSameBlockRef } from './reader/usePowerMode'
 import { DEFAULT_VIEWER_LANGUAGE } from '../utils/languages'
-import sanitizeInlineHtml, { stripHtmlTags } from '../components/viewer/richText/sanitizeInlineHtml'
+import sanitizeInlineHtml, {
+  stripHtmlTags,
+  stripNoterefAnchorsFromBlockHtml,
+} from '../components/viewer/richText/sanitizeInlineHtml'
 
 export default function ReaderView() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -657,7 +660,10 @@ export default function ReaderView() {
   ) => {
     const parser = new DOMParser()
     let doc = parser.parseFromString(html, 'application/xhtml+xml')
-    let body = doc.querySelector('body')
+    // Failed XHTML (e.g. unbound epub: prefix) still may yield a partial/broken body —
+    // fall back to text/html whenever the XML parser reported an error or body is missing.
+    const xhtmlFailed = Boolean(doc.querySelector('parsererror'))
+    let body = xhtmlFailed ? null : doc.querySelector('body')
     if (!body) {
       doc = parser.parseFromString(html, 'text/html')
       body = doc.querySelector('body')
@@ -1338,6 +1344,34 @@ export default function ReaderView() {
     )
   }
 
+  const handleMakeEndnoteFromBlock = (
+    sectionIndex: number,
+    block: TextBlock
+  ) => {
+    const tag = block.tag.toLowerCase()
+    if (tag === 'hr' || tag === 'img') {
+      return
+    }
+
+    const withoutNoterefs = stripNoterefAnchorsFromBlockHtml(block.html)
+    const text = sanitizeInlineHtml(withoutNoterefs)
+    if (!stripHtmlTags(text).trim()) {
+      return
+    }
+
+    const uid = crypto.randomUUID().slice(0, 4)
+    setEndnotes((prev) => [...prev, { uid, text }])
+    setEndnotesOpen(true)
+    handleDeleteBlock(sectionIndex, block.id)
+    handleQueueDeleteBlock(
+      block.href,
+      block.selector,
+      block.tag,
+      block.order,
+      block.blockId
+    )
+  }
+
   const handleRestoreBlock = (sectionIndex: number, blockId: string) => {
     setSections((prev) =>
       prev.map((section) => {
@@ -1623,6 +1657,10 @@ export default function ReaderView() {
         block.order,
         block.blockId
       )
+      return
+    }
+    if (action === 'make-endnote') {
+      handleMakeEndnoteFromBlock(sectionIndex, block)
       return
     }
     if (action === 'append-prev') {

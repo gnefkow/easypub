@@ -146,4 +146,40 @@
     outline-offset: 1px;
     border-radius: 2px;
   }
+
+  /* Endnotes sidebar row — token padding (Tailwind px/py not reliable here) */
+  .endnote-block-item {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+  }
+
+  .endnote-block-item:hover {
+    background-color: var(--bg-secondary-hover);
+  }
+
+  .endnote-block-item__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+  }
+
+  .endnote-block-item__body {
+    margin: 0;
+  }
+
+  .endnote-block-item--editing {
+    cursor: default;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-tertiary);
+    padding: 0.5rem;
+  }
+
+  .endnote-block-item--editing:hover {
+    background-color: var(--bg-primary);
+  }
 }

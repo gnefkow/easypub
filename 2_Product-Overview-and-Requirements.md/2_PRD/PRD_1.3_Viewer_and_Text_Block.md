@@ -7,6 +7,11 @@ This is a detailed overview of the `Viewer` component and its children, in partc
 ---
 The `TextBlock` component is the primary way that users can edit each HTML/XHTML Element (<p>,<h1>,<blockquote>, etc...) in the an Epub's "Section" (Content Document). 
 
+### **Block parsing**
+When a content document loads, `parseSectionBlocks` (client) and `collectAllowedBlocks` (server) walk the `<body>` and create one TextBlock per **block tag** (`p`, `h1`–`h6`, `li`, `blockquote`, `pre`, `figure`, `figcaption`, `table`, `ul`, `ol`, `img`, `hr`).
+
+HTML `<section>` and `<article>` are **container tags** — structural wrappers common in Pandoc and EPUB3 output. The parser recurses into them but does not create TextBlocks for them. This is separate from EasyPub **Sections** (EPUB content documents), which are managed via the section sidebar and boundary cards.
+
 ### Reminder on "actions"
 Recall that "actions" refer to changes that users intend to make to the contents of an Epub. `Actions` are added to the `Queue`, and the actions are sequenced, then executed as a batch when the user clicks the "Update Epub" button. 
 

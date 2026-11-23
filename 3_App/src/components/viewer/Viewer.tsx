@@ -207,6 +207,18 @@ export default function Viewer({
         return
       }
 
+      if (e.metaKey && e.shiftKey && (key === 'e' || key === 'E')) {
+        const blocks = focusedSectionBlocks
+        if (!blocks) return
+        const current = blocks.find((block) => block.id === focusedBlock.blockId)
+        if (!current) return
+        const blockTag = current.tag.toLowerCase()
+        if (blockTag === 'hr' || blockTag === 'img') return
+        e.preventDefault()
+        onSelectAction(focusedBlock.sectionIndex, current, 'make-endnote')
+        return
+      }
+
       if (!e.metaKey) return
       if (key !== 'ArrowUp' && key !== 'ArrowDown') return
       const blocks = focusedSectionBlocks

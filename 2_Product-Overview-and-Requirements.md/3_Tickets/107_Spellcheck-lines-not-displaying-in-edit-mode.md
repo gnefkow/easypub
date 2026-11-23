@@ -1,5 +1,6 @@
 ---
-**Keywords**: spellcheck, edit mode, view mode, TipTap, contentEditable, browser spell-check, red squiggles, spell-unknown, spell-dictionary, highlights disappear, TextBlock, TextBlockRichEditor, spellcheckHtml, block.html, inline editing, dictionary, PRD 1.6, ticket 106
+**Status**: Completed (2026-07-14)
+**Keywords**: spellcheck, edit mode, view mode, TipTap, ProseMirror, decorations, SpellcheckDecoration, spellcheckRanges, useEditModeSpellcheck, contentEditable, spell-unknown, spell-dictionary, spellcheckHtml, block.html, spellcheck-block, fetchSpellcheckHtml, debounced re-check, hide while stale, server-driven underlines, browser spellcheck disabled, red squiggles, highlights disappear, TextBlock, TextBlockRichEditor, inline editing, dictionary, PRD 1.6, ticket 106, ticket 107
 ---
 
 ## **Intended behaviour:**

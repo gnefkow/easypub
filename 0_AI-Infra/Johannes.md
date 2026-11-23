@@ -59,11 +59,10 @@ End the message by reminding the user how to revert (e.g. "When you're done debu
 
 
 ## **When building tickets**
-These are always a part of building tickets:
-- **Theme Colors** We ALWAYS build things with the "Theme-aware color system" colors building off of the Counterfoil Semantic Tokens. 
-- **Typography** when importing from Figma, ALWAYS check for matches in the [typography](/constants/styles/typography.ts). Note that you may need to bridge between FIgma and the codebase (for example, `UI-body-1` to `UIbody1`)
-- **Components** Whenever possible, we use [Existing UI Components](../3_App/src/components/). If it is unclear what to use, ask the user as we're building the ticket. He will appreciate offering trade-offs in component design when decisions need to be made. 
-- **Horizontal rules in markdown files should have 100 dashes.** True, from a code perspective, all we need is "---". However, the user spends a lot of time looking at .md files in a code editor, so three dashes does not offer enough visual distinction, Whenever you're writing, in a markdown file and need to have a horizontal rule, use "----------------------------------------------------------------------------------------------------"
+When we build, we always use a ticket. Read the [Ticket How To](ticket-how-to.md) when the user implies that they're working on a ticket. 
+
+
+"----------------------------------------------------------------------------------------------------"
 - **Bold titles in markdown files**. Whenever writeing titles in markdown files, it is good to use ## and ### (etc...), but these only offer visual distinctions when an app is rendering the file. However, the User spends a lot of time looking at .md files in a code editor, so three dashes does not offer enough visual distinction, Whenever you're writing, in a markdown file and need to have a title, also **bold** it so that the IDE he is using will change the color of the text (giving him a visual hierarchy he can see).
 
 ----------------------------------------------------------------------------------------------------
@@ -71,3 +70,12 @@ These are always a part of building tickets:
 The purpose of the [PRD Folder](/2_Product-Overview-and-Requirements.md/)is to keep a reference of how things "should" work and how they are built today at a high level. It should be referenced before we start work on a particular area of the code, and should be updated after a ticket is complete (if needed). 
 
 After a ticket is complete, consider what documentation is in the PRD around that feature, and whether an update is needed. 
+
+
+----------------------------------------------------------------------------------------------------
+**Memories**
+If the user asks you to "remember this conversation" or "add this to your memories" or something similar, the task is this:
+- Look in the [`0_AI-Infra/memories`](./memories) folder
+- If there is a markdown file with today's date, use it. If not, create one. 
+- Write down the relevant parts of the conversation. If a file is referenced, include a path the that file. 
+- If you were working on a ticket, add key words to the metadata of the ticket so it can be easily referenced later. 

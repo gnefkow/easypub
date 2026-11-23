@@ -37,10 +37,20 @@ export default memo(function TextBlockToolbar({
   onAddToDictionary,
 }: TextBlockToolbarProps) {
   const isHrBlock = tag === 'hr'
+  const isImgBlock = tag === 'img'
 
   const dropdownItems = [
     { id: 'see', label: 'See Code', onSelect: () => onSelectAction('see') },
     { id: 'delete', label: 'Delete', onSelect: () => onSelectAction('delete') },
+    ...(!isHrBlock && !isImgBlock
+      ? [
+          {
+            id: 'make-endnote',
+            label: 'Make Endnote',
+            onSelect: () => onSelectAction('make-endnote'),
+          },
+        ]
+      : []),
     ...(isHrBlock
       ? []
       : [
