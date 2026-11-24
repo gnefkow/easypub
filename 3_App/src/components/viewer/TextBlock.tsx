@@ -1,10 +1,11 @@
 import type { CSSProperties, ElementType, MouseEvent as ReactMouseEvent } from 'react'
-import { memo, useRef, useState } from 'react'
+import { memo, useMemo, useRef, useState } from 'react'
 import type { TextBlock as TextBlockType } from '../../types/reader'
 import { Button } from 'counterfoil-starter-kit'
 import TextBlockToolbar from './TextBlockToolbar'
 import TextBlockRichEditor from './richText/TextBlockRichEditor'
 import { shouldIndentParagraph } from '../../views/reader/paragraphIndent'
+import { decorateEndnotePlaceholders } from './decorateEndnotePlaceholders'
 
 type TextBlockProps = {
   block: TextBlockType
@@ -31,6 +32,8 @@ type TextBlockProps = {
   onSelectSpellWord: (word: string | null) => void
   onAddToDictionary: (word: string) => void
   fetchSpellcheckHtml: (html: string) => Promise<string | null>
+  onEndnoteTagClick: (uid: string) => void
+  focusedEndnoteUid: string | null
 }
 
 export default memo(function TextBlock({
@@ -58,6 +61,8 @@ export default memo(function TextBlock({
   onSelectSpellWord,
   onAddToDictionary,
   fetchSpellcheckHtml,
+  onEndnoteTagClick,
+  focusedEndnoteUid,
 }: TextBlockProps) {
   const tag = block.tag.toLowerCase()
   const Tag = tag as ElementType
@@ -102,6 +107,11 @@ export default memo(function TextBlock({
 
   const displayHtml = useSpellcheckHtml ? block.spellcheckHtml! : block.html
 
+  const decoratedDisplayHtml = useMemo(
+    () => decorateEndnotePlaceholders(displayHtml, focusedEndnoteUid),
+    [displayHtml, focusedEndnoteUid],
+  )
+
   const paragraphIndent =
     !isEditing && tag === 'p'
       ? shouldIndentParagraph(tag, block.order, previousBlock?.tag ?? null)
@@ -121,12 +131,27 @@ export default memo(function TextBlock({
   }
 
   const handleContentClick = (event: ReactMouseEvent<HTMLElement>) => {
+    const clickTarget = event.target
+    if (clickTarget instanceof Element) {
+      const endnoteTag = clickTarget.closest('.endnote-tag')
+      if (endnoteTag instanceof HTMLElement) {
+        const uid = endnoteTag.getAttribute('data-endnote-uid')
+        if (uid) {
+          event.preventDefault()
+          event.stopPropagation()
+          onSelectSpellWord(null)
+          onEndnoteTagClick(uid)
+          return
+        }
+      }
+    }
+
     if (powerMode) {
       if (tag === 'img' || tag === 'hr') return
       const target = event.target as unknown
       if (
         target instanceof Element &&
-        target.closest('button, a, input, select, textarea')
+        target.closest('button, a, input, select, textarea, .endnote-tag')
       ) {
         return
       }
@@ -226,7 +251,11 @@ export default memo(function TextBlock({
         <div
           className={`text-slate-900 font-contentTypeface ${tagTypographyClass[tag] ?? 'text-body-1'}`}
         >
-          <span dangerouslySetInnerHTML={{ __html: block.html }} />
+          <span
+            dangerouslySetInnerHTML={{
+              __html: decorateEndnotePlaceholders(block.html, focusedEndnoteUid),
+            }}
+          />
         </div>
       ) : (
         <Tag
@@ -246,7 +275,10 @@ export default memo(function TextBlock({
             <>
               <span
                 dangerouslySetInnerHTML={{
-                  __html: block.originalHtml ?? block.html,
+                  __html: decorateEndnotePlaceholders(
+                    block.originalHtml ?? block.html,
+                    focusedEndnoteUid,
+                  ),
                 }}
               />
               <span> </span>
@@ -261,7 +293,12 @@ export default memo(function TextBlock({
               <span
                 className="text-emerald-600 font-medium"
                 style={{ color: '#059669' }}
-                dangerouslySetInnerHTML={{ __html: block.appendedHtml ?? '' }}
+                dangerouslySetInnerHTML={{
+                  __html: decorateEndnotePlaceholders(
+                    block.appendedHtml ?? '',
+                    focusedEndnoteUid,
+                  ),
+                }}
               />
             </>
           ) : (
@@ -269,7 +306,12 @@ export default memo(function TextBlock({
               <span
                 className="text-emerald-600 font-medium"
                 style={{ color: '#059669' }}
-                dangerouslySetInnerHTML={{ __html: block.appendedHtml ?? '' }}
+                dangerouslySetInnerHTML={{
+                  __html: decorateEndnotePlaceholders(
+                    block.appendedHtml ?? '',
+                    focusedEndnoteUid,
+                  ),
+                }}
               />
               <span> </span>
               <button
@@ -282,13 +324,16 @@ export default memo(function TextBlock({
               <span> </span>
               <span
                 dangerouslySetInnerHTML={{
-                  __html: block.originalHtml ?? block.html,
+                  __html: decorateEndnotePlaceholders(
+                    block.originalHtml ?? block.html,
+                    focusedEndnoteUid,
+                  ),
                 }}
               />
             </>
           )
           ) : (
-            <span dangerouslySetInnerHTML={{ __html: displayHtml }} />
+            <span dangerouslySetInnerHTML={{ __html: decoratedDisplayHtml }} />
           )}
         </Tag>
       )}

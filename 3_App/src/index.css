@@ -7,6 +7,7 @@
   use design tokens directly for viewer components.
 */
 @import 'counterfoil-starter-kit/styles/semanticTokens.css';
+@import './styles/easypub-tokens.css';
 @import 'counterfoil-starter-kit/styles/CounterfoilComponents.css';
 
 @config "../tailwind.config.ts";
@@ -103,6 +104,40 @@
     border-color: var(--fg-primary);
   }
 
+  .bg-endnote {
+    background-color: var(--bg-endnote);
+  }
+
+  .text-endnote {
+    color: var(--text-endnote);
+  }
+
+  .endnote-tag {
+    display: inline;
+    border-radius: 9999px;
+    padding: 0.125rem 0.25rem; /* 2px vertical, 4px horizontal at 16px root */
+    background-color: var(--bg-endnote);
+    color: var(--text-endnote);
+    cursor: pointer;
+    font-size: 0.85em;
+    line-height: 1.2;
+    vertical-align: baseline;
+    transition: background-color 150ms ease;
+  }
+
+  .endnote-tag:hover {
+    background-color: var(--bg-endnote-hover);
+  }
+
+  .endnote-tag--selected {
+    background-color: var(--bg-endnote-hover);
+    box-shadow: 0 0 0 1px var(--text-endnote);
+  }
+
+  .endnote-tag--selected:hover {
+    background-color: var(--bg-endnote-hover);
+  }
+
   .easypub-hyphenate {
     hyphens: auto;
     -webkit-hyphens: auto;
@@ -161,11 +196,39 @@
     background-color: var(--bg-secondary-hover);
   }
 
+  .endnote-block-item--focused {
+    background-color: var(--bg-endnote);
+  }
+
+  .endnote-block-item--focused:hover {
+    background-color: var(--bg-endnote-hover);
+  }
+
   .endnote-block-item__meta {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 0;
+  }
+
+  /* Sidebar meta UID chip — same tokens as viewer .endnote-tag, not interactive */
+  .endnote-block-item__meta .endnote-tag {
+    font-size: 0.75rem; /* text-xs; overrides viewer 0.85em */
+    line-height: 1rem;
+    cursor: pointer;
+  }
+
+  .endnote-block-item__meta .endnote-tag:hover {
+    background-color: var(--bg-endnote);
+  }
+
+  .endnote-block-item--focused .endnote-block-item__meta .endnote-tag {
+    background-color: var(--bg-endnote-hover);
+    box-shadow: 0 0 0 1px var(--text-endnote);
+  }
+
+  .endnote-block-item--focused .endnote-block-item__meta .endnote-tag:hover {
+    background-color: var(--bg-endnote-hover);
   }
 
   .endnote-block-item__body {

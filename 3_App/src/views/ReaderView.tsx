@@ -30,6 +30,7 @@ import {
 } from './reader/addSpaceBreak'
 import { usePowerModeState, type BlockRef, isSameBlockRef } from './reader/usePowerMode'
 import { DEFAULT_VIEWER_LANGUAGE } from '../utils/languages'
+import { findSectionIndexForEndnoteUid } from '../lib/findEndnoteInSections'
 import sanitizeInlineHtml, {
   stripHtmlTags,
   stripNoterefAnchorsFromBlockHtml,
@@ -70,6 +71,9 @@ export default function ReaderView() {
   const [endnotesOpen, setEndnotesOpen] = useState(false)
   const [endnotes, setEndnotes] = useState<Endnote[]>([])
   const [editingEndnoteUid, setEditingEndnoteUid] = useState<string | null>(null)
+  const [focusedEndnoteUid, setFocusedEndnoteUid] = useState<string | null>(null)
+  const endnotesSidebarScrollRef = useRef<HTMLDivElement>(null)
+  const endnoteFocusScrollTargetRef = useRef<'viewer' | 'sidebar' | null>(null)
   const noterefMapRef = useRef<Record<string, string>>({})
   const [queueItems, setQueueItems] = useState<QueueItem[]>([])
   const [optimisticAddBlocksByQueueId, setOptimisticAddBlocksByQueueId] =
@@ -116,6 +120,10 @@ export default function ReaderView() {
   sectionMetaRef.current = sectionMeta
   const editingBlockRef = useRef(editingBlock)
   editingBlockRef.current = editingBlock
+  const editingEndnoteUidRef = useRef(editingEndnoteUid)
+  editingEndnoteUidRef.current = editingEndnoteUid
+  const focusedEndnoteUidRef = useRef(focusedEndnoteUid)
+  focusedEndnoteUidRef.current = focusedEndnoteUid
   const powerModeRef = useRef(powerMode)
   powerModeRef.current = powerMode
   const queueItemsRef = useRef(queueItems)
@@ -200,6 +208,83 @@ export default function ReaderView() {
     }
     setFocusedBlock(ref)
   }, [dismissEditingBlock, setFocusedBlock])
+
+  const handleEndnoteTagClick = useCallback(
+    (uid: string) => {
+      endnoteFocusScrollTargetRef.current = 'sidebar'
+      setQueueOpen(false)
+      setEndnotesOpen(true)
+      setFocusedEndnoteUid(uid)
+      if (editingBlockRef.current) {
+        dismissEditingBlock()
+      }
+    },
+    [dismissEditingBlock],
+  )
+
+  const handleSidebarEndnoteNavigate = useCallback(
+    (uid: string) => {
+      endnoteFocusScrollTargetRef.current = 'viewer'
+      setEditingEndnoteUid(null)
+      setFocusedEndnoteUid(uid)
+      if (editingBlockRef.current) {
+        dismissEditingBlock()
+      }
+      const sectionIndex = findSectionIndexForEndnoteUid(sectionsRef.current, uid)
+      if (sectionIndex !== null) {
+        setDisplayedSections((prev) => ({ ...prev, [sectionIndex]: true }))
+      }
+    },
+    [dismissEditingBlock],
+  )
+
+  const handleRequestEditEndnote = useCallback((uid: string) => {
+    setFocusedEndnoteUid(null)
+    setEditingEndnoteUid(uid)
+  }, [])
+
+  useEffect(() => {
+    const handlePointerDown = () => {
+      if (!focusedEndnoteUidRef.current) return
+      setFocusedEndnoteUid(null)
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown, true)
+    return () => document.removeEventListener('pointerdown', handlePointerDown, true)
+  }, [])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (editingBlockRef.current) return
+      if (editingEndnoteUidRef.current) return
+
+      const active = document.activeElement
+      if (active instanceof HTMLElement) {
+        if (active.isContentEditable) return
+        const tag = active.tagName
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+      }
+
+      const focusedUid = focusedEndnoteUidRef.current
+      if (!focusedUid) return
+
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        e.stopPropagation()
+        setFocusedEndnoteUid(null)
+        return
+      }
+
+      if (e.key === 'Enter' && !e.metaKey && !e.shiftKey && !e.altKey) {
+        e.preventDefault()
+        e.stopPropagation()
+        setEditingEndnoteUid(focusedUid)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown, true)
+    return () => document.removeEventListener('keydown', handleKeyDown, true)
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -2001,6 +2086,7 @@ export default function ReaderView() {
     const uid = crypto.randomUUID().slice(0, 4)
     const newEndnote: Endnote = { uid, text: '' }
     setEndnotes((prev) => [...prev, newEndnote])
+    setFocusedEndnoteUid(null)
     setEditingEndnoteUid(uid)
   }, [])
 
@@ -2027,6 +2113,7 @@ export default function ReaderView() {
     if (editingEndnoteUid === uid) {
       setEditingEndnoteUid(null)
     }
+    setFocusedEndnoteUid((prev) => (prev === uid ? null : prev))
   }, [editingEndnoteUid])
 
   const header = (
@@ -2042,7 +2129,12 @@ export default function ReaderView() {
       }}
       endnotesOpen={endnotesOpen}
       onToggleEndnotes={() => {
-        setEndnotesOpen((prev) => !prev)
+        setEndnotesOpen((prev) => {
+          if (prev) {
+            setFocusedEndnoteUid(null)
+          }
+          return !prev
+        })
         setQueueOpen(false)
       }}
       showDebug={showDebug}
@@ -2092,9 +2184,13 @@ export default function ReaderView() {
   )
   const rightSidebar = endnotesOpen ? (
     <EndnotesSidebar
+      scrollContainerRef={endnotesSidebarScrollRef}
+      endnoteFocusScrollTargetRef={endnoteFocusScrollTargetRef}
       endnotes={endnotes}
+      focusedEndnoteUid={focusedEndnoteUid}
       editingEndnoteUid={editingEndnoteUid}
-      onRequestEdit={setEditingEndnoteUid}
+      onRequestEdit={handleRequestEditEndnote}
+      onNavigateToViewer={handleSidebarEndnoteNavigate}
       onCommit={handleCommitEndnote}
       onCancel={handleCancelEndnoteEdit}
       onCreate={handleCreateEndnote}
@@ -2214,6 +2310,9 @@ export default function ReaderView() {
             onSelectSpellWord={setSelectedSpellWord}
             onAddToDictionary={handleAddToDictionary}
             fetchSpellcheckHtml={fetchSpellcheckHtml}
+            onEndnoteTagClick={handleEndnoteTagClick}
+            focusedEndnoteUid={focusedEndnoteUid}
+            endnoteFocusScrollTargetRef={endnoteFocusScrollTargetRef}
           />
         )}
         <Modal

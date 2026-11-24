@@ -25,6 +25,8 @@ type SectionProps = {
   onSelectSpellWord: (word: string | null) => void
   onAddToDictionary: (word: string) => void
   fetchSpellcheckHtml: (html: string) => Promise<string | null>
+  onEndnoteTagClick: (uid: string) => void
+  focusedEndnoteUid: string | null
 }
 
 export default memo(function Section({
@@ -50,6 +52,8 @@ export default memo(function Section({
   onSelectSpellWord,
   onAddToDictionary,
   fetchSpellcheckHtml,
+  onEndnoteTagClick,
+  focusedEndnoteUid,
 }: SectionProps) {
   return (
     <div
@@ -84,6 +88,8 @@ export default memo(function Section({
           onSelectSpellWord={onSelectSpellWord}
           onAddToDictionary={onAddToDictionary}
           fetchSpellcheckHtml={fetchSpellcheckHtml}
+          onEndnoteTagClick={onEndnoteTagClick}
+          focusedEndnoteUid={focusedEndnoteUid}
         />
       ))}
     </div>

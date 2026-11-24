@@ -1,0 +1,9 @@
+/*
+  EasyPub-specific semantic tokens (not counterfoil vendor CSS).
+  Import after counterfoil semanticTokens.css so --fg-primary exists.
+*/
+:root {
+  --bg-endnote: color-mix(in srgb, var(--fg-primary) 14%, white);
+  --bg-endnote-hover: color-mix(in srgb, var(--fg-primary) 22%, white);
+  --text-endnote: color-mix(in srgb, var(--fg-primary) 82%, black);
+}

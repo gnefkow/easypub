@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef } from 'react'
+import { Fragment, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 import type { LoadedSection, TextBlock } from '../../types/reader'
 import Section from './Section'
 import SectionBoundaryCard from './SectionBoundaryCard'
@@ -54,6 +54,9 @@ type ViewerProps = {
   onSelectSpellWord: (word: string | null) => void
   onAddToDictionary: (word: string) => void
   fetchSpellcheckHtml: (html: string) => Promise<string | null>
+  onEndnoteTagClick: (uid: string) => void
+  focusedEndnoteUid: string | null
+  endnoteFocusScrollTargetRef: MutableRefObject<'viewer' | 'sidebar' | null>
 }
 
 export default function Viewer({
@@ -96,6 +99,9 @@ export default function Viewer({
   onSelectSpellWord,
   onAddToDictionary,
   fetchSpellcheckHtml,
+  onEndnoteTagClick,
+  focusedEndnoteUid,
+  endnoteFocusScrollTargetRef,
 }: ViewerProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const visibilityRatiosRef = useRef<Map<number, number>>(new Map())
@@ -162,6 +168,52 @@ export default function Viewer({
       ;(el as HTMLElement).scrollIntoView({ block: 'nearest' })
     }
   }, [powerMode, focusedBlockId])
+
+  useEffect(() => {
+    if (!focusedEndnoteUid) {
+      if (endnoteFocusScrollTargetRef.current === 'viewer') {
+        endnoteFocusScrollTargetRef.current = null
+      }
+      return
+    }
+    if (endnoteFocusScrollTargetRef.current !== 'viewer') return
+
+    const escapeSelector = (value: string) => {
+      try {
+        return CSS.escape(value)
+      } catch {
+        return value.replace(/"/g, '\\"')
+      }
+    }
+
+    const scrollToEndnoteTag = () => {
+      const container = scrollContainerRef.current
+      if (!container) return false
+      const tag = container.querySelector(
+        `.endnote-tag[data-endnote-uid="${escapeSelector(focusedEndnoteUid)}"]`,
+      )
+      if (tag && 'scrollIntoView' in tag) {
+        ;(tag as HTMLElement).scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+        endnoteFocusScrollTargetRef.current = null
+        return true
+      }
+      return false
+    }
+
+    if (scrollToEndnoteTag()) return
+
+    let innerFrame = 0
+    const outerFrame = requestAnimationFrame(() => {
+      if (scrollToEndnoteTag()) return
+      innerFrame = requestAnimationFrame(() => {
+        scrollToEndnoteTag()
+      })
+    })
+    return () => {
+      cancelAnimationFrame(outerFrame)
+      cancelAnimationFrame(innerFrame)
+    }
+  }, [focusedEndnoteUid, sections, sectionOrder, endnoteFocusScrollTargetRef])
 
   useEffect(() => {
     if (!powerMode) return
@@ -319,6 +371,8 @@ export default function Viewer({
                   onSelectSpellWord={onSelectSpellWord}
                   onAddToDictionary={onAddToDictionary}
                   fetchSpellcheckHtml={fetchSpellcheckHtml}
+                  onEndnoteTagClick={onEndnoteTagClick}
+                  focusedEndnoteUid={focusedEndnoteUid}
                 />
                 {boundaryProps && <SectionBoundaryCard {...boundaryProps} />}
               </Fragment>

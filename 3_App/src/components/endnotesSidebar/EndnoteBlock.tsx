@@ -14,7 +14,9 @@ type EndnoteBlockProps = {
   endnote: Endnote
   displayNumber: number
   isEditing: boolean
+  isFocused: boolean
   onRequestEdit: (uid: string) => void
+  onNavigateToViewer: (uid: string) => void
   onCommit: (uid: string, text: string) => void
   onCancel: () => void
   onDelete: (uid: string) => void
@@ -24,7 +26,9 @@ export default function EndnoteBlock({
   endnote,
   displayNumber,
   isEditing,
+  isFocused,
   onRequestEdit,
+  onNavigateToViewer,
   onCommit,
   onCancel,
   onDelete,
@@ -123,6 +127,14 @@ export default function EndnoteBlock({
     setTimeout(() => setCopied(false), 1500)
   }, [endnote.uid])
 
+  const handleTitleNavigate = useCallback(
+    (e: ReactMouseEvent) => {
+      e.stopPropagation()
+      onNavigateToViewer(endnote.uid)
+    },
+    [endnote.uid, onNavigateToViewer],
+  )
+
   if (isEditing) {
     return (
       <div
@@ -131,7 +143,14 @@ export default function EndnoteBlock({
         data-component="EndnoteBlock"
       >
         <div className="endnote-block-item__meta">
-          <span className="text-xs font-mono text-slate-400">placeholder-{endnote.uid}</span>
+          <span
+            className="endnote-tag text-xs font-mono"
+            role="button"
+            tabIndex={-1}
+            onClick={handleTitleNavigate}
+          >
+            {endnote.uid}
+          </span>
         </div>
         {editor && <InlineFormatToolbar editor={editor} />}
         <EditorContent editor={editor} />
@@ -153,13 +172,19 @@ export default function EndnoteBlock({
 
   return (
     <div
-      className="endnote-block-item group"
+      className={`endnote-block-item group${isFocused ? ' endnote-block-item--focused' : ''}`}
       onClick={() => onRequestEdit(endnote.uid)}
       data-component="EndnoteBlock"
+      data-endnote-uid={endnote.uid}
     >
       <div className="endnote-block-item__meta">
-        <span className="text-xs font-mono text-slate-400">
-          placeholder-{endnote.uid}
+        <span
+          className="endnote-tag text-xs font-mono"
+          role="button"
+          tabIndex={-1}
+          onClick={handleTitleNavigate}
+        >
+          {endnote.uid}
         </span>
         <Tooltip label={copied ? 'Copied!' : 'Copy anchor'}>
           <Button
